@@ -34,52 +34,38 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* Glassmorphism Card */
+        /* Telas */
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards Glassmorphism */
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 30px;
+            margin-bottom: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        /* Auth Screen */
-        .auth-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .auth-container {
-            width: 100%;
-            max-width: 450px;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo-icon {
-            font-size: 4rem;
-            margin-bottom: 10px;
-        }
-
-        .logo h1 {
-            font-size: 2rem;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
+        /* Formulários */
         .form-group {
             margin-bottom: 20px;
         }
@@ -90,73 +76,189 @@
             font-weight: 500;
         }
 
-        .form-group input,
-        .form-group select {
+        .form-control {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--glass-border);
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
             color: var(--light);
-            font-size: 1rem;
+            font-size: 16px;
             transition: all 0.3s;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-control:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
 
+        /* Botões */
         .btn {
-            width: 100%;
-            padding: 14px;
+            padding: 12px 24px;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            font-size: 1rem;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .btn:hover {
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
         }
 
         .btn-secondary {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
             border: 1px solid var(--glass-border);
-            margin-top: 10px;
         }
 
-        .switch-auth {
-            text-align: center;
-            margin-top: 20px;
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Sliders Customizados */
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
             color: rgba(255, 255, 255, 0.7);
         }
 
-        .switch-auth a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
         }
 
-        /* Dashboard */
-        .dashboard {
-            display: none;
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
         }
 
+        /* Grid de Botões do Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .dashboard-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dashboard-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .dashboard-btn-icon {
+            font-size: 32px;
+        }
+
+        /* Índices Principais */
+        .indices-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .index-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .index-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .index-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Container do Gráfico com Altura Fixa */
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Checkbox para múltipla seleção */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input {
+            cursor: pointer;
+        }
+
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 15px;
         }
 
         .user-info {
@@ -169,196 +271,13 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
+            background: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 24px;
             cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .user-avatar:hover {
-            transform: scale(1.1);
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 10px;
-            background: var(--glass);
-            color: var(--light);
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-btn:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        /* Key Metrics */
-        .key-metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .metric-card {
-            text-align: center;
-            padding: 25px;
-        }
-
-        .metric-value {
-            font-size: 3rem;
-            font-weight: 700;
-            margin: 10px 0;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .metric-label {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .metric-status {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
-
-        .status-good { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-        .status-warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-        .status-bad { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-
-        /* Daily Questionnaire */
-        .questionnaire-section {
-            margin-bottom: 30px;
-        }
-
-        .slider-container {
-            margin: 25px 0;
-        }
-
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .slider-values {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 5px;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.5);
-        }
-
-        .ai-analysis {
-            background: rgba(6, 182, 212, 0.1);
-            border-left: 4px solid var(--accent);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .ai-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* Dashboard Charts */
-        .chart-container {
-            position: relative;
-            height: 400px;
-            max-height: 400px;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .chart-filters {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 8px 16px;
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            background: transparent;
-            color: var(--light);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .filter-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .variable-selector {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .variable-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 12px;
-            background: var(--glass);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .variable-checkbox input {
-            accent-color: var(--primary);
-        }
-
-        .variable-checkbox.active {
-            background: var(--primary);
+            border: 2px solid var(--glass-border);
         }
 
         /* Modal */
@@ -371,679 +290,632 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
-            justify-content: center;
             align-items: center;
-            padding: 20px;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
         }
 
         .modal-content {
-            max-width: 600px;
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
             max-height: 80vh;
             overflow-y: auto;
         }
 
-        .close-modal {
-            float: right;
-            font-size: 2rem;
-            cursor: pointer;
-            color: rgba(255, 255, 255, 0.7);
+        /* IA Analysis Box */
+        .ai-analysis {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
         }
 
-        .close-modal:hover {
-            color: var(--light);
-        }
-
-        @media (max-width: 768px) {
-            .charts-section {
-                grid-template-columns: 1fr;
-            }
-            
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .nav-buttons {
-                justify-content: center;
-            }
-            
-            .key-metrics {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .hidden { display: none !important; }
-        
-        /* Resume Modal Styles */
-        .resume-content {
-            line-height: 1.6;
-        }
-        .resume-content h3 {
-            color: var(--accent);
-            margin: 20px 0 10px;
-        }
-        .resume-content ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-        .resume-content p {
+        .ai-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
             margin-bottom: 10px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .indices-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Auth Screen -->
-    <div id="authScreen" class="auth-screen">
-        <div class="auth-container glass-card">
-            <div class="logo">
-                <div class="logo-icon">🧬</div>
-                <h1>Synthonia AI</h1>
-                <p style="color: rgba(255,255,255,0.7); margin-top: 10px;">Recuperação & Performance Inteligente</p>
+    <!-- Tela de Login/Cadastro -->
+    <div id="authScreen" class="screen active">
+        <div class="container" style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+            <div class="glass-card" style="width: 100%; max-width: 450px;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">🏆</div>
+                    <h1 style="margin-bottom: 10px;">Synthonia AI</h1>
+                    <p style="color: rgba(255,255,255,0.7);">Recuperação & Performance</p>
+                </div>
+
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="seu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Senha</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="••••••">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="login()">Entrar</button>
+                    <p style="text-align: center; margin-top: 20px;">
+                        Não tem conta? <a href="#" style="color: var(--primary);" onclick="showRegister()">Cadastre-se</a>
+                    </p>
+                </div>
+
+                <div id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" id="regName" class="form-control" placeholder="Seu nome">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" id="regEmail" class="form-control" placeholder="seu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar E-mail</label>
+                        <input type="email" id="regEmailConfirm" class="form-control" placeholder="confirme seu email">
+                    </div>
+                    <div class="form-group">
+                        <label>Senha</label>
+                        <input type="password" id="regPassword" class="form-control" placeholder="••••••">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar Senha</label>
+                        <input type="password" id="regPasswordConfirm" class="form-control" placeholder="confirme sua senha">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="register()">Cadastrar</button>
+                    <p style="text-align: center; margin-top: 20px;">
+                        Já tem conta? <a href="#" style="color: var(--primary);" onclick="showLogin()">Faça login</a>
+                    </p>
+                </div>
             </div>
-
-            <!-- Login Form -->
-            <form id="loginForm">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="loginEmail" required placeholder="seu@email.com">
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn">Entrar</button>
-                <div class="switch-auth">
-                    Não tem conta? <a href="#" onclick="showRegister()">Cadastre-se</a>
-                </div>
-            </form>
-
-            <!-- Register Form -->
-            <form id="registerForm" class="hidden">
-                <div class="form-group">
-                    <label>Nome Completo</label>
-                    <input type="text" id="regName" required placeholder="Seu nome">
-                </div>
-                <div class="form-group">
-                    <label>Data de Nascimento</label>
-                    <input type="date" id="regBirthDate" required>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="regEmail" required placeholder="seu@email.com">
-                </div>
-                <div class="form-group">
-                    <label>Confirmar Email</label>
-                    <input type="email" id="regEmailConfirm" required placeholder="confirme seu email">
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="regPassword" required placeholder="mínimo 6 caracteres" minlength="6">
-                </div>
-                <div class="form-group">
-                    <label>Confirmar Senha</label>
-                    <input type="password" id="regPasswordConfirm" required placeholder="confirme sua senha" minlength="6">
-                </div>
-                <div class="form-group">
-                    <label>Papel</label>
-                    <select id="regRole">
-                        <option value="athlete">Atleta</option>
-                        <option value="coach">Treinador</option>
-                        <option value="physiotherapist">Fisioterapeuta</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">Cadastrar</button>
-                <div class="switch-auth">
-                    Já tem conta? <a href="#" onclick="showLogin()">Faça login</a>
-                </div>
-            </form>
         </div>
     </div>
 
-    <!-- Dashboard -->
-    <div id="dashboard" class="dashboard container">
-        <div class="header">
-            <div class="user-info">
-                <div class="user-avatar" onclick="openResumeModal()" id="userAvatar">👤</div>
+    <!-- Tela Principal (Dashboard) -->
+    <div id="mainScreen" class="screen">
+        <div class="container">
+            <!-- Header -->
+            <div class="header glass-card">
                 <div>
-                    <h2 id="userName">Usuário</h2>
-                    <p id="userRole" style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">Atleta</p>
+                    <h1>Olá, <span id="userName">Atleta</span>! 👋</h1>
+                    <p style="color: rgba(255,255,255,0.7);">Pronto para otimizar sua performance?</p>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar" onclick="openCurriculum()">👤</div>
+                    <button class="btn btn-danger" onclick="logout()">Sair</button>
                 </div>
             </div>
-            <div class="nav-buttons">
-                <button class="nav-btn" onclick="showSection('recovery')">💆 Recuperação</button>
-                <button class="nav-btn" onclick="showSection('training')">🏋️ Treino</button>
-                <button class="nav-btn" onclick="showSection('rehab')">🩹 Reab</button>
-                <button class="nav-btn" onclick="showSection('numerology')">🔢 Numerologia</button>
-                <button class="nav-btn" onclick="showSection('ai-analysis')">🤖 Análise IA</button>
-                <button class="nav-btn" onclick="editProfile()">✏️ Editar</button>
-                <button class="nav-btn" onclick="logout()" style="background: rgba(239, 68, 68, 0.2);">🚪 Sair</button>
+
+            <!-- Índices Principais -->
+            <div class="indices-container">
+                <div class="index-card">
+                    <div class="index-label">Índice de Recuperação</div>
+                    <div class="index-value" id="recoveryIndex" style="color: var(--success);">--</div>
+                    <div style="font-size: 12px; color: rgba(255,255,255,0.6);">0-100</div>
+                </div>
+                <div class="index-card">
+                    <div class="index-label">Prontidão para Treino</div>
+                    <div class="index-value" id="readinessIndex" style="color: var(--accent);">--</div>
+                    <div style="font-size: 12px; color: rgba(255,255,255,0.6);">0-100</div>
+                </div>
+                <div class="index-card">
+                    <div class="index-label">Intensidade Recomendada</div>
+                    <div class="index-value" id="intensityIndex" style="color: var(--warning);">--</div>
+                    <div style="font-size: 12px; color: rgba(255,255,255,0.6);">% do máximo</div>
+                </div>
+            </div>
+
+            <!-- Análise de IA -->
+            <div class="ai-analysis glass-card">
+                <div class="ai-title">
+                    <span>🤖</span> Análise de IA - Hoje
+                </div>
+                <div id="aiAnalysisText">
+                    Preencha o questionário diário para receber sua análise personalizada.
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="dashboard-grid">
+                <div class="dashboard-btn" onclick="openQuestionnaire()">
+                    <div class="dashboard-btn-icon">📋</div>
+                    <div>Questionário Diário</div>
+                </div>
+                <div class="dashboard-btn" onclick="alert('Funcionalidade de Treino em desenvolvimento')">
+                    <div class="dashboard-btn-icon">💪</div>
+                    <div>Treino</div>
+                </div>
+                <div class="dashboard-btn" onclick="alert('Funcionalidade de Reab em desenvolvimento')">
+                    <div class="dashboard-btn-icon">🔄</div>
+                    <div>Reab</div>
+                </div>
+                <div class="dashboard-btn" onclick="alert('Funcionalidade de Numerologia em desenvolvimento')">
+                    <div class="dashboard-btn-icon">🔢</div>
+                    <div>Numerologia</div>
+                </div>
+                <div class="dashboard-btn" onclick="generateAIAnalysis()">
+                    <div class="dashboard-btn-icon">🧠</div>
+                    <div>Análise IA</div>
+                </div>
+                <div class="dashboard-btn" onclick="editProfile()">
+                    <div class="dashboard-btn-icon">✏️</div>
+                    <div>Editar Perfil</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Gráfico -->
+            <div class="glass-card">
+                <h2 style="margin-bottom: 20px;">📊 Dashboard de Variáveis</h2>
+                
+                <div style="margin-bottom: 15px;">
+                    <strong>Selecione as variáveis para comparar:</strong>
+                    <div class="checkbox-group" id="variableCheckboxes">
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="TSS" checked> TSS
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="TRIMP" checked> TRIMP
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="ATL" checked> ATL
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="CTL" checked> CTL
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="TSB" checked> TSB
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Monotonia"> Monotonia
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Prontidao"> Prontidão
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Dor"> Dor
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" value="Sono"> Sono
+                        </label>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <strong>Período:</strong>
+                    <div style="display: inline-flex; gap: 10px; margin-left: 10px;">
+                        <button class="btn btn-secondary" onclick="updateChart(7)">7 dias</button>
+                        <button class="btn btn-secondary" onclick="updateChart(14)">14 dias</button>
+                        <button class="btn btn-secondary" onclick="updateChart(21)">21 dias</button>
+                        <button class="btn btn-secondary" onclick="updateChart(28)">28 dias</button>
+                    </div>
+                </div>
+
+                <!-- Container do Gráfico com Altura Fixa -->
+                <div class="chart-wrapper">
+                    <canvas id="metricsChart"></canvas>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Key Metrics -->
-        <div class="key-metrics">
-            <div class="glass-card metric-card">
-                <div class="metric-label">Índice de Recuperação</div>
-                <div class="metric-value" id="recoveryIndex">--</div>
-                <div class="metric-status status-good" id="recoveryStatus">Aguardando dados</div>
+    <!-- Modal de Currículo -->
+    <div id="curriculumModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">📄 Meu Currículo</h2>
+            <div id="curriculumContent">
+                <p><strong>Nome:</strong> <span id="currName">-</span></p>
+                <p><strong>Email:</strong> <span id="currEmail">-</span></p>
+                <p><strong>Data de Cadastro:</strong> <span id="currDate">-</span></p>
+                <hr style="border-color: rgba(255,255,255,0.2); margin: 15px 0;">
+                <p style="color: rgba(255,255,255,0.7);">
+                    Atleta focado em otimização de performance e recuperação muscular através de ciência de dados e IA.
+                </p>
             </div>
-            <div class="glass-card metric-card">
-                <div class="metric-label">Prontidão para o Treino</div>
-                <div class="metric-value" id="readinessIndex">--</div>
-                <div class="metric-status" id="readinessStatus">Aguardando dados</div>
-            </div>
-            <div class="glass-card metric-card">
-                <div class="metric-label">Intensidade Recomendada</div>
-                <div class="metric-value" id="intensityIndex">--</div>
-                <div class="metric-status" id="intensityStatus">Aguardando dados</div>
-            </div>
+            <button class="btn btn-secondary" style="margin-top: 20px;" onclick="closeModal('curriculumModal')">Fechar</button>
         </div>
+    </div>
 
-        <!-- Daily Questionnaire -->
-        <div class="glass-card questionnaire-section">
-            <h2 style="margin-bottom: 20px;">📊 Questionário Diário</h2>
-            <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">
-                Avalie como você está se sentindo hoje (0 = Muito Ruim, 10 = Excelente)
-            </p>
-
+    <!-- Modal de Questionário -->
+    <div id="questionnaireModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">📋 Questionário Diário</h2>
+            
             <div class="slider-container">
-                <div class="slider-label">
-                    <span>😴 Qualidade do Sono</span>
-                    <span id="sleepValue">5</span>
-                </div>
-                <input type="range" id="sleep" min="0" max="10" value="5" step="1" oninput="updateSliderValue('sleep', this.value)">
-                <div class="slider-values">
+                <label>Qualidade do Sono (0-10)</label>
+                <input type="range" id="sleepScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
                     <span>Péssimo</span>
-                    <span>Regular</span>
+                    <span id="sleepValue">5</span>
                     <span>Excelente</span>
                 </div>
             </div>
 
             <div class="slider-container">
-                <div class="slider-label">
-                    <span>⚡ Nível de Energia</span>
-                    <span id="energyValue">5</span>
-                </div>
-                <input type="range" id="energy" min="0" max="10" value="5" step="1" oninput="updateSliderValue('energy', this.value)">
-                <div class="slider-values">
-                    <span>Exausto</span>
-                    <span>Normal</span>
-                    <span>Energético</span>
+                <label>Nível de Fadiga (0-10)</label>
+                <input type="range" id="fatigueScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
+                    <span>Nenhuma</span>
+                    <span id="fatigueValue">5</span>
+                    <span>Extrema</span>
                 </div>
             </div>
 
             <div class="slider-container">
-                <div class="slider-label">
-                    <span>😖 Dor Muscular</span>
-                    <span id="painValue">5</span>
-                </div>
-                <input type="range" id="pain" min="0" max="10" value="5" step="1" oninput="updateSliderValue('pain', this.value)">
-                <div class="slider-values">
+                <label>Dor Muscular (0-10)</label>
+                <input type="range" id="painScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
                     <span>Sem dor</span>
-                    <span>Desconforto</span>
-                    <span>Muita dor</span>
+                    <span id="painValue">5</span>
+                    <span>Insuportável</span>
                 </div>
             </div>
 
             <div class="slider-container">
-                <div class="slider-label">
-                    <span>🧠 Estresse Mental</span>
-                    <span id="stressValue">5</span>
-                </div>
-                <input type="range" id="stress" min="0" max="10" value="5" step="1" oninput="updateSliderValue('stress', this.value)">
-                <div class="slider-values">
+                <label>Estresse (0-10)</label>
+                <input type="range" id="stressScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
                     <span>Relaxado</span>
-                    <span>Moderado</span>
-                    <span>Muito estressado</span>
+                    <span id="stressValue">5</span>
+                    <span>Muito Estressado</span>
                 </div>
             </div>
 
             <div class="slider-container">
-                <div class="slider-label">
-                    <span>🎯 Motivação para Treinar</span>
-                    <span id="motivationValue">5</span>
-                </div>
-                <input type="range" id="motivation" min="0" max="10" value="5" step="1" oninput="updateSliderValue('motivation', this.value)">
-                <div class="slider-values">
+                <label>Motivação (0-10)</label>
+                <input type="range" id="motivationScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
                     <span>Sem vontade</span>
-                    <span>Normal</span>
-                    <span>Muito motivado</span>
+                    <span id="motivationValue">5</span>
+                    <span>Motivado</span>
                 </div>
             </div>
 
             <div class="slider-container">
-                <div class="slider-label">
-                    <span>🔄 Perceived Recovery Status (PRS)</span>
-                    <span id="prsValue">5</span>
-                </div>
-                <input type="range" id="prs" min="0" max="10" value="5" step="1" oninput="updateSliderValue('prs', this.value)">
-                <div class="slider-values">
+                <label>TQR - Recuperação Percebida (0-10)</label>
+                <input type="range" id="tqrScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
                     <span>Não recuperado</span>
-                    <span>Parcial</span>
+                    <span id="tqrValue">5</span>
                     <span>Totalmente recuperado</span>
                 </div>
             </div>
 
             <div class="slider-container">
-                <div class="slider-label">
-                    <span>📈 Total Quality Recovery (TQR)</span>
-                    <span id="tqrValue">5</span>
-                </div>
-                <input type="range" id="tqr" min="0" max="10" value="5" step="1" oninput="updateSliderValue('tqr', this.value)">
-                <div class="slider-values">
-                    <span>Má recuperação</span>
-                    <span>Recuperação média</span>
-                    <span>Ótima recuperação</span>
+                <label>PRS - Status de Recuperação (0-10)</label>
+                <input type="range" id="prsScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
+                    <span>Muito mal</span>
+                    <span id="prsValue">5</span>
+                    <span>Excelente</span>
                 </div>
             </div>
 
             <div class="slider-container">
-                <div class="slider-label">
-                    <span>🏋️ Percepção de Esforço (PSE)</span>
-                    <span id="pseValue">5</span>
-                </div>
-                <input type="range" id="pse" min="0" max="10" value="5" step="1" oninput="updateSliderValue('pse', this.value)">
-                <div class="slider-values">
+                <label>PSE - Esforço Percebido no Último Treino (0-10)</label>
+                <input type="range" id="pseScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
                     <span>Muito leve</span>
-                    <span>Moderado</span>
-                    <span>Máximo esforço</span>
+                    <span id="pseValue">5</span>
+                    <span>Máximo</span>
                 </div>
             </div>
 
             <div class="slider-container">
-                <div class="slider-label">
-                    <span>📊 Volume de Treino Previsto (min)</span>
-                    <span id="volumeValue">60</span>
-                </div>
-                <input type="range" id="volume" min="0" max="180" value="60" step="5" oninput="updateSliderValue('volume', this.value)">
-                <div class="slider-values">
+                <label>Volume de Treino Hoje (minutos)</label>
+                <input type="range" id="volumeScore" min="0" max="120" value="30" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
                     <span>0 min</span>
-                    <span>60 min</span>
-                    <span>180 min</span>
+                    <span id="volumeValue">30</span>
+                    <span>120 min</span>
                 </div>
             </div>
 
-            <button class="btn" onclick="saveDailyData()" style="margin-top: 20px;">
-                💾 Salvar Dados do Dia
-            </button>
-
-            <div class="ai-analysis" id="aiAnalysis">
-                <div class="ai-title">
-                    <span>🤖</span>
-                    <span>Análise da IA - Synthonia</span>
-                </div>
-                <p id="aiText">Preencha o questionário acima para receber uma análise personalizada da IA sobre sua recuperação e recomendações para o treino de hoje.</p>
-            </div>
-        </div>
-
-        <!-- Charts Section -->
-        <div class="glass-card">
-            <h2 style="margin-bottom: 20px;">📈 Dashboard de Performance</h2>
-            
-            <div class="chart-filters">
-                <button class="filter-btn active" onclick="setTimeRange(7)">7 dias</button>
-                <button class="filter-btn" onclick="setTimeRange(14)">14 dias</button>
-                <button class="filter-btn" onclick="setTimeRange(21)">21 dias</button>
-                <button class="filter-btn" onclick="setTimeRange(28)">28 dias</button>
-            </div>
-
-            <div class="variable-selector">
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="recoveryIndex" checked onchange="updateChart()"> Recuperação
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="readinessIndex" checked onchange="updateChart()"> Prontidão
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="sleep" onchange="updateChart()"> Sono
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="energy" onchange="updateChart()"> Energia
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="pain" onchange="updateChart()"> Dor
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="stress" onchange="updateChart()"> Estresse
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="motivation" onchange="updateChart()"> Motivação
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="prs" onchange="updateChart()"> PRS
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="tqr" onchange="updateChart()"> TQR
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="pse" onchange="updateChart()"> PSE
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="atl" onchange="updateChart()"> ATL
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="ctl" onchange="updateChart()"> CTL
-                </label>
-                <label class="variable-checkbox">
-                    <input type="checkbox" value="tsb" onchange="updateChart()"> TSB
-                </label>
-            </div>
-
-            <div class="chart-container">
-                <canvas id="performanceChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Resume Modal -->
-    <div id="resumeModal" class="modal">
-        <div class="glass-card modal-content">
-            <span class="close-modal" onclick="closeResumeModal()">&times;</span>
-            <h2 style="margin-bottom: 20px;">📄 Currículo Profissional</h2>
-            <div class="resume-content" id="resumeContent">
-                <p><strong>Nome:</strong> <span id="resumeName">-</span></p>
-                <p><strong>Email:</strong> <span id="resumeEmail">-</span></p>
-                <p><strong>Função:</strong> <span id="resumeRole">-</span></p>
-                
-                <h3>🎯 Objetivos</h3>
-                <p>Otimizar a recuperação muscular e maximizar a performance esportiva através de monitoramento contínuo e análise de dados baseada em IA.</p>
-                
-                <h3>📊 Métricas Monitoradas</h3>
-                <ul>
-                    <li>TSS (Training Stress Score)</li>
-                    <li>TRIMP (Training Impulse)</li>
-                    <li>PSE/PSR (Perceived Exertion/Recovery)</li>
-                    <li>ATL/CTL/TSB (Agudeza/Carga/Fadiga)</li>
-                    <li>Monotonia e Prontidão Diária</li>
-                    <li>Hooper Index e TQR</li>
-                </ul>
-                
-                <h3>🏆 Conquistas</h3>
-                <ul>
-                    <li>Implementação de sistema de monitoramento 24/7</li>
-                    <li>Redução de lesões em até 40%</li>
-                    <li>Otimização de周期 de treino e recuperação</li>
-                </ul>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveQuestionnaire()">Salvar</button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('questionnaireModal')">Cancelar</button>
             </div>
         </div>
     </div>
 
     <script>
-        // State
+        // === SISTEMA DE AUTENTICAÇÃO LOCAL ===
         let currentUser = null;
-        let timeRange = 7;
-        let chartInstance = null;
-        let dailyHistory = [];
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
+        function init() {
             const savedUser = localStorage.getItem('synthonia_user');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
-                showDashboard();
+                showMainScreen();
+            } else {
+                document.getElementById('authScreen').classList.add('active');
+                document.getElementById('mainScreen').classList.remove('active');
             }
-            
-            // Load history
-            const savedHistory = localStorage.getItem('synthonia_history_' + (currentUser?.email || 'guest'));
-            if (savedHistory) {
-                dailyHistory = JSON.parse(savedHistory);
-                updateDashboard();
-            }
-            
-            initChart();
-        });
-
-        // Auth Functions
-        function showRegister() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registerForm').classList.remove('hidden');
         }
 
         function showLogin() {
-            document.getElementById('registerForm').classList.add('hidden');
-            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
         }
 
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            const users = JSON.parse(localStorage.getItem('synthonia_users') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
-            
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('synthonia_user', JSON.stringify(user));
-                showDashboard();
-            } else {
-                alert('Email ou senha inválidos!');
-            }
-        });
+        function showRegister() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+        }
 
-        document.getElementById('registerForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('regEmail').value;
-            const emailConfirm = document.getElementById('regEmailConfirm').value;
+        function register() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const emailConfirm = document.getElementById('regEmailConfirm').value.trim();
             const password = document.getElementById('regPassword').value;
             const passwordConfirm = document.getElementById('regPasswordConfirm').value;
-            
-            if (email !== emailConfirm) {
-                alert('Os emails não coincidem!');
+
+            if (!name || !email || !password) {
+                alert('Preencha todos os campos!');
                 return;
             }
-            
+
+            if (email !== emailConfirm) {
+                alert('Os e-mails não coincidem!');
+                return;
+            }
+
             if (password !== passwordConfirm) {
                 alert('As senhas não coincidem!');
                 return;
             }
-            
-            const users = JSON.parse(localStorage.getItem('synthonia_users') || '[]');
-            
-            if (users.find(u => u.email === email)) {
-                alert('Email já cadastrado!');
+
+            if (password.length < 6) {
+                alert('A senha deve ter pelo menos 6 caracteres!');
                 return;
             }
-            
+
+            // Verificar se usuário já existe
+            const users = JSON.parse(localStorage.getItem('synthonia_users') || '[]');
+            if (users.find(u => u.email === email)) {
+                alert('Este e-mail já está cadastrado!');
+                return;
+            }
+
             const newUser = {
-                email: email,
-                password: password,
-                name: document.getElementById('regName').value,
-                birthDate: document.getElementById('regBirthDate').value,
-                role: document.getElementById('regRole').value,
+                id: Date.now().toString(),
+                name,
+                email,
+                password,
                 createdAt: new Date().toISOString()
             };
-            
+
             users.push(newUser);
             localStorage.setItem('synthonia_users', JSON.stringify(users));
             
             alert('Cadastro realizado com sucesso! Faça login.');
             showLogin();
-        });
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            const users = JSON.parse(localStorage.getItem('synthonia_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (!user) {
+                alert('E-mail ou senha inválidos!');
+                return;
+            }
+
+            currentUser = user;
+            localStorage.setItem('synthonia_user', JSON.stringify(user));
+            showMainScreen();
+        }
 
         function logout() {
-            localStorage.removeItem('synthonia_user');
             currentUser = null;
-            document.getElementById('dashboard').style.display = 'none';
-            document.getElementById('authScreen').style.display = 'flex';
+            localStorage.removeItem('synthonia_user');
+            document.getElementById('mainScreen').classList.remove('active');
+            document.getElementById('authScreen').classList.add('active');
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
         }
 
-        function showDashboard() {
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userRole').textContent = 
-                currentUser.role === 'athlete' ? 'Atleta' : 
-                currentUser.role === 'coach' ? 'Treinador' : 'Fisioterapeuta';
-            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        function showMainScreen() {
+            document.getElementById('authScreen').classList.remove('active');
+            document.getElementById('mainScreen').classList.add('active');
+            document.getElementById('userName').textContent = currentUser.name.split(' ')[0];
             
-            // Update resume modal
-            document.getElementById('resumeName').textContent = currentUser.name;
-            document.getElementById('resumeEmail').textContent = currentUser.email;
-            document.getElementById('resumeRole').textContent = 
-                currentUser.role === 'athlete' ? 'Atleta' : 
-                currentUser.role === 'coach' ? 'Treinador' : 'Fisioterapeuta';
-            
-            updateDashboard();
+            // Carregar dados e atualizar dashboard
+            loadDashboardData();
+            updateChart(7);
         }
 
-        // Slider Updates
-        function updateSliderValue(id, value) {
-            document.getElementById(id + 'Value').textContent = value;
-            generateAIAnalysis();
-        }
-
-        // AI Analysis
-        function generateAIAnalysis() {
-            const sleep = parseInt(document.getElementById('sleep').value);
-            const energy = parseInt(document.getElementById('energy').value);
-            const pain = parseInt(document.getElementById('pain').value);
-            const stress = parseInt(document.getElementById('stress').value);
-            const motivation = parseInt(document.getElementById('motivation').value);
-            const prs = parseInt(document.getElementById('prs').value);
-            const tqr = parseInt(document.getElementById('tqr').value);
-            
-            const recoveryScore = (sleep + prs + tqr + energy) / 4;
-            const readinessScore = (motivation + energy - stress - pain) / 4 + 5;
-            
-            let analysis = `📊 <strong>Análise em Tempo Real:</strong><br><br>`;
-            analysis += `• <strong>Qualidade do Sono:</strong> ${sleep}/10 - `;
-            if (sleep >= 8) analysis += 'Excelente! Seu corpo está se recuperando bem durante a noite.<br>';
-            else if (sleep >= 6) analysis += 'Bom, mas pode melhorar. Tente manter uma rotina regular.<br>';
-            else analysis += 'Atenção! Sono insuficiente pode prejudicar sua recuperação.<br>';
-            
-            analysis += `• <strong>Nível de Dor:</strong> ${pain}/10 - `;
-            if (pain <= 3) analysis += 'Baixa dor, ótimo para treinar.<br>';
-            else if (pain <= 6) analysis += 'Dor moderada. Considere reduzir intensidade.<br>';
-            else analysis += 'Dor elevada. Recomenda-se descanso ou recuperação ativa.<br>';
-            
-            analysis += `• <strong>Motivação:</strong> ${motivation}/10 - `;
-            if (motivation >= 8) analysis += 'Alta motivação! Aproveite para treinos intensos.<br>';
-            else if (motivation >= 5) analysis += 'Motivação normal. Mantenha a consistência.<br>';
-            else analysis += 'Baixa motivação. Talvez seja um sinal de overtraining.<br>';
-            
-            analysis += `<br>🎯 <strong>Recomendação:</strong> `;
-            if (recoveryScore >= 7 && readinessScore >= 7) {
-                analysis += 'Você está em ótimas condições! Pode realizar um treino de alta intensidade hoje.';
-            } else if (recoveryScore >= 5 && readinessScore >= 5) {
-                analysis += 'Condições razoáveis. Mantenha um treino moderado e foque na técnica.';
-            } else {
-                analysis += 'Sinais de fadiga acumulada. Priorize recuperação ativa ou descanso completo.';
-            }
-            
-            document.getElementById('aiText').innerHTML = analysis;
-        }
-
-        // Save Daily Data
-        function saveDailyData() {
-            const data = {
-                date: new Date().toISOString().split('T')[0],
-                sleep: parseInt(document.getElementById('sleep').value),
-                energy: parseInt(document.getElementById('energy').value),
-                pain: parseInt(document.getElementById('pain').value),
-                stress: parseInt(document.getElementById('stress').value),
-                motivation: parseInt(document.getElementById('motivation').value),
-                prs: parseInt(document.getElementById('prs').value),
-                tqr: parseInt(document.getElementById('tqr').value),
-                pse: parseInt(document.getElementById('pse').value),
-                volume: parseInt(document.getElementById('volume').value)
-            };
-            
-            // Calculate metrics
-            data.recoveryIndex = Math.round((data.sleep + data.prs + data.tqr + data.energy) / 4);
-            data.readinessIndex = Math.round(Math.min(10, Math.max(0, (data.motivation + data.energy - data.stress - data.pain) / 4 + 5)));
-            data.intensityIndex = data.readinessIndex >= 7 ? 'Alta' : data.readinessIndex >= 5 ? 'Moderada' : 'Baixa';
-            
-            // Calculate advanced metrics
-            const avgPSE = dailyHistory.length > 0 ? 
-                dailyHistory.reduce((sum, d) => sum + d.pse, 0) / dailyHistory.length : 5;
-            data.atl = Math.round(data.pse * data.volume / 60 * 0.4);
-            data.ctl = Math.round(dailyHistory.reduce((sum, d) => sum + (d.pse * d.volume / 60 * 0.4), 0) / Math.max(1, dailyHistory.length) * 0.5);
-            data.tsb = data.ctl - data.atl;
-            
-            // Check for duplicate date
-            const existingIndex = dailyHistory.findIndex(d => d.date === data.date);
-            if (existingIndex >= 0) {
-                dailyHistory[existingIndex] = data;
-            } else {
-                dailyHistory.unshift(data);
-            }
-            
-            // Keep only last 28 days
-            if (dailyHistory.length > 28) dailyHistory.pop();
-            
-            localStorage.setItem('synthonia_history_' + currentUser.email, JSON.stringify(dailyHistory));
-            
-            alert('Dados salvos com sucesso!');
-            updateDashboard();
-            updateChart();
-        }
-
-        // Update Dashboard
-        function updateDashboard() {
-            if (dailyHistory.length === 0) return;
-            
-            const today = dailyHistory[0];
-            document.getElementById('recoveryIndex').textContent = today.recoveryIndex + '/10';
-            document.getElementById('readinessIndex').textContent = today.readinessIndex + '/10';
-            document.getElementById('intensityIndex').textContent = today.intensityIndex;
-            
-            const recoveryStatus = document.getElementById('recoveryStatus');
-            recoveryStatus.className = 'metric-status ' + 
-                (today.recoveryIndex >= 7 ? 'status-good' : today.recoveryIndex >= 5 ? 'status-warning' : 'status-bad');
-            recoveryStatus.textContent = today.recoveryIndex >= 7 ? 'Ótima recuperação' : 
-                today.recoveryIndex >= 5 ? 'Recuperação regular' : 'Recuperação ruim';
-            
-            const readinessStatus = document.getElementById('readinessStatus');
-            readinessStatus.className = 'metric-status ' + 
-                (today.readinessIndex >= 7 ? 'status-good' : today.readinessIndex >= 5 ? 'status-warning' : 'status-bad');
-            readinessStatus.textContent = today.readinessIndex >= 7 ? 'Pronto para treinar' : 
-                today.readinessIndex >= 5 ? 'Prontidão moderada' : 'Baixa prontidão';
-            
-            const intensityStatus = document.getElementById('intensityStatus');
-            intensityStatus.className = 'metric-status ' + 
-                (today.intensityIndex === 'Alta' ? 'status-good' : today.intensityIndex === 'Moderada' ? 'status-warning' : 'status-bad');
-            intensityStatus.textContent = today.intensityIndex === 'Alta' ? 'Treino intenso recomendado' : 
-                today.intensityIndex === 'Moderada' ? 'Treino moderado' : 'Descanso ou recuperação';
-        }
-
-        // Chart Functions
+        // === DASHBOARD ===
         let chartInstance = null;
-        
-        function initChart() {
-            const canvas = document.getElementById('performanceChart');
+
+        function loadDashboardData() {
+            const data = JSON.parse(localStorage.getItem('synthonia_data') || '[]');
+            
+            if (data.length > 0) {
+                const latest = data[data.length - 1];
+                
+                // Calcular índices
+                const recovery = Math.round((latest.sleep + latest.tqr + latest.prs) / 3 * 10);
+                const readiness = Math.round((latest.motivation - latest.fatigue - latest.stress + 10) / 3 * 10);
+                const intensity = Math.max(0, Math.min(100, readiness + 20));
+
+                document.getElementById('recoveryIndex').textContent = recovery;
+                document.getElementById('readinessIndex').textContent = readiness;
+                document.getElementById('intensityIndex').textContent = intensity + '%';
+
+                // Cores dinâmicas
+                document.getElementById('recoveryIndex').style.color = recovery >= 70 ? 'var(--success)' : recovery >= 40 ? 'var(--warning)' : 'var(--danger)';
+                document.getElementById('readinessIndex').style.color = readiness >= 70 ? 'var(--success)' : readiness >= 40 ? 'var(--warning)' : 'var(--danger)';
+            }
+        }
+
+        function generateAIAnalysis() {
+            const data = JSON.parse(localStorage.getItem('synthonia_data') || '[]');
+            
+            if (data.length === 0) {
+                document.getElementById('aiAnalysisText').innerHTML = 'Nenhum dado disponível. Preencha o questionário diário.';
+                return;
+            }
+
+            const latest = data[data.length - 1];
+            const recovery = Math.round((latest.sleep + latest.tqr + latest.prs) / 3 * 10);
+            const readiness = Math.round((latest.motivation - latest.fatigue - latest.stress + 10) / 3 * 10);
+
+            let analysis = '<strong>Análise do Dia:</strong><br><br>';
+            
+            if (recovery >= 70 && readiness >= 70) {
+                analysis += '✅ <strong>Condição Ótima!</strong> Você está bem recuperado e pronto para treinos de alta intensidade. Aproveite para bater recordes.';
+            } else if (recovery >= 50 && readiness >= 50) {
+                analysis += '⚠️ <strong>Condição Regular.</strong> Mantenha o treino planejado, mas fique atento aos sinais de fadiga. Hidrate-se bem.';
+            } else {
+                analysis += '🔴 <strong>Atenção Necessária!</strong> Sua recuperação está abaixo do ideal. Considere reduzir volume/intensidade ou fazer um dia de descanso ativo.';
+            }
+
+            if (latest.pain >= 7) {
+                analysis += '<br><br>🚨 <strong>Dor Elevada Detectada:</strong> Avalie a possibilidade de lesão. Consulte um profissional se persistir.';
+            }
+
+            if (latest.sleep <= 4) {
+                analysis += '<br><br>😴 <strong>Sono Insuficiente:</strong> Priorize 7-9 horas de sono hoje para otimizar a recuperação.';
+            }
+
+            document.getElementById('aiAnalysisText').innerHTML = analysis;
+        }
+
+        // === GRÁFICO ===
+        function updateChart(days) {
+            const canvas = document.getElementById('metricsChart');
             if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            
-            // Destroy existing chart if any
+
+            // Destruir gráfico anterior se existir
             if (chartInstance) {
                 chartInstance.destroy();
+                chartInstance = null;
             }
+
+            const ctx = canvas.getContext('2d');
+            const allData = JSON.parse(localStorage.getItem('synthonia_data') || '[]');
             
+            // Pegar últimos 'days' registros
+            const recentData = allData.slice(-days);
+            
+            if (recentData.length === 0) {
+                // Dados simulados para demonstração
+                const labels = [];
+                for (let i = days; i > 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    labels.push(date.toLocaleDateString('pt-BR', {day: '2digit', month: '2digit'}));
+                }
+                
+                renderChart(ctx, labels, null);
+                return;
+            }
+
+            const labels = recentData.map(d => new Date(d.date).toLocaleDateString('pt-BR', {day: '2digit', month: '2digit'}));
+            
+            renderChart(ctx, labels, recentData);
+        }
+
+        function renderChart(ctx, labels, data) {
+            // Obter variáveis selecionadas
+            const selectedVars = Array.from(document.querySelectorAll('#variableCheckboxes input:checked'))
+                .map(cb => cb.value);
+
+            if (selectedVars.length === 0) {
+                alert('Selecione pelo menos uma variável!');
+                return;
+            }
+
+            const datasets = [];
+            const colors = {
+                'TSS': '#6366f1',
+                'TRIMP': '#8b5cf6',
+                'ATL': '#06b6d4',
+                'CTL': '#10b981',
+                'TSB': '#f59e0b',
+                'Monotonia': '#ef4444',
+                'Prontidao': '#ec4899',
+                'Dor': '#f97316',
+                'Sono': '#3b82f6'
+            };
+
+            selectedVars.forEach(variable => {
+                let dataValues;
+                
+                if (data && data.length > 0) {
+                    dataValues = data.map(entry => {
+                        if (variable === 'TSS') return Math.round(entry.pse * entry.volume / 10);
+                        if (variable === 'TRIMP') return Math.round(entry.pse * entry.volume * 0.5);
+                        if (variable === 'ATL') return Math.round(entry.pse * 0.8);
+                        if (variable === 'CTL') return Math.round(entry.pse * 0.5);
+                        if (variable === 'TSB') return Math.round(entry.ctl - entry.atl);
+                        if (variable === 'Monotonia') return Math.round((entry.fatigue + entry.stress) / 2);
+                        if (variable === 'Prontidao') return Math.round((entry.motivation - entry.fatigue + 10) / 2);
+                        if (variable === 'Dor') return entry.pain;
+                        if (variable === 'Sono') return entry.sleep;
+                        return 0;
+                    });
+                } else {
+                    // Dados aleatórios para demonstração
+                    dataValues = labels.map(() => Math.floor(Math.random() * 80) + 20);
+                }
+
+                datasets.push({
+                    label: variable,
+                    data: dataValues,
+                    borderColor: colors[variable] || '#6366f1',
+                    backgroundColor: (colors[variable] || '#6366f1') + '20',
+                    tension: 0.4,
+                    fill: false
+                });
+            });
+
             chartInstance = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: [],
-                    datasets: []
-                },
+                data: { labels, datasets },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     plugins: {
                         legend: {
-                            labels: { color: 'white' }
+                            labels: { color: '#f8fafc' }
                         }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 10,
+                        x: {
                             ticks: { color: 'rgba(255,255,255,0.7)' },
                             grid: { color: 'rgba(255,255,255,0.1)' }
                         },
-                        x: {
+                        y: {
                             ticks: { color: 'rgba(255,255,255,0.7)' },
                             grid: { color: 'rgba(255,255,255,0.1)' }
                         }
@@ -1052,69 +924,98 @@
             });
         }
 
-        function setTimeRange(days) {
-            timeRange = days;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.includes(days));
-            });
-            updateChart();
+        // === QUESTIONÁRIO ===
+        function openQuestionnaire() {
+            document.getElementById('questionnaireModal').classList.add('active');
         }
 
-        function updateChart() {
-            if (!chartInstance || dailyHistory.length === 0) return;
-            
-            const selectedVars = Array.from(document.querySelectorAll('.variable-checkbox input:checked'))
-                .map(cb => cb.value);
-            
-            const filteredData = dailyHistory.slice(0, timeRange);
-            const labels = filteredData.map(d => {
-                const date = new Date(d.date);
-                return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-            });
-            
-            const colors = [
-                '#6366f1', '#8b5cf6', '#06b6d4', '#10b981', 
-                '#f59e0b', '#ef4444', '#ec4899', '#14b8a6'
-            ];
-            
-            const datasets = selectedVars.map((variable, index) => ({
-                label: variable.toUpperCase(),
-                data: filteredData.map(d => d[variable] || 0),
-                borderColor: colors[index % colors.length],
-                backgroundColor: colors[index % colors.length] + '20',
-                tension: 0.4,
-                fill: false
-            }));
-            
-            chartInstance.data.labels = labels;
-            chartInstance.data.datasets = datasets;
-            chartInstance.update();
+        function updateSliderValue(slider) {
+            const valueSpan = document.getElementById(slider.id.replace('Score', 'Value'));
+            if (valueSpan) {
+                valueSpan.textContent = slider.value;
+            }
         }
 
-        // Modal Functions
-        function openResumeModal() {
-            document.getElementById('resumeModal').style.display = 'flex';
+        function saveQuestionnaire() {
+            const newData = {
+                date: new Date().toISOString(),
+                sleep: parseInt(document.getElementById('sleepScore').value),
+                fatigue: parseInt(document.getElementById('fatigueScore').value),
+                pain: parseInt(document.getElementById('painScore').value),
+                stress: parseInt(document.getElementById('stressScore').value),
+                motivation: parseInt(document.getElementById('motivationScore').value),
+                tqr: parseInt(document.getElementById('tqrScore').value),
+                prs: parseInt(document.getElementById('prsScore').value),
+                pse: parseInt(document.getElementById('pseScore').value),
+                volume: parseInt(document.getElementById('volumeScore').value),
+                atl: 0,
+                ctl: 0,
+                tsb: 0
+            };
+
+            // Calcular ATL, CTL, TSB acumulados
+            const allData = JSON.parse(localStorage.getItem('synthonia_data') || '[]');
+            newData.atl = Math.round(newData.pse * 0.8);
+            
+            if (allData.length > 0) {
+                const prev = allData[allData.length - 1];
+                newData.ctl = Math.round(prev.ctl * 0.95 + newData.pse * 0.05);
+                newData.tsb = Math.round(newData.ctl - newData.atl);
+            } else {
+                newData.ctl = newData.atl;
+                newData.tsb = 0;
+            }
+
+            allData.push(newData);
+            localStorage.setItem('synthonia_data', JSON.stringify(allData));
+
+            closeModal('questionnaireModal');
+            loadDashboardData();
+            generateAIAnalysis();
+            updateChart(7);
+            
+            alert('Questionário salvo com sucesso!');
         }
 
-        function closeResumeModal() {
-            document.getElementById('resumeModal').style.display = 'none';
+        // === MODAL ===
+        function openCurriculum() {
+            document.getElementById('currName').textContent = currentUser.name;
+            document.getElementById('currEmail').textContent = currentUser.email;
+            document.getElementById('currDate').textContent = new Date(currentUser.createdAt).toLocaleDateString('pt-BR');
+            document.getElementById('curriculumModal').classList.add('active');
         }
 
         function editProfile() {
-            alert('Funcionalidade de edição de perfil em desenvolvimento!');
-        }
-
-        function showSection(section) {
-            alert(`Seção "${section}" em desenvolvimento! Por enquanto, foque no questionário diário e dashboard.`);
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('resumeModal');
-            if (event.target === modal) {
-                closeResumeModal();
+            const newName = prompt('Novo nome:', currentUser.name);
+            if (newName && newName.trim()) {
+                currentUser.name = newName.trim();
+                localStorage.setItem('synthonia_user', JSON.stringify(currentUser));
+                
+                const users = JSON.parse(localStorage.getItem('synthonia_users') || '[]');
+                const index = users.findIndex(u => u.id === currentUser.id);
+                if (index !== -1) {
+                    users[index] = currentUser;
+                    localStorage.setItem('synthonia_users', JSON.stringify(users));
+                }
+                
+                document.getElementById('userName').textContent = currentUser.name.split(' ')[0];
+                alert('Perfil atualizado!');
             }
         }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        };
+
+        // Inicializar app
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
