@@ -123,6 +123,12 @@
             border: 1px solid var(--glass-border);
         }
 
+        .btn-secondary.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
         .btn-danger {
             background: var(--danger);
             color: white;
@@ -441,23 +447,11 @@
             <div class="dashboard-grid">
                 <div class="dashboard-btn" onclick="openQuestionnaire()">
                     <div class="dashboard-btn-icon">📋</div>
-                    <div>Questionário Diário</div>
+                    <div>Questionário REDIA</div>
                 </div>
-                <div class="dashboard-btn" onclick="alert('Funcionalidade de Treino em desenvolvimento')">
+                <div class="dashboard-btn" onclick="openWorkoutModal()">
                     <div class="dashboard-btn-icon">💪</div>
-                    <div>Treino</div>
-                </div>
-                <div class="dashboard-btn" onclick="alert('Funcionalidade de Reab em desenvolvimento')">
-                    <div class="dashboard-btn-icon">🔄</div>
-                    <div>Reab</div>
-                </div>
-                <div class="dashboard-btn" onclick="alert('Funcionalidade de Numerologia em desenvolvimento')">
-                    <div class="dashboard-btn-icon">🔢</div>
-                    <div>Numerologia</div>
-                </div>
-                <div class="dashboard-btn" onclick="generateAIAnalysis()">
-                    <div class="dashboard-btn-icon">🧠</div>
-                    <div>Análise IA</div>
+                    <div>Registro de Treinos</div>
                 </div>
                 <div class="dashboard-btn" onclick="editProfile()">
                     <div class="dashboard-btn-icon">✏️</div>
@@ -473,42 +467,42 @@
                     <strong>Selecione as variáveis para comparar:</strong>
                     <div class="checkbox-group" id="variableCheckboxes">
                         <label class="checkbox-item">
-                            <input type="checkbox" value="TSS" checked> TSS
+                            <input type="checkbox" value="TSS" checked onchange="updateChart()"> TSS
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="TRIMP" checked> TRIMP
+                            <input type="checkbox" value="TRIMP" checked onchange="updateChart()"> TRIMP
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="ATL" checked> ATL
+                            <input type="checkbox" value="ATL" checked onchange="updateChart()"> ATL
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="CTL" checked> CTL
+                            <input type="checkbox" value="CTL" checked onchange="updateChart()"> CTL
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="TSB" checked> TSB
+                            <input type="checkbox" value="TSB" checked onchange="updateChart()"> TSB
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="Monotonia"> Monotonia
+                            <input type="checkbox" value="Monotonia" onchange="updateChart()"> Monotonia
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="Prontidao"> Prontidão
+                            <input type="checkbox" value="Prontidao" onchange="updateChart()"> Prontidão
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="Dor"> Dor
+                            <input type="checkbox" value="Dor" onchange="updateChart()"> Dor
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" value="Sono"> Sono
+                            <input type="checkbox" value="Sono" onchange="updateChart()"> Sono
                         </label>
                     </div>
                 </div>
 
                 <div style="margin-bottom: 15px;">
                     <strong>Período:</strong>
-                    <div style="display: inline-flex; gap: 10px; margin-left: 10px;">
-                        <button class="btn btn-secondary" onclick="updateChart(7)">7 dias</button>
-                        <button class="btn btn-secondary" onclick="updateChart(14)">14 dias</button>
-                        <button class="btn btn-secondary" onclick="updateChart(21)">21 dias</button>
-                        <button class="btn btn-secondary" onclick="updateChart(28)">28 dias</button>
+                    <div style="display: inline-flex; gap: 10px; margin-left: 10px;" id="periodButtons">
+                        <button class="btn btn-secondary period-btn active" onclick="setChartPeriod(7, this)">7 dias</button>
+                        <button class="btn btn-secondary period-btn" onclick="setChartPeriod(14, this)">14 dias</button>
+                        <button class="btn btn-secondary period-btn" onclick="setChartPeriod(21, this)">21 dias</button>
+                        <button class="btn btn-secondary period-btn" onclick="setChartPeriod(28, this)">28 dias</button>
                     </div>
                 </div>
 
@@ -537,10 +531,10 @@
         </div>
     </div>
 
-    <!-- Modal de Questionário -->
+    <!-- Modal de Questionário REDIA -->
     <div id="questionnaireModal" class="modal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 20px;">📋 Questionário Diário</h2>
+            <h2 style="margin-bottom: 20px;">📋 Questionário REDIA</h2>
             
             <div class="slider-container">
                 <label>Qualidade do Sono (0-10)</label>
@@ -635,6 +629,55 @@
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button class="btn btn-primary" style="flex: 1;" onclick="saveQuestionnaire()">Salvar</button>
                 <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('questionnaireModal')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Registro de Treinos -->
+    <div id="workoutModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">💪 Registro de Treinos</h2>
+            
+            <div class="form-group">
+                <label>Tipo de Treino</label>
+                <select id="workoutType" class="form-control" style="background: rgba(255, 255, 255, 0.1); color: var(--light);">
+                    <option value="Musculação" style="background: #1e293b;">Musculação</option>
+                    <option value="Corrida" style="background: #1e293b;">Corrida</option>
+                    <option value="Ciclismo" style="background: #1e293b;">Ciclismo</option>
+                    <option value="Natação" style="background: #1e293b;">Natação</option>
+                    <option value="CrossFit / Funcional" style="background: #1e293b;">CrossFit / Funcional</option>
+                    <option value="Mobilidade / Regen" style="background: #1e293b;">Mobilidade / Regenerativo</option>
+                </select>
+            </div>
+
+            <div class="slider-container">
+                <label>Duração do Treino (minutos)</label>
+                <input type="range" id="workoutDuration" min="10" max="180" value="60" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
+                    <span>10 min</span>
+                    <span id="workoutDurationValue">60</span>
+                    <span>180 min</span>
+                </div>
+            </div>
+
+            <div class="slider-container">
+                <label>Percepção de Esforço - PSE (1-10)</label>
+                <input type="range" id="workoutPse" min="1" max="10" value="7" oninput="updateSliderValue(this)">
+                <div class="slider-labels">
+                    <span>Muito leve</span>
+                    <span id="workoutPseValue">7</span>
+                    <span>Esforço Máximo</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Observações / Notas do Treino</label>
+                <input type="text" id="workoutNotes" class="form-control" placeholder="Ex: Treino forte de pernas, carga alta">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="saveWorkout()">Salvar Treino</button>
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('workoutModal')">Cancelar</button>
             </div>
         </div>
     </div>
@@ -739,6 +782,8 @@
             document.getElementById('loginPassword').value = '';
         }
 
+        let currentPeriod = 7;
+
         function showMainScreen() {
             document.getElementById('authScreen').classList.remove('active');
             document.getElementById('mainScreen').classList.add('active');
@@ -746,21 +791,67 @@
             
             // Carregar dados e atualizar dashboard
             loadDashboardData();
-            updateChart(7);
+            generateAIAnalysis();
+            updateChart(currentPeriod);
+        }
+
+        // === OBTER OU INICIALIZAR DADOS ===
+        function getOrInitData() {
+            let data = JSON.parse(localStorage.getItem('synthonia_data') || '[]');
+            if (data.length === 0) {
+                data = [];
+                let ctl = 50;
+                for (let i = 14; i >= 1; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    
+                    const pse = Math.floor(Math.random() * 4) + 5; // 5 - 8
+                    const volume = Math.floor(Math.random() * 40) + 40; // 40 - 80 min
+                    const sleep = Math.floor(Math.random() * 3) + 7; // 7 - 9
+                    const fatigue = Math.floor(Math.random() * 4) + 3; // 3 - 6
+                    const pain = Math.floor(Math.random() * 3) + 1; // 1 - 3
+                    const stress = Math.floor(Math.random() * 3) + 2; // 2 - 4
+                    const motivation = Math.floor(Math.random() * 3) + 7; // 7 - 9
+                    const tqr = Math.floor(Math.random() * 3) + 7;
+                    const prs = Math.floor(Math.random() * 3) + 7;
+                    
+                    const atl = Math.round(pse * volume * 0.8 / 10);
+                    ctl = Math.round(ctl * 0.9 + (pse * volume / 10) * 0.1);
+                    const tsb = ctl - atl;
+                    
+                    data.push({
+                        date: date.toISOString(),
+                        sleep,
+                        fatigue,
+                        pain,
+                        stress,
+                        motivation,
+                        tqr,
+                        prs,
+                        pse,
+                        volume,
+                        atl,
+                        ctl,
+                        tsb
+                    });
+                }
+                localStorage.setItem('synthonia_data', JSON.stringify(data));
+            }
+            return data;
         }
 
         // === DASHBOARD ===
         let chartInstance = null;
 
         function loadDashboardData() {
-            const data = JSON.parse(localStorage.getItem('synthonia_data') || '[]');
+            const data = getOrInitData();
             
             if (data.length > 0) {
                 const latest = data[data.length - 1];
                 
                 // Calcular índices
-                const recovery = Math.round((latest.sleep + latest.tqr + latest.prs) / 3 * 10);
-                const readiness = Math.round((latest.motivation - latest.fatigue - latest.stress + 10) / 3 * 10);
+                const recovery = Math.round(((latest.sleep || 7) + (latest.tqr || 7) + (latest.prs || 7)) / 3 * 10);
+                const readiness = Math.round(((latest.motivation || 7) - (latest.fatigue || 4) - (latest.stress || 3) + 10) / 3 * 10);
                 const intensity = Math.max(0, Math.min(100, readiness + 20));
 
                 document.getElementById('recoveryIndex').textContent = recovery;
@@ -774,7 +865,7 @@
         }
 
         function generateAIAnalysis() {
-            const data = JSON.parse(localStorage.getItem('synthonia_data') || '[]');
+            const data = getOrInitData();
             
             if (data.length === 0) {
                 document.getElementById('aiAnalysisText').innerHTML = 'Nenhum dado disponível. Preencha o questionário diário.';
@@ -782,8 +873,8 @@
             }
 
             const latest = data[data.length - 1];
-            const recovery = Math.round((latest.sleep + latest.tqr + latest.prs) / 3 * 10);
-            const readiness = Math.round((latest.motivation - latest.fatigue - latest.stress + 10) / 3 * 10);
+            const recovery = Math.round(((latest.sleep || 7) + (latest.tqr || 7) + (latest.prs || 7)) / 3 * 10);
+            const readiness = Math.round(((latest.motivation || 7) - (latest.fatigue || 4) - (latest.stress || 3) + 10) / 3 * 10);
 
             let analysis = '<strong>Análise do Dia:</strong><br><br>';
             
@@ -806,8 +897,19 @@
             document.getElementById('aiAnalysisText').innerHTML = analysis;
         }
 
+        // === CONTROLE DE PERÍODO DO GRÁFICO ===
+        function setChartPeriod(days, btnElement) {
+            currentPeriod = days;
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            if (btnElement) btnElement.classList.add('active');
+            updateChart(currentPeriod);
+        }
+
         // === GRÁFICO ===
         function updateChart(days) {
+            if (!days) days = currentPeriod;
+            currentPeriod = days;
+
             const canvas = document.getElementById('metricsChart');
             if (!canvas) return;
 
@@ -818,25 +920,15 @@
             }
 
             const ctx = canvas.getContext('2d');
-            const allData = JSON.parse(localStorage.getItem('synthonia_data') || '[]');
+            const allData = getOrInitData();
             
             // Pegar últimos 'days' registros
             const recentData = allData.slice(-days);
             
-            if (recentData.length === 0) {
-                // Dados simulados para demonstração
-                const labels = [];
-                for (let i = days; i > 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    labels.push(date.toLocaleDateString('pt-BR', {day: '2digit', month: '2digit'}));
-                }
-                
-                renderChart(ctx, labels, null);
-                return;
-            }
-
-            const labels = recentData.map(d => new Date(d.date).toLocaleDateString('pt-BR', {day: '2digit', month: '2digit'}));
+            const labels = recentData.map(d => {
+                const dateObj = new Date(d.date);
+                return isNaN(dateObj.getTime()) ? 'Hoje' : dateObj.toLocaleDateString('pt-BR', {day: '2digit', month: '2digit'});
+            });
             
             renderChart(ctx, labels, recentData);
         }
@@ -847,7 +939,6 @@
                 .map(cb => cb.value);
 
             if (selectedVars.length === 0) {
-                alert('Selecione pelo menos uma variável!');
                 return;
             }
 
@@ -865,33 +956,40 @@
             };
 
             selectedVars.forEach(variable => {
-                let dataValues;
-                
-                if (data && data.length > 0) {
-                    dataValues = data.map(entry => {
-                        if (variable === 'TSS') return Math.round(entry.pse * entry.volume / 10);
-                        if (variable === 'TRIMP') return Math.round(entry.pse * entry.volume * 0.5);
-                        if (variable === 'ATL') return Math.round(entry.pse * 0.8);
-                        if (variable === 'CTL') return Math.round(entry.pse * 0.5);
-                        if (variable === 'TSB') return Math.round(entry.ctl - entry.atl);
-                        if (variable === 'Monotonia') return Math.round((entry.fatigue + entry.stress) / 2);
-                        if (variable === 'Prontidao') return Math.round((entry.motivation - entry.fatigue + 10) / 2);
-                        if (variable === 'Dor') return entry.pain;
-                        if (variable === 'Sono') return entry.sleep;
-                        return 0;
-                    });
-                } else {
-                    // Dados aleatórios para demonstração
-                    dataValues = labels.map(() => Math.floor(Math.random() * 80) + 20);
-                }
+                const dataValues = data.map(entry => {
+                    const pse = Number(entry.pse) || 5;
+                    const volume = Number(entry.volume) || 30;
+                    const sleep = Number(entry.sleep) || 7;
+                    const fatigue = Number(entry.fatigue) || 3;
+                    const pain = Number(entry.pain) || 2;
+                    const stress = Number(entry.stress) || 3;
+                    const motivation = Number(entry.motivation) || 7;
+                    const atl = Number.isFinite(entry.atl) ? entry.atl : Math.round(pse * volume * 0.8 / 10);
+                    const ctl = Number.isFinite(entry.ctl) ? entry.ctl : 50;
+                    const tsb = Number.isFinite(entry.tsb) ? entry.tsb : (ctl - atl);
+
+                    if (variable === 'TSS') return Math.round(pse * volume / 10);
+                    if (variable === 'TRIMP') return Math.round(pse * volume * 0.5);
+                    if (variable === 'ATL') return atl;
+                    if (variable === 'CTL') return ctl;
+                    if (variable === 'TSB') return tsb;
+                    if (variable === 'Monotonia') return Math.round((fatigue + stress) / 2);
+                    if (variable === 'Prontidao') return Math.round((motivation - fatigue + 10) / 2);
+                    if (variable === 'Dor') return pain;
+                    if (variable === 'Sono') return sleep;
+                    return 0;
+                });
 
                 datasets.push({
                     label: variable,
                     data: dataValues,
                     borderColor: colors[variable] || '#6366f1',
                     backgroundColor: (colors[variable] || '#6366f1') + '20',
-                    tension: 0.4,
-                    fill: false
+                    tension: 0.35,
+                    fill: false,
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 8
                 });
             });
 
@@ -907,7 +1005,7 @@
                     },
                     plugins: {
                         legend: {
-                            labels: { color: '#f8fafc' }
+                            labels: { color: '#f8fafc', font: { size: 13, weight: 'bold' } }
                         }
                     },
                     scales: {
@@ -924,13 +1022,13 @@
             });
         }
 
-        // === QUESTIONÁRIO ===
+        // === QUESTIONÁRIO REDIA ===
         function openQuestionnaire() {
             document.getElementById('questionnaireModal').classList.add('active');
         }
 
         function updateSliderValue(slider) {
-            const valueSpan = document.getElementById(slider.id.replace('Score', 'Value'));
+            const valueSpan = document.getElementById(slider.id.replace('Score', 'Value').replace('Duration', 'DurationValue').replace('Pse', 'PseValue'));
             if (valueSpan) {
                 valueSpan.textContent = slider.value;
             }
@@ -954,13 +1052,14 @@
             };
 
             // Calcular ATL, CTL, TSB acumulados
-            const allData = JSON.parse(localStorage.getItem('synthonia_data') || '[]');
-            newData.atl = Math.round(newData.pse * 0.8);
+            const allData = getOrInitData();
+            newData.atl = Math.round(newData.pse * newData.volume * 0.8 / 10);
             
             if (allData.length > 0) {
                 const prev = allData[allData.length - 1];
-                newData.ctl = Math.round(prev.ctl * 0.95 + newData.pse * 0.05);
-                newData.tsb = Math.round(newData.ctl - newData.atl);
+                const prevCtl = Number.isFinite(prev.ctl) ? prev.ctl : 50;
+                newData.ctl = Math.round(prevCtl * 0.9 + (newData.pse * newData.volume / 10) * 0.1);
+                newData.tsb = newData.ctl - newData.atl;
             } else {
                 newData.ctl = newData.atl;
                 newData.tsb = 0;
@@ -972,12 +1071,74 @@
             closeModal('questionnaireModal');
             loadDashboardData();
             generateAIAnalysis();
-            updateChart(7);
+            updateChart(currentPeriod);
             
-            alert('Questionário salvo com sucesso!');
+            alert('Questionário REDIA salvo com sucesso!');
         }
 
-        // === MODAL ===
+        // === REGISTRO DE TREINOS ===
+        function openWorkoutModal() {
+            document.getElementById('workoutModal').classList.add('active');
+        }
+
+        function saveWorkout() {
+            const duration = parseInt(document.getElementById('workoutDuration').value) || 60;
+            const pse = parseInt(document.getElementById('workoutPse').value) || 7;
+            const type = document.getElementById('workoutType').value;
+            const notes = document.getElementById('workoutNotes').value;
+
+            const allData = getOrInitData();
+            const lastEntry = allData.length > 0 ? allData[allData.length - 1] : {
+                sleep: 7, fatigue: 4, pain: 2, stress: 3, motivation: 7, tqr: 7, prs: 7, ctl: 50
+            };
+
+            const atl = Math.round(pse * duration * 0.8 / 10);
+            const prevCtl = Number.isFinite(lastEntry.ctl) ? lastEntry.ctl : 50;
+            const ctl = Math.round(prevCtl * 0.9 + (pse * duration / 10) * 0.1);
+            const tsb = ctl - atl;
+
+            const newEntry = {
+                date: new Date().toISOString(),
+                workoutType: type,
+                notes: notes,
+                sleep: lastEntry.sleep || 7,
+                fatigue: Math.min(10, (lastEntry.fatigue || 4) + 1),
+                pain: lastEntry.pain || 2,
+                stress: lastEntry.stress || 3,
+                motivation: lastEntry.motivation || 7,
+                tqr: lastEntry.tqr || 7,
+                prs: lastEntry.prs || 7,
+                pse: pse,
+                volume: duration,
+                atl: atl,
+                ctl: ctl,
+                tsb: tsb
+            };
+
+            allData.push(newEntry);
+            localStorage.setItem('synthonia_data', JSON.stringify(allData));
+
+            // Salvar no histórico de treinos
+            const workouts = JSON.parse(localStorage.getItem('synthonia_workouts') || '[]');
+            workouts.push({
+                date: new Date().toISOString(),
+                type,
+                duration,
+                pse,
+                notes,
+                tss: Math.round(pse * duration / 10)
+            });
+            localStorage.setItem('synthonia_workouts', JSON.stringify(workouts));
+
+            closeModal('workoutModal');
+            loadDashboardData();
+            generateAIAnalysis();
+            updateChart(currentPeriod);
+            
+            alert('Treino de ' + type + ' registrado com sucesso!');
+        }
+
+        // === MODAL & PERFIL ===
         function openCurriculum() {
             document.getElementById('currName').textContent = currentUser.name;
             document.getElementById('currEmail').textContent = currentUser.email;
