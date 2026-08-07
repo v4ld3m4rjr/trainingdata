@@ -3,1180 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synthonia AI - Recuperação e Performance</title>
+    <title>Synthonia AI — Recuperação & Performance</title>
+    <meta name="description" content="Plataforma inteligente de monitoramento de recuperação muscular, prontidão e performance para atletas.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #8b5cf6;
-            --accent: #06b6d4;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-        }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            min-height: 100vh;
-            color: var(--light);
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Telas */
-        .screen {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Cards Glassmorphism */
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Formulários */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            color: var(--light);
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* Botões */
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--light);
-            border: 1px solid var(--glass-border);
-        }
-
-        .btn-secondary.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        /* Sliders Customizados */
-        .slider-container {
-            margin: 20px 0;
-        }
-
-        .slider-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.2);
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
-        }
-
-        /* Grid de Botões do Dashboard */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .dashboard-btn {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .dashboard-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
-        }
-
-        .dashboard-btn-icon {
-            font-size: 32px;
-        }
-
-        /* Índices Principais */
-        .indices-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .index-card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .index-value {
-            font-size: 36px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .index-label {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* Container do Gráfico com Altura Fixa */
-        .chart-wrapper {
-            position: relative;
-            height: 400px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        /* Checkbox para múltipla seleção */
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 8px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        .checkbox-item input {
-            cursor: pointer;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            border: 2px solid var(--glass-border);
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #1e293b;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        /* IA Analysis Box */
-        .ai-analysis {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
-            border-left: 4px solid var(--primary);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-        }
-
-        .ai-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .indices-container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <!-- App Styles -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Tela de Login/Cadastro -->
-    <div id="authScreen" class="screen active">
-        <div class="container" style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
-            <div class="glass-card" style="width: 100%; max-width: 450px;">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <div style="font-size: 48px; margin-bottom: 10px;">🏆</div>
-                    <h1 style="margin-bottom: 10px;">Synthonia AI</h1>
-                    <p style="color: rgba(255,255,255,0.7);">Recuperação & Performance</p>
-                </div>
 
-                <div id="loginForm">
-                    <div class="form-group">
-                        <label>E-mail</label>
-                        <input type="email" id="loginEmail" class="form-control" placeholder="seu@email.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Senha</label>
-                        <input type="password" id="loginPassword" class="form-control" placeholder="••••••">
-                    </div>
-                    <button class="btn btn-primary" style="width: 100%;" onclick="login()">Entrar</button>
-                    <p style="text-align: center; margin-top: 20px;">
-                        Não tem conta? <a href="#" style="color: var(--primary);" onclick="showRegister()">Cadastre-se</a>
-                    </p>
-                </div>
+<!-- ==================== AUTH SCREEN ==================== -->
+<div id="authScreen" class="screen active">
+    <div class="auth-wrapper">
+        <div class="auth-card glass" style="padding:36px">
+            <div class="auth-logo">
+                <div class="logo-icon">⚡</div>
+                <h1>Synthonia <span>AI</span></h1>
+                <p>Recuperação & Performance Inteligente</p>
+            </div>
 
-                <div id="registerForm" style="display: none;">
-                    <div class="form-group">
-                        <label>Nome Completo</label>
-                        <input type="text" id="regName" class="form-control" placeholder="Seu nome">
-                    </div>
-                    <div class="form-group">
-                        <label>E-mail</label>
-                        <input type="email" id="regEmail" class="form-control" placeholder="seu@email.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Confirmar E-mail</label>
-                        <input type="email" id="regEmailConfirm" class="form-control" placeholder="confirme seu email">
-                    </div>
-                    <div class="form-group">
-                        <label>Senha</label>
-                        <input type="password" id="regPassword" class="form-control" placeholder="••••••">
-                    </div>
-                    <div class="form-group">
-                        <label>Confirmar Senha</label>
-                        <input type="password" id="regPasswordConfirm" class="form-control" placeholder="confirme sua senha">
-                    </div>
-                    <button class="btn btn-primary" style="width: 100%;" onclick="register()">Cadastrar</button>
-                    <p style="text-align: center; margin-top: 20px;">
-                        Já tem conta? <a href="#" style="color: var(--primary);" onclick="showLogin()">Faça login</a>
-                    </p>
+            <!-- Login Form -->
+            <div id="loginForm">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="••••••">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="login()">Entrar</button>
+                <div class="auth-toggle">
+                    Não tem conta? <a onclick="toggleAuth('register')">Cadastre-se</a>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" style="display:none">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="regName" class="form-control" placeholder="Seu nome">
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Confirmar E-mail</label>
+                    <input type="email" id="regEmailConfirm" class="form-control" placeholder="Confirme seu e-mail">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="form-group">
+                    <label>Confirmar Senha</label>
+                    <input type="password" id="regPasswordConfirm" class="form-control" placeholder="Confirme a senha">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="register()">Cadastrar</button>
+                <div class="auth-toggle">
+                    Já tem conta? <a onclick="toggleAuth('login')">Faça login</a>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Tela Principal (Dashboard) -->
-    <div id="mainScreen" class="screen">
-        <div class="container">
-            <!-- Header -->
-            <div class="header glass-card">
-                <div>
-                    <h1>Olá, <span id="userName">Atleta</span>! 👋</h1>
-                    <p style="color: rgba(255,255,255,0.7);">Pronto para otimizar sua performance?</p>
-                </div>
-                <div class="user-info">
-                    <div class="user-avatar" onclick="openCurriculum()">👤</div>
-                    <button class="btn btn-danger" onclick="logout()">Sair</button>
+<!-- ==================== MAIN DASHBOARD ==================== -->
+<div id="mainScreen" class="screen">
+    <div class="container">
+
+        <!-- Header -->
+        <div class="app-header glass">
+            <div class="header-left">
+                <div class="header-logo">⚡</div>
+                <div class="header-greet">
+                    <h2>Olá, <span id="userName">Atleta</span>! 👋</h2>
+                    <p id="headerDate">Carregando...</p>
                 </div>
             </div>
-
-            <!-- Índices Principais -->
-            <div class="indices-container">
-                <div class="index-card">
-                    <div class="index-label">Índice de Recuperação</div>
-                    <div class="index-value" id="recoveryIndex" style="color: var(--success);">--</div>
-                    <div style="font-size: 12px; color: rgba(255,255,255,0.6);">0-100</div>
-                </div>
-                <div class="index-card">
-                    <div class="index-label">Prontidão para Treino</div>
-                    <div class="index-value" id="readinessIndex" style="color: var(--accent);">--</div>
-                    <div style="font-size: 12px; color: rgba(255,255,255,0.6);">0-100</div>
-                </div>
-                <div class="index-card">
-                    <div class="index-label">Intensidade Recomendada</div>
-                    <div class="index-value" id="intensityIndex" style="color: var(--warning);">--</div>
-                    <div style="font-size: 12px; color: rgba(255,255,255,0.6);">% do máximo</div>
-                </div>
-            </div>
-
-            <!-- Análise de IA -->
-            <div class="ai-analysis glass-card">
-                <div class="ai-title">
-                    <span>🤖</span> Análise de IA - Hoje
-                </div>
-                <div id="aiAnalysisText">
-                    Preencha o questionário diário para receber sua análise personalizada.
-                </div>
-            </div>
-
-            <!-- Botões de Ação -->
-            <div class="dashboard-grid">
-                <div class="dashboard-btn" onclick="openQuestionnaire()">
-                    <div class="dashboard-btn-icon">📋</div>
-                    <div>Questionário REDIA</div>
-                </div>
-                <div class="dashboard-btn" onclick="openWorkoutModal()">
-                    <div class="dashboard-btn-icon">💪</div>
-                    <div>Registro de Treinos</div>
-                </div>
-                <div class="dashboard-btn" onclick="editProfile()">
-                    <div class="dashboard-btn-icon">✏️</div>
-                    <div>Editar Perfil</div>
-                </div>
-            </div>
-
-            <!-- Dashboard Gráfico -->
-            <div class="glass-card">
-                <h2 style="margin-bottom: 20px;">📊 Dashboard de Variáveis</h2>
-                
-                <div style="margin-bottom: 15px;">
-                    <strong>Selecione as variáveis para comparar:</strong>
-                    <div class="checkbox-group" id="variableCheckboxes">
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="TSS" checked onchange="updateChart()"> TSS
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="TRIMP" checked onchange="updateChart()"> TRIMP
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="ATL" checked onchange="updateChart()"> ATL
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="CTL" checked onchange="updateChart()"> CTL
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="TSB" checked onchange="updateChart()"> TSB
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Monotonia" onchange="updateChart()"> Monotonia
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Prontidao" onchange="updateChart()"> Prontidão
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Dor" onchange="updateChart()"> Dor
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" value="Sono" onchange="updateChart()"> Sono
-                        </label>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <strong>Período:</strong>
-                    <div style="display: inline-flex; gap: 10px; margin-left: 10px;" id="periodButtons">
-                        <button class="btn btn-secondary period-btn active" onclick="setChartPeriod(7, this)">7 dias</button>
-                        <button class="btn btn-secondary period-btn" onclick="setChartPeriod(14, this)">14 dias</button>
-                        <button class="btn btn-secondary period-btn" onclick="setChartPeriod(21, this)">21 dias</button>
-                        <button class="btn btn-secondary period-btn" onclick="setChartPeriod(28, this)">28 dias</button>
-                    </div>
-                </div>
-
-                <!-- Container do Gráfico com Altura Fixa -->
-                <div class="chart-wrapper">
-                    <canvas id="metricsChart"></canvas>
-                </div>
+            <div class="header-right">
+                <div class="avatar" onclick="openModal('curriculumModal')" title="Meu Currículo">👤</div>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Sair</button>
             </div>
         </div>
-    </div>
 
-    <!-- Modal de Currículo -->
-    <div id="curriculumModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 20px;">📄 Meu Currículo</h2>
-            <div id="curriculumContent">
-                <p><strong>Nome:</strong> <span id="currName">-</span></p>
-                <p><strong>Email:</strong> <span id="currEmail">-</span></p>
-                <p><strong>Data de Cadastro:</strong> <span id="currDate">-</span></p>
-                <hr style="border-color: rgba(255,255,255,0.2); margin: 15px 0;">
-                <p style="color: rgba(255,255,255,0.7);">
-                    Atleta focado em otimização de performance e recuperação muscular através de ciência de dados e IA.
-                </p>
+        <!-- Action Buttons -->
+        <div class="action-grid">
+            <div class="action-card" onclick="openModal('questionnaireModal')">
+                <div class="icon">📋</div>
+                <div class="label">Recuperação</div>
             </div>
-            <button class="btn btn-secondary" style="margin-top: 20px;" onclick="closeModal('curriculumModal')">Fechar</button>
-        </div>
-    </div>
-
-    <!-- Modal de Questionário REDIA -->
-    <div id="questionnaireModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 20px;">📋 Questionário REDIA</h2>
-            
-            <div class="slider-container">
-                <label>Qualidade do Sono (0-10)</label>
-                <input type="range" id="sleepScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>Péssimo</span>
-                    <span id="sleepValue">5</span>
-                    <span>Excelente</span>
-                </div>
+            <div class="action-card" onclick="openModal('workoutModal')">
+                <div class="icon">💪</div>
+                <div class="label">Treino</div>
             </div>
-
-            <div class="slider-container">
-                <label>Nível de Fadiga (0-10)</label>
-                <input type="range" id="fatigueScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>Nenhuma</span>
-                    <span id="fatigueValue">5</span>
-                    <span>Extrema</span>
-                </div>
+            <div class="action-card" onclick="openModal('rehabModal')">
+                <div class="icon">🔄</div>
+                <div class="label">Reab</div>
             </div>
-
-            <div class="slider-container">
-                <label>Dor Muscular (0-10)</label>
-                <input type="range" id="painScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>Sem dor</span>
-                    <span id="painValue">5</span>
-                    <span>Insuportável</span>
-                </div>
+            <div class="action-card" onclick="openModal('numerologyModal')">
+                <div class="icon">🔢</div>
+                <div class="label">Numerologia</div>
             </div>
-
-            <div class="slider-container">
-                <label>Estresse (0-10)</label>
-                <input type="range" id="stressScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>Relaxado</span>
-                    <span id="stressValue">5</span>
-                    <span>Muito Estressado</span>
-                </div>
+            <div class="action-card" onclick="runAIAnalysis()">
+                <div class="icon">🧠</div>
+                <div class="label">Análise IA</div>
             </div>
-
-            <div class="slider-container">
-                <label>Motivação (0-10)</label>
-                <input type="range" id="motivationScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>Sem vontade</span>
-                    <span id="motivationValue">5</span>
-                    <span>Motivado</span>
-                </div>
-            </div>
-
-            <div class="slider-container">
-                <label>TQR - Recuperação Percebida (0-10)</label>
-                <input type="range" id="tqrScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>Não recuperado</span>
-                    <span id="tqrValue">5</span>
-                    <span>Totalmente recuperado</span>
-                </div>
-            </div>
-
-            <div class="slider-container">
-                <label>PRS - Status de Recuperação (0-10)</label>
-                <input type="range" id="prsScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>Muito mal</span>
-                    <span id="prsValue">5</span>
-                    <span>Excelente</span>
-                </div>
-            </div>
-
-            <div class="slider-container">
-                <label>PSE - Esforço Percebido no Último Treino (0-10)</label>
-                <input type="range" id="pseScore" min="0" max="10" value="5" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>Muito leve</span>
-                    <span id="pseValue">5</span>
-                    <span>Máximo</span>
-                </div>
-            </div>
-
-            <div class="slider-container">
-                <label>Volume de Treino Hoje (minutos)</label>
-                <input type="range" id="volumeScore" min="0" max="120" value="30" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>0 min</span>
-                    <span id="volumeValue">30</span>
-                    <span>120 min</span>
-                </div>
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn btn-primary" style="flex: 1;" onclick="saveQuestionnaire()">Salvar</button>
-                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('questionnaireModal')">Cancelar</button>
+            <div class="action-card" onclick="openModal('editProfileModal')">
+                <div class="icon">✏️</div>
+                <div class="label">Editar Cadastro</div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal de Registro de Treinos -->
-    <div id="workoutModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 20px;">💪 Registro de Treinos</h2>
-            
-            <div class="form-group">
-                <label>Tipo de Treino</label>
-                <select id="workoutType" class="form-control" style="background: rgba(255, 255, 255, 0.1); color: var(--light);">
-                    <option value="Musculação" style="background: #1e293b;">Musculação</option>
-                    <option value="Corrida" style="background: #1e293b;">Corrida</option>
-                    <option value="Ciclismo" style="background: #1e293b;">Ciclismo</option>
-                    <option value="Natação" style="background: #1e293b;">Natação</option>
-                    <option value="CrossFit / Funcional" style="background: #1e293b;">CrossFit / Funcional</option>
-                    <option value="Mobilidade / Regen" style="background: #1e293b;">Mobilidade / Regenerativo</option>
-                </select>
+        <!-- Key Indices -->
+        <div class="indices">
+            <div class="idx-card recovery">
+                <div class="idx-label">Índice de Recuperação</div>
+                <div class="idx-value" id="idxRecovery" style="color:var(--success)">--</div>
+                <div class="idx-sub">0 – 100</div>
             </div>
-
-            <div class="slider-container">
-                <label>Duração do Treino (minutos)</label>
-                <input type="range" id="workoutDuration" min="10" max="180" value="60" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>10 min</span>
-                    <span id="workoutDurationValue">60</span>
-                    <span>180 min</span>
-                </div>
+            <div class="idx-card readiness">
+                <div class="idx-label">Prontidão para Treino</div>
+                <div class="idx-value" id="idxReadiness" style="color:var(--secondary)">--</div>
+                <div class="idx-sub">0 – 100</div>
             </div>
-
-            <div class="slider-container">
-                <label>Percepção de Esforço - PSE (1-10)</label>
-                <input type="range" id="workoutPse" min="1" max="10" value="7" oninput="updateSliderValue(this)">
-                <div class="slider-labels">
-                    <span>Muito leve</span>
-                    <span id="workoutPseValue">7</span>
-                    <span>Esforço Máximo</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Observações / Notas do Treino</label>
-                <input type="text" id="workoutNotes" class="form-control" placeholder="Ex: Treino forte de pernas, carga alta">
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn btn-primary" style="flex: 1;" onclick="saveWorkout()">Salvar Treino</button>
-                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('workoutModal')">Cancelar</button>
+            <div class="idx-card intensity">
+                <div class="idx-label">Intensidade Recomendada</div>
+                <div class="idx-value" id="idxIntensity" style="color:var(--warning)">--</div>
+                <div class="idx-sub">% do máximo</div>
             </div>
         </div>
+
+        <!-- AI Analysis Box -->
+        <div class="ai-box">
+            <div class="ai-header"><span>🤖</span> Análise de IA — Hoje</div>
+            <div class="ai-content" id="aiText">
+                Preencha o questionário de recuperação para receber sua análise personalizada de IA.
+            </div>
+        </div>
+
+        <!-- Chart Dashboard -->
+        <div class="chart-section glass">
+            <div class="chart-header">
+                <h3>📊 Dashboard de Variáveis</h3>
+                <div class="period-btns" id="periodBtns">
+                    <button class="btn btn-secondary btn-sm active" onclick="setPeriod(7,this)">7d</button>
+                    <button class="btn btn-secondary btn-sm" onclick="setPeriod(14,this)">14d</button>
+                    <button class="btn btn-secondary btn-sm" onclick="setPeriod(21,this)">21d</button>
+                    <button class="btn btn-secondary btn-sm" onclick="setPeriod(28,this)">28d</button>
+                </div>
+            </div>
+            <div class="var-chips" id="varChips">
+                <!-- Variable chips built dynamically by chart.js -->
+            </div>
+            <div class="chart-canvas-wrap">
+                <canvas id="mainChart"></canvas>
+            </div>
+        </div>
+
     </div>
+</div>
 
-    <script>
-        // === SISTEMA DE AUTENTICAÇÃO LOCAL ===
-        let currentUser = null;
+<!-- ==================== MODALS ==================== -->
 
-        function init() {
-            const savedUser = localStorage.getItem('synthonia_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                showMainScreen();
-            } else {
-                document.getElementById('authScreen').classList.add('active');
-                document.getElementById('mainScreen').classList.remove('active');
-            }
-        }
+<!-- Curriculum Modal -->
+<div id="curriculumModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>📄 Currículo</h2>
+            <button class="modal-close" onclick="closeModal('curriculumModal')">✕</button>
+        </div>
+        <div style="text-align:center;margin-bottom:20px">
+            <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--primary));margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:36px">👤</div>
+            <h3 id="currName">—</h3>
+            <p style="color:var(--text-muted);font-size:13px" id="currEmail">—</p>
+        </div>
+        <div style="border-top:1px solid var(--glass-border);padding-top:16px;font-size:14px;color:var(--text-muted);line-height:1.8">
+            <p><strong style="color:var(--text)">Data de Cadastro:</strong> <span id="currDate">—</span></p>
+            <p><strong style="color:var(--text)">Total de Registros:</strong> <span id="currRecords">0</span></p>
+            <hr style="border-color:var(--glass-border);margin:12px 0">
+            <p>Atleta focado em otimização de performance e recuperação muscular, utilizando ciência de dados e inteligência artificial para maximizar resultados.</p>
+        </div>
+    </div>
+</div>
 
-        function showLogin() {
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('registerForm').style.display = 'none';
-        }
+<!-- Recovery Questionnaire Modal -->
+<div id="questionnaireModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>📋 Questionário de Recuperação</h2>
+            <button class="modal-close" onclick="closeModal('questionnaireModal')">✕</button>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Responda com base em como você se sente <strong>agora</strong>.</p>
 
-        function showRegister() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'block';
-        }
+        <div class="slider-group">
+            <div class="slider-header"><label>Qualidade do Sono</label><span class="slider-val" id="vSonoQ">3</span></div>
+            <input type="range" id="sonoQ" min="1" max="5" value="3" oninput="sv(this,'vSonoQ')">
+            <div class="slider-labels"><span>Péssimo</span><span>Excelente</span></div>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>Horas de Sono</label><span class="slider-val" id="vSonoH">7</span></div>
+            <input type="range" id="sonoH" min="3" max="12" value="7" step="0.5" oninput="sv(this,'vSonoH')">
+            <div class="slider-labels"><span>3h</span><span>12h</span></div>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>Fadiga (Hooper)</label><span class="slider-val" id="vFadiga">3</span></div>
+            <input type="range" id="fadiga" min="1" max="7" value="3" oninput="sv(this,'vFadiga')">
+            <div class="slider-labels"><span>Nenhuma</span><span>Extrema</span></div>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>Estresse (Hooper)</label><span class="slider-val" id="vEstresse">3</span></div>
+            <input type="range" id="estresse" min="1" max="7" value="3" oninput="sv(this,'vEstresse')">
+            <div class="slider-labels"><span>Nenhum</span><span>Extremo</span></div>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>Dor Muscular / DOMS (Hooper)</label><span class="slider-val" id="vDoms">3</span></div>
+            <input type="range" id="doms" min="1" max="7" value="3" oninput="sv(this,'vDoms')">
+            <div class="slider-labels"><span>Sem dor</span><span>Insuportável</span></div>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>Humor (Hooper)</label><span class="slider-val" id="vHumor">5</span></div>
+            <input type="range" id="humor" min="1" max="7" value="5" oninput="sv(this,'vHumor')">
+            <div class="slider-labels"><span>Muito ruim</span><span>Excelente</span></div>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>TQR — Recuperação Total</label><span class="slider-val" id="vTqr">13</span></div>
+            <input type="range" id="tqr" min="6" max="20" value="13" oninput="sv(this,'vTqr')">
+            <div class="slider-labels"><span>6 (Nada recuperado)</span><span>20 (Totalmente)</span></div>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>PRS — Recuperação Percebida</label><span class="slider-val" id="vPrs">5</span></div>
+            <input type="range" id="prs" min="0" max="10" value="5" oninput="sv(this,'vPrs')">
+            <div class="slider-labels"><span>0 (Muito mal)</span><span>10 (Excelente)</span></div>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>Dor Geral</label><span class="slider-val" id="vDor">2</span></div>
+            <input type="range" id="dor" min="0" max="10" value="2" oninput="sv(this,'vDor')">
+            <div class="slider-labels"><span>Sem dor</span><span>Insuportável</span></div>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>Motivação</label><span class="slider-val" id="vMotivacao">7</span></div>
+            <input type="range" id="motivacao" min="0" max="10" value="7" oninput="sv(this,'vMotivacao')">
+            <div class="slider-labels"><span>Sem vontade</span><span>Muito motivado</span></div>
+        </div>
 
-        function register() {
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const emailConfirm = document.getElementById('regEmailConfirm').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="saveQuestionnaire()">Salvar</button>
+            <button class="btn btn-secondary" onclick="closeModal('questionnaireModal')">Cancelar</button>
+        </div>
+    </div>
+</div>
 
-            if (!name || !email || !password) {
-                alert('Preencha todos os campos!');
-                return;
-            }
+<!-- Workout Modal -->
+<div id="workoutModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>💪 Registro de Treino</h2>
+            <button class="modal-close" onclick="closeModal('workoutModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Tipo de Treino</label>
+            <select id="wkType" class="form-control">
+                <option>Musculação</option>
+                <option>Corrida</option>
+                <option>Ciclismo</option>
+                <option>Natação</option>
+                <option>CrossFit / Funcional</option>
+                <option>Esporte Coletivo</option>
+                <option>Mobilidade / Regen</option>
+            </select>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>Duração (min)</label><span class="slider-val" id="vWkDur">60</span></div>
+            <input type="range" id="wkDur" min="10" max="180" value="60" step="5" oninput="sv(this,'vWkDur')">
+            <div class="slider-labels"><span>10</span><span>180</span></div>
+        </div>
+        <div class="slider-group">
+            <div class="slider-header"><label>PSE — Esforço Percebido (Borg CR-10)</label><span class="slider-val" id="vWkPse">6</span></div>
+            <input type="range" id="wkPse" min="0" max="10" value="6" oninput="sv(this,'vWkPse')">
+            <div class="slider-labels"><span>0 (Repouso)</span><span>10 (Máximo)</span></div>
+        </div>
+        <div class="form-group">
+            <label>Observações</label>
+            <input type="text" id="wkNotes" class="form-control" placeholder="Ex: Treino de pernas, carga progressiva">
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="saveWorkout()">Salvar Treino</button>
+            <button class="btn btn-secondary" onclick="closeModal('workoutModal')">Cancelar</button>
+        </div>
+    </div>
+</div>
 
-            if (email !== emailConfirm) {
-                alert('Os e-mails não coincidem!');
-                return;
-            }
+<!-- Rehab Modal -->
+<div id="rehabModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🔄 Reabilitação</h2>
+            <button class="modal-close" onclick="closeModal('rehabModal')">✕</button>
+        </div>
+        <p style="color:var(--text-muted);text-align:center;padding:40px 0">
+            <span style="font-size:48px;display:block;margin-bottom:16px">🏗️</span>
+            Módulo de Reabilitação em desenvolvimento.<br>
+            Em breve: protocolos de reab guiados por IA com progressão adaptativa.
+        </p>
+    </div>
+</div>
 
-            if (password !== passwordConfirm) {
-                alert('As senhas não coincidem!');
-                return;
-            }
+<!-- Numerology Modal -->
+<div id="numerologyModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🔢 Numerologia</h2>
+            <button class="modal-close" onclick="closeModal('numerologyModal')">✕</button>
+        </div>
+        <p style="color:var(--text-muted);text-align:center;padding:40px 0">
+            <span style="font-size:48px;display:block;margin-bottom:16px">🔮</span>
+            Módulo de Numerologia em desenvolvimento.<br>
+            Em breve: análises numerológicas personalizadas para seu ciclo de treino.
+        </p>
+    </div>
+</div>
 
-            if (password.length < 6) {
-                alert('A senha deve ter pelo menos 6 caracteres!');
-                return;
-            }
+<!-- Edit Profile Modal -->
+<div id="editProfileModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>✏️ Editar Cadastro</h2>
+            <button class="modal-close" onclick="closeModal('editProfileModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Nome Completo</label>
+            <input type="text" id="editName" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>E-mail (somente leitura)</label>
+            <input type="email" id="editEmail" class="form-control" readonly style="opacity:.6">
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="saveProfile()">Salvar Alterações</button>
+            <button class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancelar</button>
+        </div>
+    </div>
+</div>
 
-            // Verificar se usuário já existe
-            const users = JSON.parse(localStorage.getItem('synthonia_users') || '[]');
-            if (users.find(u => u.email === email)) {
-                alert('Este e-mail já está cadastrado!');
-                return;
-            }
+<!-- ==================== SCRIPTS (order matters!) ==================== -->
+<!-- 1. Config (constants, no dependencies) -->
+<script src="js/config.js"></script>
+<!-- 2. Data layer (depends on config) -->
+<script src="js/data.js"></script>
+<!-- 3. Auth (depends on config, calls showDashboard from app.js) -->
+<script src="js/auth.js"></script>
+<!-- 4. Dashboard (depends on data.js) -->
+<script src="js/dashboard.js"></script>
+<!-- 5. Chart (depends on config, data.js) -->
+<script src="js/chart.js"></script>
+<!-- 6. Modals (depends on data.js, dashboard.js, chart.js) -->
+<script src="js/modals.js"></script>
+<!-- 7. App init (depends on all above) -->
+<script src="js/app.js"></script>
 
-            const newUser = {
-                id: Date.now().toString(),
-                name,
-                email,
-                password,
-                createdAt: new Date().toISOString()
-            };
-
-            users.push(newUser);
-            localStorage.setItem('synthonia_users', JSON.stringify(users));
-            
-            alert('Cadastro realizado com sucesso! Faça login.');
-            showLogin();
-        }
-
-        function login() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            const users = JSON.parse(localStorage.getItem('synthonia_users') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
-
-            if (!user) {
-                alert('E-mail ou senha inválidos!');
-                return;
-            }
-
-            currentUser = user;
-            localStorage.setItem('synthonia_user', JSON.stringify(user));
-            showMainScreen();
-        }
-
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('synthonia_user');
-            document.getElementById('mainScreen').classList.remove('active');
-            document.getElementById('authScreen').classList.add('active');
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPassword').value = '';
-        }
-
-        let currentPeriod = 7;
-
-        function showMainScreen() {
-            document.getElementById('authScreen').classList.remove('active');
-            document.getElementById('mainScreen').classList.add('active');
-            document.getElementById('userName').textContent = currentUser.name.split(' ')[0];
-            
-            // Carregar dados e atualizar dashboard
-            loadDashboardData();
-            generateAIAnalysis();
-            updateChart(currentPeriod);
-        }
-
-        // === OBTER OU INICIALIZAR DADOS ===
-        function getOrInitData() {
-            let data = JSON.parse(localStorage.getItem('synthonia_data') || '[]');
-            if (data.length === 0) {
-                data = [];
-                let ctl = 50;
-                for (let i = 14; i >= 1; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    
-                    const pse = Math.floor(Math.random() * 4) + 5; // 5 - 8
-                    const volume = Math.floor(Math.random() * 40) + 40; // 40 - 80 min
-                    const sleep = Math.floor(Math.random() * 3) + 7; // 7 - 9
-                    const fatigue = Math.floor(Math.random() * 4) + 3; // 3 - 6
-                    const pain = Math.floor(Math.random() * 3) + 1; // 1 - 3
-                    const stress = Math.floor(Math.random() * 3) + 2; // 2 - 4
-                    const motivation = Math.floor(Math.random() * 3) + 7; // 7 - 9
-                    const tqr = Math.floor(Math.random() * 3) + 7;
-                    const prs = Math.floor(Math.random() * 3) + 7;
-                    
-                    const atl = Math.round(pse * volume * 0.8 / 10);
-                    ctl = Math.round(ctl * 0.9 + (pse * volume / 10) * 0.1);
-                    const tsb = ctl - atl;
-                    
-                    data.push({
-                        date: date.toISOString(),
-                        sleep,
-                        fatigue,
-                        pain,
-                        stress,
-                        motivation,
-                        tqr,
-                        prs,
-                        pse,
-                        volume,
-                        atl,
-                        ctl,
-                        tsb
-                    });
-                }
-                localStorage.setItem('synthonia_data', JSON.stringify(data));
-            }
-            return data;
-        }
-
-        // === DASHBOARD ===
-        let chartInstance = null;
-
-        function loadDashboardData() {
-            const data = getOrInitData();
-            
-            if (data.length > 0) {
-                const latest = data[data.length - 1];
-                
-                // Calcular índices
-                const recovery = Math.round(((latest.sleep || 7) + (latest.tqr || 7) + (latest.prs || 7)) / 3 * 10);
-                const readiness = Math.round(((latest.motivation || 7) - (latest.fatigue || 4) - (latest.stress || 3) + 10) / 3 * 10);
-                const intensity = Math.max(0, Math.min(100, readiness + 20));
-
-                document.getElementById('recoveryIndex').textContent = recovery;
-                document.getElementById('readinessIndex').textContent = readiness;
-                document.getElementById('intensityIndex').textContent = intensity + '%';
-
-                // Cores dinâmicas
-                document.getElementById('recoveryIndex').style.color = recovery >= 70 ? 'var(--success)' : recovery >= 40 ? 'var(--warning)' : 'var(--danger)';
-                document.getElementById('readinessIndex').style.color = readiness >= 70 ? 'var(--success)' : readiness >= 40 ? 'var(--warning)' : 'var(--danger)';
-            }
-        }
-
-        function generateAIAnalysis() {
-            const data = getOrInitData();
-            
-            if (data.length === 0) {
-                document.getElementById('aiAnalysisText').innerHTML = 'Nenhum dado disponível. Preencha o questionário diário.';
-                return;
-            }
-
-            const latest = data[data.length - 1];
-            const recovery = Math.round(((latest.sleep || 7) + (latest.tqr || 7) + (latest.prs || 7)) / 3 * 10);
-            const readiness = Math.round(((latest.motivation || 7) - (latest.fatigue || 4) - (latest.stress || 3) + 10) / 3 * 10);
-
-            let analysis = '<strong>Análise do Dia:</strong><br><br>';
-            
-            if (recovery >= 70 && readiness >= 70) {
-                analysis += '✅ <strong>Condição Ótima!</strong> Você está bem recuperado e pronto para treinos de alta intensidade. Aproveite para bater recordes.';
-            } else if (recovery >= 50 && readiness >= 50) {
-                analysis += '⚠️ <strong>Condição Regular.</strong> Mantenha o treino planejado, mas fique atento aos sinais de fadiga. Hidrate-se bem.';
-            } else {
-                analysis += '🔴 <strong>Atenção Necessária!</strong> Sua recuperação está abaixo do ideal. Considere reduzir volume/intensidade ou fazer um dia de descanso ativo.';
-            }
-
-            if (latest.pain >= 7) {
-                analysis += '<br><br>🚨 <strong>Dor Elevada Detectada:</strong> Avalie a possibilidade de lesão. Consulte um profissional se persistir.';
-            }
-
-            if (latest.sleep <= 4) {
-                analysis += '<br><br>😴 <strong>Sono Insuficiente:</strong> Priorize 7-9 horas de sono hoje para otimizar a recuperação.';
-            }
-
-            document.getElementById('aiAnalysisText').innerHTML = analysis;
-        }
-
-        // === CONTROLE DE PERÍODO DO GRÁFICO ===
-        function setChartPeriod(days, btnElement) {
-            currentPeriod = days;
-            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-            if (btnElement) btnElement.classList.add('active');
-            updateChart(currentPeriod);
-        }
-
-        // === GRÁFICO ===
-        function updateChart(days) {
-            if (!days) days = currentPeriod;
-            currentPeriod = days;
-
-            const canvas = document.getElementById('metricsChart');
-            if (!canvas) return;
-
-            // Destruir gráfico anterior se existir
-            if (chartInstance) {
-                chartInstance.destroy();
-                chartInstance = null;
-            }
-
-            const ctx = canvas.getContext('2d');
-            const allData = getOrInitData();
-            
-            // Pegar últimos 'days' registros
-            const recentData = allData.slice(-days);
-            
-            const labels = recentData.map(d => {
-                const dateObj = new Date(d.date);
-                return isNaN(dateObj.getTime()) ? 'Hoje' : dateObj.toLocaleDateString('pt-BR', {day: '2digit', month: '2digit'});
-            });
-            
-            renderChart(ctx, labels, recentData);
-        }
-
-        function renderChart(ctx, labels, data) {
-            // Obter variáveis selecionadas
-            const selectedVars = Array.from(document.querySelectorAll('#variableCheckboxes input:checked'))
-                .map(cb => cb.value);
-
-            if (selectedVars.length === 0) {
-                return;
-            }
-
-            const datasets = [];
-            const colors = {
-                'TSS': '#6366f1',
-                'TRIMP': '#8b5cf6',
-                'ATL': '#06b6d4',
-                'CTL': '#10b981',
-                'TSB': '#f59e0b',
-                'Monotonia': '#ef4444',
-                'Prontidao': '#ec4899',
-                'Dor': '#f97316',
-                'Sono': '#3b82f6'
-            };
-
-            selectedVars.forEach(variable => {
-                const dataValues = data.map(entry => {
-                    const pse = Number(entry.pse) || 5;
-                    const volume = Number(entry.volume) || 30;
-                    const sleep = Number(entry.sleep) || 7;
-                    const fatigue = Number(entry.fatigue) || 3;
-                    const pain = Number(entry.pain) || 2;
-                    const stress = Number(entry.stress) || 3;
-                    const motivation = Number(entry.motivation) || 7;
-                    const atl = Number.isFinite(entry.atl) ? entry.atl : Math.round(pse * volume * 0.8 / 10);
-                    const ctl = Number.isFinite(entry.ctl) ? entry.ctl : 50;
-                    const tsb = Number.isFinite(entry.tsb) ? entry.tsb : (ctl - atl);
-
-                    if (variable === 'TSS') return Math.round(pse * volume / 10);
-                    if (variable === 'TRIMP') return Math.round(pse * volume * 0.5);
-                    if (variable === 'ATL') return atl;
-                    if (variable === 'CTL') return ctl;
-                    if (variable === 'TSB') return tsb;
-                    if (variable === 'Monotonia') return Math.round((fatigue + stress) / 2);
-                    if (variable === 'Prontidao') return Math.round((motivation - fatigue + 10) / 2);
-                    if (variable === 'Dor') return pain;
-                    if (variable === 'Sono') return sleep;
-                    return 0;
-                });
-
-                datasets.push({
-                    label: variable,
-                    data: dataValues,
-                    borderColor: colors[variable] || '#6366f1',
-                    backgroundColor: (colors[variable] || '#6366f1') + '20',
-                    tension: 0.35,
-                    fill: false,
-                    borderWidth: 3,
-                    pointRadius: 5,
-                    pointHoverRadius: 8
-                });
-            });
-
-            chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: { labels, datasets },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            labels: { color: '#f8fafc', font: { size: 13, weight: 'bold' } }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: { color: 'rgba(255,255,255,0.7)' },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
-                        },
-                        y: {
-                            ticks: { color: 'rgba(255,255,255,0.7)' },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
-                        }
-                    }
-                }
-            });
-        }
-
-        // === QUESTIONÁRIO REDIA ===
-        function openQuestionnaire() {
-            document.getElementById('questionnaireModal').classList.add('active');
-        }
-
-        function updateSliderValue(slider) {
-            const valueSpan = document.getElementById(slider.id.replace('Score', 'Value').replace('Duration', 'DurationValue').replace('Pse', 'PseValue'));
-            if (valueSpan) {
-                valueSpan.textContent = slider.value;
-            }
-        }
-
-        function saveQuestionnaire() {
-            const newData = {
-                date: new Date().toISOString(),
-                sleep: parseInt(document.getElementById('sleepScore').value),
-                fatigue: parseInt(document.getElementById('fatigueScore').value),
-                pain: parseInt(document.getElementById('painScore').value),
-                stress: parseInt(document.getElementById('stressScore').value),
-                motivation: parseInt(document.getElementById('motivationScore').value),
-                tqr: parseInt(document.getElementById('tqrScore').value),
-                prs: parseInt(document.getElementById('prsScore').value),
-                pse: parseInt(document.getElementById('pseScore').value),
-                volume: parseInt(document.getElementById('volumeScore').value),
-                atl: 0,
-                ctl: 0,
-                tsb: 0
-            };
-
-            // Calcular ATL, CTL, TSB acumulados
-            const allData = getOrInitData();
-            newData.atl = Math.round(newData.pse * newData.volume * 0.8 / 10);
-            
-            if (allData.length > 0) {
-                const prev = allData[allData.length - 1];
-                const prevCtl = Number.isFinite(prev.ctl) ? prev.ctl : 50;
-                newData.ctl = Math.round(prevCtl * 0.9 + (newData.pse * newData.volume / 10) * 0.1);
-                newData.tsb = newData.ctl - newData.atl;
-            } else {
-                newData.ctl = newData.atl;
-                newData.tsb = 0;
-            }
-
-            allData.push(newData);
-            localStorage.setItem('synthonia_data', JSON.stringify(allData));
-
-            closeModal('questionnaireModal');
-            loadDashboardData();
-            generateAIAnalysis();
-            updateChart(currentPeriod);
-            
-            alert('Questionário REDIA salvo com sucesso!');
-        }
-
-        // === REGISTRO DE TREINOS ===
-        function openWorkoutModal() {
-            document.getElementById('workoutModal').classList.add('active');
-        }
-
-        function saveWorkout() {
-            const duration = parseInt(document.getElementById('workoutDuration').value) || 60;
-            const pse = parseInt(document.getElementById('workoutPse').value) || 7;
-            const type = document.getElementById('workoutType').value;
-            const notes = document.getElementById('workoutNotes').value;
-
-            const allData = getOrInitData();
-            const lastEntry = allData.length > 0 ? allData[allData.length - 1] : {
-                sleep: 7, fatigue: 4, pain: 2, stress: 3, motivation: 7, tqr: 7, prs: 7, ctl: 50
-            };
-
-            const atl = Math.round(pse * duration * 0.8 / 10);
-            const prevCtl = Number.isFinite(lastEntry.ctl) ? lastEntry.ctl : 50;
-            const ctl = Math.round(prevCtl * 0.9 + (pse * duration / 10) * 0.1);
-            const tsb = ctl - atl;
-
-            const newEntry = {
-                date: new Date().toISOString(),
-                workoutType: type,
-                notes: notes,
-                sleep: lastEntry.sleep || 7,
-                fatigue: Math.min(10, (lastEntry.fatigue || 4) + 1),
-                pain: lastEntry.pain || 2,
-                stress: lastEntry.stress || 3,
-                motivation: lastEntry.motivation || 7,
-                tqr: lastEntry.tqr || 7,
-                prs: lastEntry.prs || 7,
-                pse: pse,
-                volume: duration,
-                atl: atl,
-                ctl: ctl,
-                tsb: tsb
-            };
-
-            allData.push(newEntry);
-            localStorage.setItem('synthonia_data', JSON.stringify(allData));
-
-            // Salvar no histórico de treinos
-            const workouts = JSON.parse(localStorage.getItem('synthonia_workouts') || '[]');
-            workouts.push({
-                date: new Date().toISOString(),
-                type,
-                duration,
-                pse,
-                notes,
-                tss: Math.round(pse * duration / 10)
-            });
-            localStorage.setItem('synthonia_workouts', JSON.stringify(workouts));
-
-            closeModal('workoutModal');
-            loadDashboardData();
-            generateAIAnalysis();
-            updateChart(currentPeriod);
-            
-            alert('Treino de ' + type + ' registrado com sucesso!');
-        }
-
-        // === MODAL & PERFIL ===
-        function openCurriculum() {
-            document.getElementById('currName').textContent = currentUser.name;
-            document.getElementById('currEmail').textContent = currentUser.email;
-            document.getElementById('currDate').textContent = new Date(currentUser.createdAt).toLocaleDateString('pt-BR');
-            document.getElementById('curriculumModal').classList.add('active');
-        }
-
-        function editProfile() {
-            const newName = prompt('Novo nome:', currentUser.name);
-            if (newName && newName.trim()) {
-                currentUser.name = newName.trim();
-                localStorage.setItem('synthonia_user', JSON.stringify(currentUser));
-                
-                const users = JSON.parse(localStorage.getItem('synthonia_users') || '[]');
-                const index = users.findIndex(u => u.id === currentUser.id);
-                if (index !== -1) {
-                    users[index] = currentUser;
-                    localStorage.setItem('synthonia_users', JSON.stringify(users));
-                }
-                
-                document.getElementById('userName').textContent = currentUser.name.split(' ')[0];
-                alert('Perfil atualizado!');
-            }
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        // Fechar modal ao clicar fora
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('active');
-            }
-        };
-
-        // Inicializar app
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
 </body>
 </html>
