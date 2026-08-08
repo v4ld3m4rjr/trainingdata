@@ -5,15 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Synthonia AI — Recuperação & Performance</title>
     <meta name="description" content="Plataforma inteligente de monitoramento de recuperação muscular, prontidão e performance para atletas.">
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- App Styles -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -28,7 +22,6 @@
                 <p>Recuperação & Performance Inteligente</p>
             </div>
 
-            <!-- Login Form -->
             <div id="loginForm">
                 <div class="form-group">
                     <label>E-mail</label>
@@ -39,12 +32,9 @@
                     <input type="password" id="loginPassword" class="form-control" placeholder="••••••">
                 </div>
                 <button class="btn btn-primary btn-block" onclick="login()">Entrar</button>
-                <div class="auth-toggle">
-                    Não tem conta? <a onclick="toggleAuth('register')">Cadastre-se</a>
-                </div>
+                <div class="auth-toggle">Não tem conta? <a onclick="toggleAuth('register')">Cadastre-se</a></div>
             </div>
 
-            <!-- Register Form -->
             <div id="registerForm" style="display:none">
                 <div class="form-group">
                     <label>Nome Completo</label>
@@ -67,9 +57,7 @@
                     <input type="password" id="regPasswordConfirm" class="form-control" placeholder="Confirme a senha">
                 </div>
                 <button class="btn btn-primary btn-block" onclick="register()">Cadastrar</button>
-                <div class="auth-toggle">
-                    Já tem conta? <a onclick="toggleAuth('login')">Faça login</a>
-                </div>
+                <div class="auth-toggle">Já tem conta? <a onclick="toggleAuth('login')">Faça login</a></div>
             </div>
         </div>
     </div>
@@ -94,31 +82,25 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Action Grid -->
         <div class="action-grid">
             <div class="action-card" onclick="openModal('questionnaireModal')">
-                <div class="icon">📋</div>
-                <div class="label">Recuperação</div>
+                <div class="icon">📋</div><div class="label">Recuperação</div>
             </div>
             <div class="action-card" onclick="openModal('workoutModal')">
-                <div class="icon">💪</div>
-                <div class="label">Treino</div>
+                <div class="icon">💪</div><div class="label">Treino</div>
             </div>
             <div class="action-card" onclick="openModal('rehabModal')">
-                <div class="icon">🔄</div>
-                <div class="label">Reab</div>
+                <div class="icon">🔄</div><div class="label">Reab</div>
             </div>
             <div class="action-card" onclick="openModal('numerologyModal')">
-                <div class="icon">🔢</div>
-                <div class="label">Numerologia</div>
+                <div class="icon">🔢</div><div class="label">Numerologia</div>
             </div>
             <div class="action-card" onclick="runAIAnalysis()">
-                <div class="icon">🧠</div>
-                <div class="label">Análise IA</div>
+                <div class="icon">🧠</div><div class="label">Análise IA</div>
             </div>
             <div class="action-card" onclick="openModal('editProfileModal')">
-                <div class="icon">✏️</div>
-                <div class="label">Editar Cadastro</div>
+                <div class="icon">✏️</div><div class="label">Editar Cadastro</div>
             </div>
         </div>
 
@@ -141,12 +123,10 @@
             </div>
         </div>
 
-        <!-- AI Analysis Box -->
+        <!-- AI Analysis -->
         <div class="ai-box">
             <div class="ai-header"><span>🤖</span> Análise de IA — Hoje</div>
-            <div class="ai-content" id="aiText">
-                Preencha o questionário de recuperação para receber sua análise personalizada de IA.
-            </div>
+            <div class="ai-content" id="aiText">Preencha o questionário de recuperação para receber sua análise personalizada.</div>
         </div>
 
         <!-- Chart Dashboard -->
@@ -160,26 +140,18 @@
                     <button class="btn btn-secondary btn-sm" onclick="setPeriod(28,this)">28d</button>
                 </div>
             </div>
-            <div class="var-chips" id="varChips">
-                <!-- Variable chips built dynamically by chart.js -->
-            </div>
-            <div class="chart-canvas-wrap">
-                <canvas id="mainChart"></canvas>
-            </div>
+            <div class="var-chips" id="varChips"></div>
+            <div class="chart-canvas-wrap"><canvas id="mainChart"></canvas></div>
         </div>
-
     </div>
 </div>
 
 <!-- ==================== MODALS ==================== -->
 
-<!-- Curriculum Modal -->
+<!-- Curriculum -->
 <div id="curriculumModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>📄 Currículo</h2>
-            <button class="modal-close" onclick="closeModal('curriculumModal')">✕</button>
-        </div>
+        <div class="modal-header"><h2>📄 Currículo</h2><button class="modal-close" onclick="closeModal('curriculumModal')">✕</button></div>
         <div style="text-align:center;margin-bottom:20px">
             <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--primary));margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:36px">👤</div>
             <h3 id="currName">—</h3>
@@ -194,13 +166,10 @@
     </div>
 </div>
 
-<!-- Recovery Questionnaire Modal -->
+<!-- Recovery Questionnaire -->
 <div id="questionnaireModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>📋 Questionário de Recuperação</h2>
-            <button class="modal-close" onclick="closeModal('questionnaireModal')">✕</button>
-        </div>
+        <div class="modal-header"><h2>📋 Questionário de Recuperação</h2><button class="modal-close" onclick="closeModal('questionnaireModal')">✕</button></div>
         <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Responda com base em como você se sente <strong>agora</strong>.</p>
 
         <div class="slider-group">
@@ -261,23 +230,16 @@
     </div>
 </div>
 
-<!-- Workout Modal -->
+<!-- Workout -->
 <div id="workoutModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>💪 Registro de Treino</h2>
-            <button class="modal-close" onclick="closeModal('workoutModal')">✕</button>
-        </div>
+        <div class="modal-header"><h2>💪 Registro de Treino</h2><button class="modal-close" onclick="closeModal('workoutModal')">✕</button></div>
         <div class="form-group">
             <label>Tipo de Treino</label>
             <select id="wkType" class="form-control">
-                <option>Musculação</option>
-                <option>Corrida</option>
-                <option>Ciclismo</option>
-                <option>Natação</option>
-                <option>CrossFit / Funcional</option>
-                <option>Esporte Coletivo</option>
-                <option>Mobilidade / Regen</option>
+                <option>Musculação</option><option>Corrida</option><option>Ciclismo</option>
+                <option>Natação</option><option>CrossFit / Funcional</option>
+                <option>Esporte Coletivo</option><option>Mobilidade / Regen</option>
             </select>
         </div>
         <div class="slider-group">
@@ -301,51 +263,34 @@
     </div>
 </div>
 
-<!-- Rehab Modal -->
+<!-- Rehab -->
 <div id="rehabModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>🔄 Reabilitação</h2>
-            <button class="modal-close" onclick="closeModal('rehabModal')">✕</button>
-        </div>
+        <div class="modal-header"><h2>🔄 Reabilitação</h2><button class="modal-close" onclick="closeModal('rehabModal')">✕</button></div>
         <p style="color:var(--text-muted);text-align:center;padding:40px 0">
             <span style="font-size:48px;display:block;margin-bottom:16px">🏗️</span>
-            Módulo de Reabilitação em desenvolvimento.<br>
-            Em breve: protocolos de reab guiados por IA com progressão adaptativa.
+            Módulo de Reabilitação em desenvolvimento.<br>Em breve: protocolos de reab guiados por IA.
         </p>
     </div>
 </div>
 
-<!-- Numerology Modal -->
+<!-- Numerology -->
 <div id="numerologyModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>🔢 Numerologia</h2>
-            <button class="modal-close" onclick="closeModal('numerologyModal')">✕</button>
-        </div>
+        <div class="modal-header"><h2>🔢 Numerologia</h2><button class="modal-close" onclick="closeModal('numerologyModal')">✕</button></div>
         <p style="color:var(--text-muted);text-align:center;padding:40px 0">
             <span style="font-size:48px;display:block;margin-bottom:16px">🔮</span>
-            Módulo de Numerologia em desenvolvimento.<br>
-            Em breve: análises numerológicas personalizadas para seu ciclo de treino.
+            Módulo de Numerologia em desenvolvimento.<br>Em breve: análises numerológicas personalizadas.
         </p>
     </div>
 </div>
 
-<!-- Edit Profile Modal -->
+<!-- Edit Profile -->
 <div id="editProfileModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>✏️ Editar Cadastro</h2>
-            <button class="modal-close" onclick="closeModal('editProfileModal')">✕</button>
-        </div>
-        <div class="form-group">
-            <label>Nome Completo</label>
-            <input type="text" id="editName" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>E-mail (somente leitura)</label>
-            <input type="email" id="editEmail" class="form-control" readonly style="opacity:.6">
-        </div>
+        <div class="modal-header"><h2>✏️ Editar Cadastro</h2><button class="modal-close" onclick="closeModal('editProfileModal')">✕</button></div>
+        <div class="form-group"><label>Nome Completo</label><input type="text" id="editName" class="form-control"></div>
+        <div class="form-group"><label>E-mail (somente leitura)</label><input type="email" id="editEmail" class="form-control" readonly style="opacity:.6"></div>
         <div class="modal-actions">
             <button class="btn btn-primary" onclick="saveProfile()">Salvar Alterações</button>
             <button class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancelar</button>
@@ -353,21 +298,13 @@
     </div>
 </div>
 
-<!-- ==================== SCRIPTS (order matters!) ==================== -->
-<!-- 1. Config (constants, no dependencies) -->
+<!-- Scripts (dependency order) -->
 <script src="js/config.js"></script>
-<!-- 2. Data layer (depends on config) -->
 <script src="js/data.js"></script>
-<!-- 3. Auth (depends on config, calls showDashboard from app.js) -->
 <script src="js/auth.js"></script>
-<!-- 4. Dashboard (depends on data.js) -->
 <script src="js/dashboard.js"></script>
-<!-- 5. Chart (depends on config, data.js) -->
 <script src="js/chart.js"></script>
-<!-- 6. Modals (depends on data.js, dashboard.js, chart.js) -->
 <script src="js/modals.js"></script>
-<!-- 7. App init (depends on all above) -->
 <script src="js/app.js"></script>
-
 </body>
 </html>
