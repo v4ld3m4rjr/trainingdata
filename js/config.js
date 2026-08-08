@@ -10,6 +10,8 @@ const VARS = {
     TSB:         { label: 'TSB (Balanço)', color: '#f59e0b', cat: 'carga' },
     Monotonia:   { label: 'Monotonia',     color: '#ef4444', cat: 'carga' },
     PSE:         { label: 'PSE',           color: '#e879f9', cat: 'treino' },
+    HRV:         { label: 'HRV (ms)',      color: '#818cf8', cat: 'treino' },
+    FCmedia:     { label: 'FC Média',      color: '#f43f5e', cat: 'treino' },
     Prontidao:   { label: 'Prontidão',     color: '#22d3ee', cat: 'subj' },
     Recuperacao: { label: 'Recuperação',   color: '#34d399', cat: 'subj' },
     Hooper:      { label: 'Hooper Idx',    color: '#fb923c', cat: 'subj' },
@@ -26,5 +28,4 @@ const SK = {
     USER:     'syn_user',
     USERS:    'syn_users',
     DATA:     'syn_data',
-    WORKOUTS: 'syn_workouts',
 };

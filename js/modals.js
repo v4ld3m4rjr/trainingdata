@@ -2,80 +2,112 @@
    modals.js — Modal Management, Questionnaire & Workout Save
    =================================================================== */
 
-function openModal(id){
-    if(id==='curriculumModal'&&currentUser){
-        document.getElementById('currName').textContent=currentUser.name;
-        document.getElementById('currEmail').textContent=currentUser.email;
-        document.getElementById('currDate').textContent=new Date(currentUser.createdAt).toLocaleDateString('pt-BR');
-        document.getElementById('currRecords').textContent=getData().length;
+function openModal(id) {
+    if (id === 'curriculumModal' && currentUser) {
+        document.getElementById('currName').textContent = currentUser.name;
+        document.getElementById('currEmail').textContent = currentUser.email;
+        document.getElementById('currDate').textContent = new Date(currentUser.createdAt).toLocaleDateString('pt-BR');
+        document.getElementById('currRecords').textContent = getData().length;
     }
-    if(id==='editProfileModal'&&currentUser){
-        document.getElementById('editName').value=currentUser.name;
-        document.getElementById('editEmail').value=currentUser.email;
+    if (id === 'editProfileModal' && currentUser) {
+        document.getElementById('editName').value = currentUser.name;
+        document.getElementById('editEmail').value = currentUser.email;
+    }
+    if (id === 'workoutModal') {
+        // Default date to today
+        document.getElementById('wkDate').value = new Date().toISOString().slice(0, 10);
     }
     document.getElementById(id).classList.add('active');
 }
 
-function closeModal(id){document.getElementById(id).classList.remove('active');}
-function sv(s,id){document.getElementById(id).textContent=s.value;}
-function num(id){return parseInt(document.getElementById(id).value)||0;}
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function sv(s, id) { document.getElementById(id).textContent = s.value; }
+function num(id) { return parseInt(document.getElementById(id).value) || 0; }
 
 /* ── Save Recovery Questionnaire ── */
-function saveQuestionnaire(){
-    const sonoQ=num('sonoQ'),sonoH=parseFloat(document.getElementById('sonoH').value)||7;
-    const fadiga=num('fadiga'),estresse=num('estresse'),doms=num('doms'),humor=num('humor');
-    const tqr=num('tqr'),prs=num('prs'),dor=num('dor'),motivacao=num('motivacao');
+function saveQuestionnaire() {
+    var sonoQ = num('sonoQ'), sonoH = parseFloat(document.getElementById('sonoH').value) || 7;
+    var fadiga = num('fadiga'), estresse = num('estresse'), doms = num('doms'), humor = num('humor');
+    var tqr = num('tqr'), prs = num('prs'), dor = num('dor'), motivacao = num('motivacao');
 
-    const hooper=cHooper(fadiga,estresse,doms,humor);
-    const prontidao=cPront(tqr,prs,sonoQ,motivacao);
-    const recuperacao=cRecup(tqr,prs,sonoQ,doms);
+    var hooper = cHooper(fadiga, estresse, doms, humor);
+    var prontidao = cPront(tqr, prs, sonoQ, motivacao);
+    var recuperacao = cRecup(tqr, prs, sonoQ, doms);
 
-    const data=getData(), prev=data.length?data[data.length-1]:null;
-    const today=new Date().toISOString().slice(0,10);
-    const te=data.find(e=>e.date&&e.date.slice(0,10)===today);
+    var data = getData();
+    var prev = data.length ? data[data.length - 1] : null;
+    var today = new Date().toISOString().slice(0, 10);
+    var te = data.find(function (e) { return e.date && e.date.slice(0, 10) === today; });
 
-    if(te){
-        Object.assign(te,{sonoQ,sonoH,fadiga,estresse,doms,humor,tqr,prs,dor,motivacao,hooper,prontidao,recuperacao});
+    if (te) {
+        Object.assign(te, { sonoQ: sonoQ, sonoH: sonoH, fadiga: fadiga, estresse: estresse, doms: doms, humor: humor, tqr: tqr, prs: prs, dor: dor, motivacao: motivacao, hooper: hooper, prontidao: prontidao, recuperacao: recuperacao });
     } else {
-        const atl=prev?Math.round(prev.atl*.87):0;
-        const ctl=prev?Math.round(prev.ctl+(0-prev.ctl)/42):0;
+        var atl = prev ? Math.round(prev.atl * 0.87) : 0;
+        var ctl = prev ? Math.round(prev.ctl + (0 - prev.ctl) / 42) : 0;
         data.push({
-            date:new Date().toISOString(), pse:0,dur:0,tss:0,trimp:0,
-            sonoQ,sonoH,fadiga,estresse,doms,humor,tqr,prs,dor,motivacao,
-            hooper, atl,ctl, tsb:ctl-atl, monotonia:prev?prev.monotonia:0,
-            prontidao,recuperacao
+            date: new Date().toISOString(), pse: 0, dur: 0, tss: 0, trimp: 0, hrv: 0, fcmedia: 0,
+            sonoQ: sonoQ, sonoH: sonoH, fadiga: fadiga, estresse: estresse, doms: doms, humor: humor,
+            tqr: tqr, prs: prs, dor: dor, motivacao: motivacao,
+            hooper: hooper, atl: atl, ctl: ctl, tsb: ctl - atl,
+            monotonia: prev ? prev.monotonia : 0, prontidao: prontidao, recuperacao: recuperacao
         });
     }
-    saveData(data);closeModal('questionnaireModal');refreshAll();
+    saveData(data); closeModal('questionnaireModal'); refreshAll();
     alert('Questionário de recuperação salvo!');
 }
 
 /* ── Save Workout ── */
-function saveWorkout(){
-    const type=document.getElementById('wkType').value;
-    const dur=num('wkDur'),pse=num('wkPse'),notes=document.getElementById('wkNotes').value;
-    const tss=Math.round(pse*dur/10), trimp=Math.round(dur*pse*.64);
+function saveWorkout() {
+    var selectedDate = document.getElementById('wkDate').value; // YYYY-MM-DD from calendar
+    var type = document.getElementById('wkType').value;
+    var dur = num('wkDur');
+    var pse = num('wkPse');
+    var hrv = num('wkHrv');
+    var fcmedia = num('wkFc');
+    var notes = document.getElementById('wkNotes').value;
 
-    const data=getData(), prev=data.length?data[data.length-1]:null;
-    const atl=tss, prevCtl=prev?(prev.ctl||45):45;
-    const ctl=Math.round(prevCtl+(tss-prevCtl)/42), tsb=ctl-atl;
-    const last7=data.slice(-6).map(e=>e.tss||0).concat([tss]);
-    const mono=cMono(last7);
+    var tss = Math.round(pse * dur / 10);
+    var trimp = Math.round(dur * pse * 0.64);
 
-    const defs={sonoQ:3,sonoH:7,fadiga:3,estresse:3,doms:3,humor:5,tqr:13,prs:5,dor:2,motivacao:7,prontidao:60,recuperacao:60};
-    const c={};for(const[k,v]of Object.entries(defs))c[k]=prev?(prev[k]??v):v;
-    const hooper=cHooper(c.fadiga,c.estresse,c.doms,c.humor);
+    var data = getData();
+    var prev = data.length ? data[data.length - 1] : null;
+    var atl = tss;
+    var prevCtl = prev ? (prev.ctl || 45) : 45;
+    var ctl = Math.round(prevCtl + (tss - prevCtl) / 42);
+    var tsb = ctl - atl;
+    var last7 = data.slice(-6).map(function (e) { return e.tss || 0; }).concat([tss]);
+    var mono = cMono(last7);
 
-    const today=new Date().toISOString().slice(0,10);
-    const te=data.find(e=>e.date&&e.date.slice(0,10)===today);
-    if(te){
-        Object.assign(te,{pse,dur,tss,trimp,atl,ctl,tsb,monotonia:mono,workoutType:type,notes});
+    var defs = { sonoQ: 3, sonoH: 7, fadiga: 3, estresse: 3, doms: 3, humor: 5, tqr: 13, prs: 5, dor: 2, motivacao: 7, prontidao: 60, recuperacao: 60 };
+    var c = {};
+    for (var k in defs) { c[k] = prev ? (prev[k] != null ? prev[k] : defs[k]) : defs[k]; }
+    var hooper = cHooper(c.fadiga, c.estresse, c.doms, c.humor);
+
+    // Use the selected date from calendar
+    var entryDate = selectedDate || new Date().toISOString().slice(0, 10);
+    var te = data.find(function (e) { return e.date && e.date.slice(0, 10) === entryDate; });
+
+    if (te) {
+        Object.assign(te, { pse: pse, dur: dur, tss: tss, trimp: trimp, hrv: hrv, fcmedia: fcmedia, atl: atl, ctl: ctl, tsb: tsb, monotonia: mono, workoutType: type, notes: notes });
     } else {
-        data.push({date:new Date().toISOString(),pse,dur,tss,trimp,...c,hooper,atl,ctl,tsb,monotonia:mono,workoutType:type,notes});
+        var fullDate = new Date(entryDate + 'T12:00:00').toISOString();
+        data.push({
+            date: fullDate, pse: pse, dur: dur, tss: tss, trimp: trimp, hrv: hrv, fcmedia: fcmedia,
+            sonoQ: c.sonoQ, sonoH: c.sonoH, fadiga: c.fadiga, estresse: c.estresse,
+            doms: c.doms, humor: c.humor, tqr: c.tqr, prs: c.prs, dor: c.dor, motivacao: c.motivacao,
+            hooper: hooper, atl: atl, ctl: ctl, tsb: tsb, monotonia: mono,
+            prontidao: c.prontidao, recuperacao: c.recuperacao, workoutType: type, notes: notes
+        });
+        // Sort by date after adding past entries
+        data.sort(function (a, b) { return new Date(a.date) - new Date(b.date); });
     }
-    saveData(data);closeModal('workoutModal');refreshAll();
-    alert('Treino de '+type+' registrado!');
+    saveData(data); closeModal('workoutModal'); refreshAll();
+    alert('Treino de ' + type + ' registrado em ' + entryDate + '!');
 }
 
 /* ── Close on backdrop click ── */
-window.addEventListener('click',e=>{if(e.target.classList.contains('modal'))e.target.classList.remove('active');});
+window.addEventListener('click', function (e) {
+    if (e.target.classList.contains('modal')) {
+        e.target.classList.remove('active');
+    }
+});

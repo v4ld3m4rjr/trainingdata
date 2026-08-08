@@ -82,25 +82,16 @@
             </div>
         </div>
 
-        <!-- Action Grid -->
-        <div class="action-grid">
+        <!-- 3 Action Buttons Only -->
+        <div class="action-grid" style="grid-template-columns:repeat(3,1fr)">
             <div class="action-card" onclick="openModal('questionnaireModal')">
-                <div class="icon">📋</div><div class="label">Recuperação</div>
+                <div class="icon">📋</div><div class="label">Questionário do Dia</div>
             </div>
             <div class="action-card" onclick="openModal('workoutModal')">
-                <div class="icon">💪</div><div class="label">Treino</div>
-            </div>
-            <div class="action-card" onclick="openModal('rehabModal')">
-                <div class="icon">🔄</div><div class="label">Reab</div>
-            </div>
-            <div class="action-card" onclick="openModal('numerologyModal')">
-                <div class="icon">🔢</div><div class="label">Numerologia</div>
+                <div class="icon">💪</div><div class="label">Treinos</div>
             </div>
             <div class="action-card" onclick="runAIAnalysis()">
                 <div class="icon">🧠</div><div class="label">Análise IA</div>
-            </div>
-            <div class="action-card" onclick="openModal('editProfileModal')">
-                <div class="icon">✏️</div><div class="label">Editar Cadastro</div>
             </div>
         </div>
 
@@ -125,7 +116,7 @@
 
         <!-- AI Analysis -->
         <div class="ai-box">
-            <div class="ai-header"><span>🤖</span> Análise de IA — Hoje</div>
+            <div class="ai-header"><span>🤖</span> Análise de IA — Evolução</div>
             <div class="ai-content" id="aiText">Preencha o questionário de recuperação para receber sua análise personalizada.</div>
         </div>
 
@@ -134,10 +125,10 @@
             <div class="chart-header">
                 <h3>📊 Dashboard de Variáveis</h3>
                 <div class="period-btns" id="periodBtns">
-                    <button class="btn btn-secondary btn-sm active" onclick="setPeriod(7,this)">7d</button>
-                    <button class="btn btn-secondary btn-sm" onclick="setPeriod(14,this)">14d</button>
-                    <button class="btn btn-secondary btn-sm" onclick="setPeriod(21,this)">21d</button>
-                    <button class="btn btn-secondary btn-sm" onclick="setPeriod(28,this)">28d</button>
+                    <button type="button" class="btn btn-secondary btn-sm active" onclick="setPeriod(7,this)">7d</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="setPeriod(14,this)">14d</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="setPeriod(21,this)">21d</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="setPeriod(28,this)">28d</button>
                 </div>
             </div>
             <div class="var-chips" id="varChips"></div>
@@ -169,7 +160,7 @@
 <!-- Recovery Questionnaire -->
 <div id="questionnaireModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header"><h2>📋 Questionário de Recuperação</h2><button class="modal-close" onclick="closeModal('questionnaireModal')">✕</button></div>
+        <div class="modal-header"><h2>📋 Questionário do Dia</h2><button class="modal-close" onclick="closeModal('questionnaireModal')">✕</button></div>
         <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Responda com base em como você se sente <strong>agora</strong>.</p>
 
         <div class="slider-group">
@@ -224,16 +215,21 @@
         </div>
 
         <div class="modal-actions">
-            <button class="btn btn-primary" onclick="saveQuestionnaire()">Salvar</button>
-            <button class="btn btn-secondary" onclick="closeModal('questionnaireModal')">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="saveQuestionnaire()">Salvar</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal('questionnaireModal')">Cancelar</button>
         </div>
     </div>
 </div>
 
-<!-- Workout -->
+<!-- Workout with Calendar, HRV, FC -->
 <div id="workoutModal" class="modal">
     <div class="modal-content">
         <div class="modal-header"><h2>💪 Registro de Treino</h2><button class="modal-close" onclick="closeModal('workoutModal')">✕</button></div>
+
+        <div class="form-group">
+            <label>📅 Data do Treino</label>
+            <input type="date" id="wkDate" class="form-control">
+        </div>
         <div class="form-group">
             <label>Tipo de Treino</label>
             <select id="wkType" class="form-control">
@@ -253,47 +249,33 @@
             <div class="slider-labels"><span>0 (Repouso)</span><span>10 (Máximo)</span></div>
         </div>
         <div class="form-group">
+            <label>❤️ HRV — Variabilidade da FC (rMSSD, ms)</label>
+            <input type="number" id="wkHrv" class="form-control" placeholder="Ex: 55" min="0" max="200">
+        </div>
+        <div class="form-group">
+            <label>💓 FC Média (bpm)</label>
+            <input type="number" id="wkFc" class="form-control" placeholder="Ex: 140" min="40" max="220">
+        </div>
+        <div class="form-group">
             <label>Observações</label>
             <input type="text" id="wkNotes" class="form-control" placeholder="Ex: Treino de pernas, carga progressiva">
         </div>
         <div class="modal-actions">
-            <button class="btn btn-primary" onclick="saveWorkout()">Salvar Treino</button>
-            <button class="btn btn-secondary" onclick="closeModal('workoutModal')">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="saveWorkout()">Salvar Treino</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal('workoutModal')">Cancelar</button>
         </div>
     </div>
 </div>
 
-<!-- Rehab -->
-<div id="rehabModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header"><h2>🔄 Reabilitação</h2><button class="modal-close" onclick="closeModal('rehabModal')">✕</button></div>
-        <p style="color:var(--text-muted);text-align:center;padding:40px 0">
-            <span style="font-size:48px;display:block;margin-bottom:16px">🏗️</span>
-            Módulo de Reabilitação em desenvolvimento.<br>Em breve: protocolos de reab guiados por IA.
-        </p>
-    </div>
-</div>
-
-<!-- Numerology -->
-<div id="numerologyModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header"><h2>🔢 Numerologia</h2><button class="modal-close" onclick="closeModal('numerologyModal')">✕</button></div>
-        <p style="color:var(--text-muted);text-align:center;padding:40px 0">
-            <span style="font-size:48px;display:block;margin-bottom:16px">🔮</span>
-            Módulo de Numerologia em desenvolvimento.<br>Em breve: análises numerológicas personalizadas.
-        </p>
-    </div>
-</div>
-
-<!-- Edit Profile -->
+<!-- Edit Profile (accessible via avatar) -->
 <div id="editProfileModal" class="modal">
     <div class="modal-content">
         <div class="modal-header"><h2>✏️ Editar Cadastro</h2><button class="modal-close" onclick="closeModal('editProfileModal')">✕</button></div>
         <div class="form-group"><label>Nome Completo</label><input type="text" id="editName" class="form-control"></div>
         <div class="form-group"><label>E-mail (somente leitura)</label><input type="email" id="editEmail" class="form-control" readonly style="opacity:.6"></div>
         <div class="modal-actions">
-            <button class="btn btn-primary" onclick="saveProfile()">Salvar Alterações</button>
-            <button class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="saveProfile()">Salvar Alterações</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancelar</button>
         </div>
     </div>
 </div>

@@ -18,6 +18,8 @@ function seedData() {
         const pse = R(4,9), dur = R(30,90);
         const tss = Math.round(pse * dur / 10);
         const trimp = Math.round(dur * pse * 0.64);
+        const hrv = R(35,85);          // HRV rMSSD em ms
+        const fcmedia = R(110,170);    // FC média bpm
         const sonoQ = R(2,5), sonoH = R(6,9);
         const fadiga = R(1,5), estresse = R(1,4), doms = R(1,5), humor = R(3,7);
         const tqr = R(10,18), prs = R(4,9), dor = R(0,5), motivacao = R(5,10);
@@ -28,7 +30,8 @@ function seedData() {
         const mono = +(Math.random()*1.5+.5).toFixed(2);
         const prontidao = cPront(tqr,prs,sonoQ,motivacao);
         const recuperacao = cRecup(tqr,prs,sonoQ,doms);
-        out.push({ date:dt.toISOString(), pse,dur,tss,trimp, sonoQ,sonoH,fadiga,estresse,doms,humor,
+        out.push({ date:dt.toISOString(), pse,dur,tss,trimp,hrv,fcmedia,
+            sonoQ,sonoH,fadiga,estresse,doms,humor,
             tqr,prs,dor,motivacao, hooper,atl,ctl,tsb,monotonia:mono,prontidao,recuperacao });
     }
     return out;
@@ -62,9 +65,9 @@ function exVar(e, k) {
     const n = v => Number(v)||0;
     const map = {
         TSS:n(e.tss), TRIMP:n(e.trimp), ATL:n(e.atl), CTL:n(e.ctl), TSB:n(e.tsb),
-        Monotonia:n(e.monotonia), PSE:n(e.pse), Prontidao:n(e.prontidao),
-        Recuperacao:n(e.recuperacao), Hooper:n(e.hooper), TQR:n(e.tqr),
-        PRS:n(e.prs), Dor:n(e.dor), SonoQ:n(e.sonoQ), Motivacao:n(e.motivacao)
+        Monotonia:n(e.monotonia), PSE:n(e.pse), HRV:n(e.hrv), FCmedia:n(e.fcmedia),
+        Prontidao:n(e.prontidao), Recuperacao:n(e.recuperacao), Hooper:n(e.hooper),
+        TQR:n(e.tqr), PRS:n(e.prs), Dor:n(e.dor), SonoQ:n(e.sonoQ), Motivacao:n(e.motivacao)
     };
     return map[k] ?? 0;
 }
