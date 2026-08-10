@@ -5,9 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Synthonia AI — Recuperação & Performance</title>
     <meta name="description" content="Plataforma inteligente de monitoramento de recuperação muscular, prontidão e performance para atletas.">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Athlytic / WHOOP Style CSS -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -15,49 +21,51 @@
 <!-- ==================== AUTH SCREEN ==================== -->
 <div id="authScreen" class="screen active">
     <div class="auth-wrapper">
-        <div class="auth-card glass" style="padding:36px">
-            <div class="auth-logo">
-                <div class="logo-icon">⚡</div>
-                <h1>Synthonia <span>AI</span></h1>
-                <p>Recuperação & Performance Inteligente</p>
-            </div>
+        <div class="auth-card card" style="padding:32px;text-align:center">
+            <div style="width:64px;height:64px;margin:0 auto 16px;border-radius:18px;background:linear-gradient(135deg,#00e676,#00e5ff);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 24px rgba(0,230,118,0.3)">⚡</div>
+            <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">Synthonia <span style="color:var(--green)">AI</span></h1>
+            <p style="color:var(--text-muted);font-size:13px;margin-bottom:24px">Recuperação & Performance Athlytic</p>
 
             <div id="loginForm">
-                <div class="form-group">
+                <div class="form-group" style="text-align:left">
                     <label>E-mail</label>
                     <input type="email" id="loginEmail" class="form-control" placeholder="seu@email.com">
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="text-align:left">
                     <label>Senha</label>
                     <input type="password" id="loginPassword" class="form-control" placeholder="••••••">
                 </div>
-                <button class="btn btn-primary btn-block" onclick="login()">Entrar</button>
-                <div class="auth-toggle">Não tem conta? <a onclick="toggleAuth('register')">Cadastre-se</a></div>
+                <button type="button" class="btn-pill-action blue" style="width:100%;margin-top:8px" onclick="login()">Entrar</button>
+                <div style="margin-top:16px;font-size:13px;color:var(--text-muted)">
+                    Não tem conta? <a onclick="toggleAuth('register')" style="color:var(--cyan);cursor:pointer;font-weight:700">Cadastre-se</a>
+                </div>
             </div>
 
             <div id="registerForm" style="display:none">
-                <div class="form-group">
+                <div class="form-group" style="text-align:left">
                     <label>Nome Completo</label>
                     <input type="text" id="regName" class="form-control" placeholder="Seu nome">
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="text-align:left">
                     <label>E-mail</label>
                     <input type="email" id="regEmail" class="form-control" placeholder="seu@email.com">
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="text-align:left">
                     <label>Confirmar E-mail</label>
                     <input type="email" id="regEmailConfirm" class="form-control" placeholder="Confirme seu e-mail">
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="text-align:left">
                     <label>Senha</label>
                     <input type="password" id="regPassword" class="form-control" placeholder="Mínimo 6 caracteres">
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="text-align:left">
                     <label>Confirmar Senha</label>
                     <input type="password" id="regPasswordConfirm" class="form-control" placeholder="Confirme a senha">
                 </div>
-                <button class="btn btn-primary btn-block" onclick="register()">Cadastrar</button>
-                <div class="auth-toggle">Já tem conta? <a onclick="toggleAuth('login')">Faça login</a></div>
+                <button type="button" class="btn-pill-action blue" style="width:100%;margin-top:8px" onclick="register()">Cadastrar</button>
+                <div style="margin-top:16px;font-size:13px;color:var(--text-muted)">
+                    Já tem conta? <a onclick="toggleAuth('login')" style="color:var(--cyan);cursor:pointer;font-weight:700">Faça login</a>
+                </div>
             </div>
         </div>
     </div>
@@ -67,98 +75,192 @@
 <div id="mainScreen" class="screen">
     <div class="container">
 
-        <!-- Header -->
-        <div class="app-header glass">
-            <div class="header-left">
-                <div class="header-logo">⚡</div>
-                <div class="header-greet">
-                    <h2>Olá, <span id="userName">Atleta</span>! 👋</h2>
-                    <p id="headerDate">Carregando...</p>
+        <!-- Top Header Navigation -->
+        <div class="top-nav">
+            <div class="top-title">Hoje</div>
+            <div class="top-actions">
+                <div class="icon-btn" onclick="openModal('workoutModal')" title="Registrar Treino">📅</div>
+                <div class="icon-btn" onclick="openModal('curriculumModal')" title="Meu Perfil">👤</div>
+            </div>
+        </div>
+
+        <!-- 1. Hero Status Card (Athlytic Style Banner) -->
+        <div class="card hero-card">
+            <div class="status-pill" id="heroPill">● GREEN LIGHT, LET'S GO!</div>
+            <div class="hero-headline" id="heroHeadline">Pronto para Superar.</div>
+            <div class="hero-desc" id="heroDesc">
+                Carregando análise do dia...
+            </div>
+        </div>
+
+        <!-- 2. 2x2 Key Metric Cards Grid -->
+        <div class="metrics-grid">
+            <!-- Metric 1: Recovery -->
+            <div class="metric-card" onclick="openModal('questionnaireModal')">
+                <div class="metric-header">
+                    <span class="metric-title">RECOVERY</span>
+                    <span class="metric-arrow">❯</span>
+                </div>
+                <div class="metric-val" id="valRec" style="color:var(--green)">--<span>%</span></div>
+                <div class="metric-sub" id="subRec">Ready to Train</div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-fill" id="barRec" style="width:0%;background:var(--green)"></div>
                 </div>
             </div>
-            <div class="header-right">
-                <div class="avatar" onclick="openModal('curriculumModal')" title="Meu Currículo">👤</div>
-                <button class="btn btn-danger btn-sm" onclick="logout()">Sair</button>
-            </div>
-        </div>
 
-        <!-- 2 Action Buttons Only -->
-        <div class="action-grid" style="grid-template-columns:repeat(2,1fr)">
-            <div class="action-card" onclick="openModal('questionnaireModal')">
-                <div class="icon">📋</div><div class="label">Questionário do Dia</div>
-            </div>
-            <div class="action-card" onclick="openModal('workoutModal')">
-                <div class="icon">💪</div><div class="label">Treinos</div>
-            </div>
-        </div>
-
-        <!-- Key Indices -->
-        <div class="indices">
-            <div class="idx-card recovery">
-                <div class="idx-label">Índice de Recuperação</div>
-                <div class="idx-value" id="idxRecovery" style="color:var(--success)">--</div>
-                <div class="idx-sub">0 – 100</div>
-            </div>
-            <div class="idx-card readiness">
-                <div class="idx-label">Prontidão para Treino</div>
-                <div class="idx-value" id="idxReadiness" style="color:var(--secondary)">--</div>
-                <div class="idx-sub">0 – 100</div>
-            </div>
-            <div class="idx-card intensity">
-                <div class="idx-label">Intensidade Recomendada</div>
-                <div class="idx-value" id="idxIntensity" style="color:var(--warning)">--</div>
-                <div class="idx-sub">% do máximo</div>
-            </div>
-        </div>
-
-        <!-- AI Analysis -->
-        <div class="ai-box">
-            <div class="ai-header"><span>🤖</span> Análise de IA — Evolução</div>
-            <div class="ai-content" id="aiText">Preencha o questionário de recuperação para receber sua análise personalizada.</div>
-        </div>
-
-        <!-- Chart Dashboard -->
-        <div class="chart-section glass">
-            <div class="chart-header">
-                <h3>📊 Dashboard de Variáveis</h3>
-                <div class="period-btns" id="periodBtns">
-                    <button type="button" class="btn btn-secondary btn-sm active" onclick="setPeriod(7,this)">7d</button>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="setPeriod(14,this)">14d</button>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="setPeriod(21,this)">21d</button>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="setPeriod(28,this)">28d</button>
+            <!-- Metric 2: Sleep -->
+            <div class="metric-card" onclick="openModal('questionnaireModal')">
+                <div class="metric-header">
+                    <span class="metric-title">SLEEP</span>
+                    <span class="metric-arrow">❯</span>
+                </div>
+                <div class="metric-val" id="valSleep" style="color:#818cf8">--<span>%</span></div>
+                <div class="metric-sub" id="subSleep">8h 48m</div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-fill" id="barSleep" style="width:0%;background:var(--indigo)"></div>
                 </div>
             </div>
-            <div class="var-chips" id="varChips"></div>
-            <div class="chart-canvas-wrap"><canvas id="mainChart"></canvas></div>
+
+            <!-- Metric 3: Exertion / Readiness -->
+            <div class="metric-card" onclick="openModal('workoutModal')">
+                <div class="metric-header">
+                    <span class="metric-title">EXERTION</span>
+                    <span class="metric-arrow">❯</span>
+                </div>
+                <div class="metric-val" id="valExertion" style="color:var(--text)">--<span>/10</span></div>
+                <div class="metric-sub" id="subExertion">Target Exertion Zone</div>
+                <div class="exertion-bar-container">
+                    <div class="target-band" id="targetBand" style="left:40%;width:35%"></div>
+                    <div class="progress-fill" id="barExertion" style="width:0%;background:var(--cyan)"></div>
+                </div>
+            </div>
+
+            <!-- Metric 4: Energy Burned / Carga -->
+            <div class="metric-card" onclick="openModal('workoutModal')">
+                <div class="metric-header">
+                    <span class="metric-title">ENERGY / TSS</span>
+                    <span class="metric-arrow">❯</span>
+                </div>
+                <div class="metric-val" id="valEnergy" style="color:var(--orange)">--<span> TSS</span></div>
+                <div class="metric-sub" id="subEnergy">Carga Acumulada</div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-fill" id="barEnergy" style="width:0%;background:var(--orange)"></div>
+                </div>
+            </div>
         </div>
+
+        <!-- 3. Target Exertion & Recommended Workout Card -->
+        <div class="recom-card">
+            <div class="recom-badge">RECOMENDADO PARA VOCÊ</div>
+            <div class="recom-main">
+                <div class="recom-icon-box">🏃</div>
+                <div>
+                    <div class="recom-title" id="recomTitle">Treino Funcional & Força</div>
+                    <div class="recom-meta" id="recomMeta">46 min · Esforço Moderado</div>
+                </div>
+            </div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">
+                Zona alvo estimada em <strong>~6.0</strong>, encaixando-se perfeitamente na sua capacidade de recuperação de hoje.
+            </div>
+            <!-- Zone Breakdown Bar -->
+            <div class="zone-bar-wrap">
+                <div class="zone-seg z1" style="width:28%"></div>
+                <div class="zone-seg z2" style="width:50%"></div>
+                <div class="zone-seg z3" style="width:22%"></div>
+            </div>
+            <div class="zone-labels">
+                <span>Z1: <strong>13m</strong></span>
+                <span>Z2: <strong>23m</strong></span>
+                <span>Z3: <strong>9m</strong></span>
+            </div>
+            <div class="pill-btn-group">
+                <button type="button" class="btn-pill-action blue" onclick="openModal('workoutModal')">Registrar Treino</button>
+                <button type="button" class="btn-pill-action dark" onclick="openModal('questionnaireModal')">Questionário</button>
+            </div>
+        </div>
+
+        <!-- 4. Deep AI Evolution Section (3 Neurophysiological Blocks) -->
+        <div class="ai-section" id="aiBlocks">
+            <!-- Dynamic 3 AI blocks injected by dashboard.js -->
+        </div>
+
+        <!-- 5. Trends / Chart Section -->
+        <div class="trends-card" id="trendsSection">
+            <div class="trends-header">
+                <h3>📊 Tendências</h3>
+                <div class="period-pills" id="periodBtns">
+                    <button type="button" class="period-pill active" onclick="setPeriod(7,this)">7d</button>
+                    <button type="button" class="period-pill" onclick="setPeriod(14,this)">14d</button>
+                    <button type="button" class="period-pill" onclick="setPeriod(21,this)">21d</button>
+                    <button type="button" class="period-pill" onclick="setPeriod(28,this)">28d</button>
+                </div>
+            </div>
+            <div class="var-chips" id="varChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div>
+            <div class="chart-box"><canvas id="mainChart"></canvas></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ==================== FIXED BOTTOM NAVIGATION BAR ==================== -->
+<div class="bottom-nav">
+    <div class="nav-item active" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <span class="nav-icon">☀️</span>
+        <span>Hoje</span>
+    </div>
+    <div class="nav-item" onclick="openModal('questionnaireModal')">
+        <span class="nav-icon">📋</span>
+        <span>Questionário</span>
+    </div>
+    <div class="nav-item" onclick="openModal('workoutModal')">
+        <span class="nav-icon">💪</span>
+        <span>Treinos</span>
+    </div>
+    <div class="nav-item" onclick="document.getElementById('trendsSection').scrollIntoView({behavior:'smooth'})">
+        <span class="nav-icon">📈</span>
+        <span>Tendências</span>
+    </div>
+    <div class="nav-item" onclick="openModal('curriculumModal')">
+        <span class="nav-icon">👤</span>
+        <span>Perfil</span>
     </div>
 </div>
 
 <!-- ==================== MODALS ==================== -->
 
-<!-- Curriculum -->
+<!-- Curriculum Modal -->
 <div id="curriculumModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header"><h2>📄 Currículo</h2><button class="modal-close" onclick="closeModal('curriculumModal')">✕</button></div>
+        <div class="modal-header">
+            <h2>📄 Meu Perfil / Currículo</h2>
+            <button type="button" class="modal-close" onclick="closeModal('curriculumModal')">✕</button>
+        </div>
         <div style="text-align:center;margin-bottom:20px">
-            <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--primary));margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:36px">👤</div>
+            <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:32px">👤</div>
             <h3 id="currName">—</h3>
             <p style="color:var(--text-muted);font-size:13px" id="currEmail">—</p>
         </div>
-        <div style="border-top:1px solid var(--glass-border);padding-top:16px;font-size:14px;color:var(--text-muted);line-height:1.8">
+        <div style="border-top:1px solid var(--border);padding-top:16px;font-size:14px;color:var(--text-muted);line-height:1.8">
             <p><strong style="color:var(--text)">Data de Cadastro:</strong> <span id="currDate">—</span></p>
             <p><strong style="color:var(--text)">Total de Registros:</strong> <span id="currRecords">0</span></p>
-            <hr style="border-color:var(--glass-border);margin:12px 0">
-            <p>Atleta focado em otimização de performance e recuperação muscular, utilizando ciência de dados e inteligência artificial para maximizar resultados.</p>
+            <hr style="border-color:var(--border);margin:12px 0">
+            <p>Atleta monitorado via Synthonia AI Athlytic Engine, integrando variáveis autonômicas, fisiológicas e perceptivas para otimização contínua.</p>
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-primary" onclick="openModal('editProfileModal');closeModal('curriculumModal')">Editar Nome</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal('curriculumModal')">Fechar</button>
         </div>
     </div>
 </div>
 
-<!-- Recovery Questionnaire -->
+<!-- Recovery Questionnaire Modal -->
 <div id="questionnaireModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header"><h2>📋 Questionário do Dia</h2><button class="modal-close" onclick="closeModal('questionnaireModal')">✕</button></div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Responda com base em como você se sente <strong>agora</strong>.</p>
+        <div class="modal-header">
+            <h2>📋 Questionário do Dia</h2>
+            <button type="button" class="modal-close" onclick="closeModal('questionnaireModal')">✕</button>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Responda com base no seu estado fisiológico <strong>atual</strong>.</p>
 
         <div class="slider-group">
             <div class="slider-header"><label>Qualidade do Sono</label><span class="slider-val" id="vSonoQ">3</span></div>
@@ -193,12 +295,12 @@
         <div class="slider-group">
             <div class="slider-header"><label>TQR — Recuperação Total</label><span class="slider-val" id="vTqr">13</span></div>
             <input type="range" id="tqr" min="6" max="20" value="13" oninput="sv(this,'vTqr')">
-            <div class="slider-labels"><span>6 (Nada recuperado)</span><span>20 (Totalmente)</span></div>
+            <div class="slider-labels"><span>6 (Nada)</span><span>20 (Total)</span></div>
         </div>
         <div class="slider-group">
             <div class="slider-header"><label>PRS — Recuperação Percebida</label><span class="slider-val" id="vPrs">5</span></div>
             <input type="range" id="prs" min="0" max="10" value="5" oninput="sv(this,'vPrs')">
-            <div class="slider-labels"><span>0 (Muito mal)</span><span>10 (Excelente)</span></div>
+            <div class="slider-labels"><span>0 (Ruim)</span><span>10 (Ótimo)</span></div>
         </div>
         <div class="slider-group">
             <div class="slider-header"><label>Dor Geral</label><span class="slider-val" id="vDor">2</span></div>
@@ -212,16 +314,19 @@
         </div>
 
         <div class="modal-actions">
-            <button type="button" class="btn btn-primary" onclick="saveQuestionnaire()">Salvar</button>
+            <button type="button" class="btn btn-primary" onclick="saveQuestionnaire()">Salvar Questionário</button>
             <button type="button" class="btn btn-secondary" onclick="closeModal('questionnaireModal')">Cancelar</button>
         </div>
     </div>
 </div>
 
-<!-- Workout with Calendar, HRV, FC -->
+<!-- Workout Modal -->
 <div id="workoutModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header"><h2>💪 Registro de Treino</h2><button class="modal-close" onclick="closeModal('workoutModal')">✕</button></div>
+        <div class="modal-header">
+            <h2>💪 Registro de Treino</h2>
+            <button type="button" class="modal-close" onclick="closeModal('workoutModal')">✕</button>
+        </div>
 
         <div class="form-group">
             <label>📅 Data do Treino</label>
@@ -230,9 +335,13 @@
         <div class="form-group">
             <label>Tipo de Treino</label>
             <select id="wkType" class="form-control">
-                <option>Musculação</option><option>Corrida</option><option>Ciclismo</option>
-                <option>Natação</option><option>CrossFit / Funcional</option>
-                <option>Esporte Coletivo</option><option>Mobilidade / Regen</option>
+                <option>Musculação / Força</option>
+                <option>Corrida</option>
+                <option>Ciclismo</option>
+                <option>Natação</option>
+                <option>CrossFit / Funcional</option>
+                <option>Esporte Coletivo</option>
+                <option>Mobilidade / Regen</option>
             </select>
         </div>
         <div class="slider-group">
@@ -255,7 +364,7 @@
         </div>
         <div class="form-group">
             <label>Observações</label>
-            <input type="text" id="wkNotes" class="form-control" placeholder="Ex: Treino de pernas, carga progressiva">
+            <input type="text" id="wkNotes" class="form-control" placeholder="Ex: Carga progressiva em membros inferiores">
         </div>
         <div class="modal-actions">
             <button type="button" class="btn btn-primary" onclick="saveWorkout()">Salvar Treino</button>
@@ -264,12 +373,21 @@
     </div>
 </div>
 
-<!-- Edit Profile (accessible via avatar) -->
+<!-- Edit Profile Modal -->
 <div id="editProfileModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header"><h2>✏️ Editar Cadastro</h2><button class="modal-close" onclick="closeModal('editProfileModal')">✕</button></div>
-        <div class="form-group"><label>Nome Completo</label><input type="text" id="editName" class="form-control"></div>
-        <div class="form-group"><label>E-mail (somente leitura)</label><input type="email" id="editEmail" class="form-control" readonly style="opacity:.6"></div>
+        <div class="modal-header">
+            <h2>✏️ Editar Perfil</h2>
+            <button type="button" class="modal-close" onclick="closeModal('editProfileModal')">✕</button>
+        </div>
+        <div class="form-group">
+            <label>Nome Completo</label>
+            <input type="text" id="editName" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>E-mail (somente leitura)</label>
+            <input type="email" id="editEmail" class="form-control" readonly style="opacity:.6">
+        </div>
         <div class="modal-actions">
             <button type="button" class="btn btn-primary" onclick="saveProfile()">Salvar Alterações</button>
             <button type="button" class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancelar</button>
@@ -277,7 +395,7 @@
     </div>
 </div>
 
-<!-- Scripts (dependency order) -->
+<!-- Scripts (in dependency order) -->
 <script src="js/config.js"></script>
 <script src="js/data.js"></script>
 <script src="js/auth.js"></script>
@@ -285,5 +403,6 @@
 <script src="js/chart.js"></script>
 <script src="js/modals.js"></script>
 <script src="js/app.js"></script>
+
 </body>
 </html>

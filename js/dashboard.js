@@ -1,149 +1,151 @@
 /* ===================================================================
-   dashboard.js — Index Cards & Deep Neurophysiological AI Analysis
-   3-Block Neurophysiological Synthesis:
-   1. Adaptações do Treinamento
-   2. Adaptações nos Processos de Fadiga
-   3. Adaptações para o Próximo Ciclo
+   dashboard.js — Index Cards & AI Analysis (WHOOP / Athlytic UI Engine)
    =================================================================== */
 
 function updateIndices(data) {
     if (!data || !data.length) return;
     const L = data[data.length - 1];
+
     const rec = CL(L.recuperacao || 0, 0, 100);
     const pront = CL(L.prontidao || 0, 0, 100);
-    const intens = CL(Math.round(pront * 0.85 + 10), 0, 100);
+    const sonoQ = CL((L.sonoQ || 3) * 20, 0, 100);
+    const sonoH = L.sonoH || 7;
+    const tss = L.tss || 0;
+    const atl = L.atl || 0;
+    const exertion = +(pront / 10).toFixed(1); // 0-10 scale
 
-    setIdx('idxRecovery', rec, rec >= 70 ? 'var(--success)' : rec >= 40 ? 'var(--warning)' : 'var(--danger)');
-    setIdx('idxReadiness', pront, pront >= 70 ? 'var(--success)' : pront >= 40 ? 'var(--warning)' : 'var(--danger)');
-    setIdx('idxIntensity', intens + '%', 'var(--warning)');
-}
+    // Update Hero Pill & Headline
+    const heroPill = document.getElementById('heroPill');
+    const heroHeadline = document.getElementById('heroHeadline');
+    const heroDesc = document.getElementById('heroDesc');
 
-function setIdx(id, val, color) {
-    const e = document.getElementById(id);
-    if (e) { e.textContent = val; e.style.color = color; }
+    if (rec >= 70) {
+        if (heroPill) { heroPill.className = 'status-pill'; heroPill.innerHTML = '● GREEN LIGHT, LET\'S GO!'; }
+        if (heroHeadline) heroHeadline.textContent = 'Pronto para Superar.';
+    } else if (rec >= 45) {
+        if (heroPill) { heroPill.className = 'status-pill amber'; heroPill.innerHTML = '● AMBER LIGHT — ESTÁVEL'; }
+        if (heroHeadline) heroHeadline.textContent = 'Estímulo Moderado.';
+    } else {
+        if (heroPill) { heroPill.className = 'status-pill red'; heroPill.innerHTML = '● RED LIGHT — REGENERAÇÃO'; }
+        if (heroHeadline) heroHeadline.textContent = 'Priorize Descanso.';
+    }
+
+    if (heroDesc) {
+        heroDesc.innerHTML = `Sua recuperação está em <strong>${rec}%</strong> e seu sono durou <strong>${sonoH}h</strong>. Seu balanço de carga (TSB: ${L.tsb || 0}) indica uma janela ${rec >= 70 ? 'excelente para ganho de performance.' : 'de restauração metabólica.'}`;
+    }
+
+    // 1. RECOVERY Metric Card
+    const valRec = document.getElementById('valRec');
+    const subRec = document.getElementById('subRec');
+    const barRec = document.getElementById('barRec');
+    if (valRec) valRec.innerHTML = `${rec}<span>%</span>`;
+    if (subRec) subRec.textContent = rec >= 70 ? 'Pronto para Treino' : rec >= 45 ? 'Moderado' : 'Atenção';
+    if (barRec) {
+        barRec.style.width = `${rec}%`;
+        barRec.style.background = rec >= 70 ? 'var(--green)' : rec >= 45 ? 'var(--orange)' : 'var(--red)';
+    }
+
+    // 2. SLEEP Metric Card
+    const valSleep = document.getElementById('valSleep');
+    const subSleep = document.getElementById('subSleep');
+    const barSleep = document.getElementById('barSleep');
+    if (valSleep) valSleep.innerHTML = `${sonoQ}<span>%</span>`;
+    if (subSleep) subSleep.textContent = `${sonoH}h de sono`;
+    if (barSleep) {
+        barSleep.style.width = `${sonoQ}%`;
+        barSleep.style.background = 'var(--indigo)';
+    }
+
+    // 3. EXERTION / PRONTIDÃO Metric Card
+    const valExertion = document.getElementById('valExertion');
+    const subExertion = document.getElementById('subExertion');
+    const barExertion = document.getElementById('barExertion');
+    if (valExertion) valExertion.innerHTML = `${exertion}<span>/10</span>`;
+    if (subExertion) subExertion.textContent = exertion >= 7 ? 'Carga Alta Alvo' : exertion >= 4 ? 'Carga Média' : 'Minimal';
+    if (barExertion) {
+        barExertion.style.width = `${exertion * 10}%`;
+        barExertion.style.background = 'var(--cyan)';
+    }
+
+    // Target range indicator on Exertion card
+    const targetBand = document.getElementById('targetBand');
+    if (targetBand) {
+        targetBand.style.left = '45%';
+        targetBand.style.width = '30%';
+    }
+
+    // 4. CARGA / ENERGY Metric Card
+    const valEnergy = document.getElementById('valEnergy');
+    const subEnergy = document.getElementById('subEnergy');
+    const barEnergy = document.getElementById('barEnergy');
+    if (valEnergy) valEnergy.innerHTML = `${tss > 0 ? tss : atl}<span> TSS</span>`;
+    if (subEnergy) subEnergy.textContent = `ATL: ${atl} | CTL: ${L.ctl || 0}`;
+    if (barEnergy) {
+        barEnergy.style.width = `${Math.min(100, (tss || atl) / 1.5)}%`;
+        barEnergy.style.background = 'var(--orange)';
+    }
 }
 
 /**
  * Multi-variable AI Analysis Engine with 3 Structured Neurophysiological Blocks
  */
 function runAIAnalysis() {
-    const data = getData(), el = document.getElementById('aiText');
+    const data = getData(), el = document.getElementById('aiBlocks');
     if (!el) return;
     if (!data || !data.length) {
-        el.innerHTML = 'Sem dados suficientes. Preencha o questionário ou registre treinos para gerar a análise.';
+        el.innerHTML = '<div class="card">Sem dados suficientes. Preencha o questionário ou registre treinos.</div>';
         return;
     }
 
     const L = data[data.length - 1];
 
-    // Extract metrics with fallbacks
     const rec = CL(L.recuperacao || 0, 0, 100);
     const pront = CL(L.prontidao || 0, 0, 100);
-    const tss = L.tss || 0;
-    const trimp = L.trimp || 0;
     const atl = L.atl || 0;
     const ctl = L.ctl || 0;
     const tsb = L.tsb || 0;
-    const mono = L.monotonia || 0;
-    const pse = L.pse || 0;
     const hrv = L.hrv || 0;
-    const fcmedia = L.fcmedia || 0;
     const hooper = L.hooper || 0;
-    const tqr = L.tqr || 13;
-    const prs = L.prs || 5;
     const dor = L.dor || 0;
     const sonoQ = L.sonoQ || 3;
     const sonoH = L.sonoH || 7;
-    const motivacao = L.motivacao || 7;
 
     let html = '';
 
-    // 1. Visão Geral da Prontidão e Recuperação
-    html += '<div style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08)">';
-    if (rec >= 70 && pront >= 70) {
-        html += '🟢 <strong>Estado Geral: Alta Capacidade de Performance</strong><br>';
-        html += 'Sistema neurovegetativo equilibrado e alta capacidade de mobilização de unidades motoras. Momento ideal para treinos de alta intensidade (Z4/Z5, cargas elevadas).';
-    } else if (rec >= 45 && pront >= 45) {
-        html += '🟡 <strong>Estado Geral: Adaptação & Transição Intermediária</strong><br>';
-        html += 'O organismo está processando as cargas recentes. Treino mantido na zona planejada, com monitoramento atento à percepção de esforço.';
-    } else {
-        html += '🔴 <strong>Estado Geral: Fadiga Acumulada / Alerta de Recuperação</strong><br>';
-        html += 'Depressão temporária da prontidão neural e metabólica. Recomenda-se treino regenerativo ativo ou descanso total.';
-    }
-    html += '</div>';
-
-    // 2. Correlação das Variáveis (Carga, Estresse e Autonômico)
-    html += '<div style="margin-bottom:16px;">';
-    html += '📊 <strong>Correlação Inter-Variáveis:</strong><br>';
-    html += '<ul style="margin-left:18px;margin-top:6px;line-height:1.7">';
-
-    html += `<li><strong>Carga & Estresse (Banister):</strong> Agudo (ATL: ${atl}) vs Crônico (CTL: ${ctl}) → Balanço TSB: <strong>${tsb}</strong>. `;
-    if (tsb < -20) {
-        html += 'Sobrecarga aguda significativa. Atenção ao risco de overreaching não-funcional se mantido por múltiplos dias.';
-    } else if (tsb >= -20 && tsb <= 5) {
-        html += 'Estímulo ótimo para ganho de aptidão cardiovascular e neuromuscular.';
-    } else {
-        html += 'Fase de polimento / recuperação (Tapering). Organismo revigorado com TSB positivo.';
-    }
-    html += '</li>';
-
-    if (mono >= 1.8) {
-        html += `<li>⚠️ <strong>Monotonia Elevada (${mono}):</strong> Treino muito homogêneo. Risco aumentado de estagnação e queda de imunidade.</li>`;
-    }
-
-    if (hrv > 0 || fcmedia > 0) {
-        html += `<li><strong>Modulação Autonômica (SNA):</strong> HRV (rMSSD): <strong>${hrv ? hrv + ' ms' : 'N/I'}</strong> | FC Média: <strong>${fcmedia ? fcmedia + ' bpm' : 'N/I'}</strong>. `;
-        if (hrv < 40 && hrv > 0) {
-            html += 'Redução no tônus parassimpático (vagal), indicando estresse autonômico residual.';
-        } else if (hrv >= 40) {
-            html += 'Tônus vagal elevado, favorecendo a variabilidade cardíaca e a regeneração celular.';
-        }
-        html += '</li>';
-    }
-
-    html += `<li><strong>Indicadores Subjetivos:</strong> Hooper: <strong>${hooper}/28</strong> | TQR: <strong>${tqr}/20</strong> | PRS: <strong>${prs}/10</strong> | Sono: <strong>${sonoH}h (Q${sonoQ}/5)</strong> | Dor: <strong>${dor}/10</strong> | Motivação: <strong>${motivacao}/10</strong>.</li>`;
-    html += '</ul>';
-    html += '</div>';
-
-    // 3. TRÊS BLOCOS DE ANÁLISE NEUROFISIOLÓGICA
-    html += '<div style="display:flex;flex-direction:column;gap:12px;">';
-
     // BLOCO 1: ADAPTAÇÕES DO TREINAMENTO
-    html += '<div style="background:rgba(124,58,237,0.12);padding:14px 16px;border-radius:12px;border-left:4px solid var(--primary)">';
-    html += '🧠 <strong>Bloco 1: Adaptações do Treinamento</strong><br>';
-    html += '<p style="margin-top:6px;font-size:13px;line-height:1.6;color:var(--text)">';
+    html += '<div class="ai-block b1">';
+    html += '<div class="ai-block-title" style="color:var(--indigo)">🧠 Bloco 1: Adaptações do Treinamento</div>';
+    html += '<div class="ai-block-text">';
     if (ctl >= 40) {
-        html += `Com uma carga crônica acumulada (CTL ${ctl}), o sistema neuromuscular apresenta consolidação de vias motoras e maior sincronização de disparos de motoneurônios alfa. Ocorreu aumento no recrutamento de unidades motoras de alto limiar (fibras IIa/IIb) e biogênese mitocondrial otimizada, permitindo maior densidade de capilares e taxa de extração metabólica de oxigênio.`;
+        html += `Com uma carga crônica acumulada (CTL ${ctl}), o sistema neuromuscular apresenta consolidação de vias motoras e maior sincronização de disparos de motoneurônios alfa. Ocorreu aumento no recrutamento de unidades motoras de alto limiar (fibras IIa/IIb) e biogênese mitocondrial otimizada.`;
     } else {
-        html += `A carga crônica atual (CTL ${ctl}) indica fase inicial ou intermediária de sinalização adaptativa. O estresse tensional/metabólico induziu transcrição de fatores miogênicos (mTOR / PGC-1α), dando início ao fortalecimento da junção neuromuscular e hipertrofia de miofibrilas musculares.`;
+        html += `A carga crônica atual (CTL ${ctl}) indica fase inicial/intermediária de sinalização adaptativa. O estresse tensional/metabólico induziu transcrição de fatores miogênicos (mTOR / PGC-1α), estimulando hipertrofia miofibrilar.`;
     }
-    html += '</p></div>';
+    html += '</div></div>';
 
     // BLOCO 2: ADAPTAÇÕES NOS PROCESSOS DE FADIGA
-    html += '<div style="background:rgba(6,182,212,0.12);padding:14px 16px;border-radius:12px;border-left:4px solid var(--secondary)">';
-    html += '⚡ <strong>Bloco 2: Adaptações nos Processos de Fadiga</strong><br>';
-    html += '<p style="margin-top:6px;font-size:13px;line-height:1.6;color:var(--text)">';
+    html += '<div class="ai-block b2">';
+    html += '<div class="ai-block-title" style="color:var(--cyan)">⚡ Bloco 2: Adaptações nos Processos de Fadiga</div>';
+    html += '<div class="ai-block-text">';
     if (rec >= 65 && hooper < 15) {
-        html += `Fadiga central e periférica sob controle (Hooper ${hooper}/28, Dor ${dor}/10). O eixo Hipotálamo-Hipófise-Adrenal (HPA) mantém níveis adequados de cortisol, evitando o catabolismo. A modulação do Sistema Nervoso Autônomo ${hrv ? '(HRV ' + hrv + 'ms)' : ''} demonstra restauração da sensibilidade dos receptores β-adrenérgicos e rápido clearance de metabólitos lactáticos.`;
+        html += `Fadiga central e periférica sob controle (Hooper ${hooper}/28, Dor ${dor}/10). O eixo HPA mantém níveis homeostáticos de cortisol. A modulação autonômica ${hrv ? '(HRV ' + hrv + 'ms)' : ''} demonstra tônus vagal preservado e rápida remoção de metabólitos.`;
     } else {
-        html += `Presença de fadiga central e periférica proeminente (Hooper ${hooper}/28, Dor ${dor}/10). A sinalização contínua por vias aferentes de nociceptores grupo III/IV reduz a frequência máxima de disparo neural (motoneurônios alfa). A privação ou qualidade do sono (Q${sonoQ}/5, ${sonoH}h) diminui a depuração glinfática do SNC e reduz a taxa de ressíntese de glicogênio.`;
+        html += `Fadiga central e periférica presente (Hooper ${hooper}/28, Dor ${dor}/10). A sinalização por nociceptores aferentes grupo III/IV reduz temporariamente a frequência máxima de disparo neural. O sono (${sonoH}h, Q${sonoQ}/5) é fator determinante para restauração glinfática.`;
     }
-    html += '</p></div>';
+    html += '</div></div>';
 
     // BLOCO 3: ADAPTAÇÕES PARA O PRÓXIMO CICLO
-    html += '<div style="background:rgba(16,185,129,0.12);padding:14px 16px;border-radius:12px;border-left:4px solid var(--success)">';
-    html += '🎯 <strong>Bloco 3: Adaptações para o Próximo Ciclo</strong><br>';
-    html += '<p style="margin-top:6px;font-size:13px;line-height:1.6;color:var(--text)">';
+    html += '<div class="ai-block b3">';
+    html += '<div class="ai-block-title" style="color:var(--green)">🎯 Bloco 3: Adaptações para o Próximo Ciclo</div>';
+    html += '<div class="ai-block-text">';
     if (pront >= 65 && tsb >= -15) {
-        html += `<strong>Diretriz do Ciclo: Progressão Carga / Alta Intensidade.</strong> Prontidão (${pront}/100) e TSB (${tsb}) favoráveis. A janela de supercompensação está aberta. Recomenda-se avançar o volume/intensidade com foco em força máxima, hipertrofia ou potência (Z4/Z5), aproveitando a ressíntese proteica ativada.`;
+        html += `<strong>Diretriz: Progressão de Carga / Alta Intensidade.</strong> Prontidão (${pront}/100) e TSB (${tsb}) favoráveis. A janela de supercompensação está aberta para ganhos de potência e força.`;
     } else if (pront >= 45) {
-        html += `<strong>Diretriz do Ciclo: Manutenção / Carga Controlada.</strong> Prontidão em nível intermediário (${pront}/100). Recomenda-se manter o microciclo em intensidade moderada (Z2/Z3), evitando falhas concêntricas extremas para otimizar o tempo de meia-vida do reparo tecidual antes do próximo pico de carga.`;
+        html += `<strong>Diretriz: Manutenção / Carga Controlada.</strong> Prontidão moderada (${pront}/100). Recomenda-se manter treinos em intensidade controlada para otimizar a regeneração.`;
     } else {
-        html += `<strong>Diretriz do Ciclo: Regeneração Ativa / Descanso (Deload).</strong> Prontidão deprimida (${pront}/100, TSB ${tsb}). Recomenda-se um ciclo de descarga ativa (mobilidade, caminhada leve ou regenerativo Z1) por 24-48h para restabelecer o balanço anabólico/catabólico e prevenir sobrecarga miofascial.`;
+        html += `<strong>Diretriz: Regeneração Ativa / Descanso (Deload).</strong> Prontidão deprimida (${pront}/100). Recomenda-se ciclo de descanso ativo por 24-48h.`;
     }
-    html += '</p></div>';
-
-    html += '</div>';
+    html += '</div></div>';
 
     el.innerHTML = html;
 }
