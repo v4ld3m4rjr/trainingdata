@@ -5,9 +5,11 @@
 function showDashboard(){
     document.getElementById('authScreen').classList.remove('active');
     document.getElementById('mainScreen').classList.add('active');
-    document.getElementById('userName').textContent=currentUser.name.split(' ')[0];
-    const now=new Date();
-    document.getElementById('headerDate').textContent=now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const uEl = document.getElementById('userName');
+    if (uEl && currentUser && currentUser.name) uEl.textContent = currentUser.name.split(' ')[0];
+    const now = new Date();
+    const dEl = document.getElementById('headerDate');
+    if (dEl) dEl.textContent = now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     buildVarChips();
     refreshAll();
 }

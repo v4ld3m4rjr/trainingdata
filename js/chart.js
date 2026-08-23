@@ -36,7 +36,7 @@ function buildVarChips() {
 function setPeriod(days, btn) {
     curPeriod = days;
     // Update active button styling
-    var btns = document.querySelectorAll('#periodBtns .btn');
+    var btns = document.querySelectorAll('#periodBtns .period-pill');
     for (var i = 0; i < btns.length; i++) {
         btns[i].classList.remove('active');
     }

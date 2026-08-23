@@ -13,6 +13,15 @@ function openModal(id) {
         document.getElementById('editName').value = currentUser.name;
         document.getElementById('editEmail').value = currentUser.email;
     }
+    if (id === 'questionnaireModal') {
+        const data = getData();
+        const today = new Date().toISOString().slice(0, 10);
+        const te = data.find(function (e) { return e.date && e.date.slice(0, 10) === today; });
+        const qHrvEl = document.getElementById('qHrv');
+        if (qHrvEl) {
+            qHrvEl.value = (te && te.hrv) ? te.hrv : '';
+        }
+    }
     if (id === 'workoutModal') {
         // Default date to today
         document.getElementById('wkDate').value = new Date().toISOString().slice(0, 10);
@@ -29,6 +38,7 @@ function saveQuestionnaire() {
     var sonoQ = num('sonoQ'), sonoH = parseFloat(document.getElementById('sonoH').value) || 7;
     var fadiga = num('fadiga'), estresse = num('estresse'), doms = num('doms'), humor = num('humor');
     var tqr = num('tqr'), prs = num('prs'), dor = num('dor'), motivacao = num('motivacao');
+    var qHrv = num('qHrv');
 
     var hooper = cHooper(fadiga, estresse, doms, humor);
     var prontidao = cPront(tqr, prs, sonoQ, motivacao);
@@ -40,12 +50,19 @@ function saveQuestionnaire() {
     var te = data.find(function (e) { return e.date && e.date.slice(0, 10) === today; });
 
     if (te) {
-        Object.assign(te, { sonoQ: sonoQ, sonoH: sonoH, fadiga: fadiga, estresse: estresse, doms: doms, humor: humor, tqr: tqr, prs: prs, dor: dor, motivacao: motivacao, hooper: hooper, prontidao: prontidao, recuperacao: recuperacao });
+        var updatedFields = {
+            sonoQ: sonoQ, sonoH: sonoH, fadiga: fadiga, estresse: estresse,
+            doms: doms, humor: humor, tqr: tqr, prs: prs, dor: dor,
+            motivacao: motivacao, hooper: hooper, prontidao: prontidao, recuperacao: recuperacao
+        };
+        if (qHrv > 0) updatedFields.hrv = qHrv;
+        Object.assign(te, updatedFields);
     } else {
         var atl = prev ? Math.round(prev.atl * 0.87) : 0;
         var ctl = prev ? Math.round(prev.ctl + (0 - prev.ctl) / 42) : 0;
         data.push({
-            date: new Date().toISOString(), pse: 0, dur: 0, tss: 0, trimp: 0, hrv: 0, fcmedia: 0,
+            date: new Date().toISOString(), pse: 0, dur: 0, tss: 0, trimp: 0,
+            hrv: qHrv > 0 ? qHrv : (prev ? prev.hrv : 0), fcmedia: 0,
             sonoQ: sonoQ, sonoH: sonoH, fadiga: fadiga, estresse: estresse, doms: doms, humor: humor,
             tqr: tqr, prs: prs, dor: dor, motivacao: motivacao,
             hooper: hooper, atl: atl, ctl: ctl, tsb: ctl - atl,
@@ -53,7 +70,7 @@ function saveQuestionnaire() {
         });
     }
     saveData(data); closeModal('questionnaireModal'); refreshAll();
-    alert('Questionário de recuperação salvo!');
+    alert('Questionário de recuperação salvo com sucesso!');
 }
 
 /* ── Save Workout ── */

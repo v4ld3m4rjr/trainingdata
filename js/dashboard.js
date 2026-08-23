@@ -12,7 +12,30 @@ function updateIndices(data) {
     const sonoH = L.sonoH || 7;
     const tss = L.tss || 0;
     const atl = L.atl || 0;
+    const hrv = L.hrv || 0;
     const exertion = +(pront / 10).toFixed(1); // 0-10 scale
+
+    // 7-day Rolling HRV Baseline & Vagal Analysis
+    const recentHrvEntries = data.slice(-7).map(e => e.hrv).filter(v => v > 0);
+    const avgHrv = recentHrvEntries.length 
+        ? Math.round(recentHrvEntries.reduce((a, b) => a + b, 0) / recentHrvEntries.length)
+        : (hrv || 55);
+
+    let hrvStatus = 'Equilibrado';
+    let hrvColor = 'var(--cyan)';
+    if (hrv >= avgHrv * 1.06) {
+        hrvStatus = 'Tônus Vagal Alto';
+        hrvColor = 'var(--green)';
+    } else if (hrv >= avgHrv * 0.90) {
+        hrvStatus = 'Dentro do Padrão';
+        hrvColor = 'var(--cyan)';
+    } else if (hrv > 0) {
+        hrvStatus = 'Abaixo da Média';
+        hrvColor = 'var(--orange)';
+    } else {
+        hrvStatus = 'Sem registro';
+        hrvColor = 'var(--text-muted)';
+    }
 
     // Update Hero Pill & Headline
     const heroPill = document.getElementById('heroPill');
@@ -31,7 +54,8 @@ function updateIndices(data) {
     }
 
     if (heroDesc) {
-        heroDesc.innerHTML = `Sua recuperação está em <strong>${rec}%</strong> e seu sono durou <strong>${sonoH}h</strong>. Seu balanço de carga (TSB: ${L.tsb || 0}) indica uma janela ${rec >= 70 ? 'excelente para ganho de performance.' : 'de restauração metabólica.'}`;
+        const hrvText = hrv > 0 ? ` e HRV em <strong>${hrv} ms</strong> (${hrvStatus})` : '';
+        heroDesc.innerHTML = `Sua recuperação está em <strong>${rec}%</strong>, sono de <strong>${sonoH}h</strong>${hrvText}. Seu balanço de carga (TSB: ${L.tsb || 0}) indica uma janela ${rec >= 70 ? 'excelente para ganho de performance e adaptação vagal.' : 'de restauração neuromuscular.'}`;
     }
 
     // 1. RECOVERY Metric Card
@@ -45,7 +69,19 @@ function updateIndices(data) {
         barRec.style.background = rec >= 70 ? 'var(--green)' : rec >= 45 ? 'var(--orange)' : 'var(--red)';
     }
 
-    // 2. SLEEP Metric Card
+    // 2. HRV (Heart Rate Variability) Metric Card
+    const valHrv = document.getElementById('valHrv');
+    const subHrv = document.getElementById('subHrv');
+    const barHrv = document.getElementById('barHrv');
+    if (valHrv) valHrv.innerHTML = hrv > 0 ? `${hrv}<span> ms</span>` : `--<span> ms</span>`;
+    if (subHrv) subHrv.textContent = hrv > 0 ? `Média 7d: ${avgHrv} ms · ${hrvStatus}` : `Registrar HRV matinal`;
+    if (barHrv) {
+        const hrvPct = Math.min(100, Math.max(12, Math.round((hrv / 110) * 100)));
+        barHrv.style.width = `${hrvPct}%`;
+        barHrv.style.background = hrvColor;
+    }
+
+    // 3. SLEEP Metric Card
     const valSleep = document.getElementById('valSleep');
     const subSleep = document.getElementById('subSleep');
     const barSleep = document.getElementById('barSleep');
@@ -56,7 +92,7 @@ function updateIndices(data) {
         barSleep.style.background = 'var(--indigo)';
     }
 
-    // 3. EXERTION / PRONTIDÃO Metric Card
+    // 4. EXERTION / PRONTIDÃO Metric Card
     const valExertion = document.getElementById('valExertion');
     const subExertion = document.getElementById('subExertion');
     const barExertion = document.getElementById('barExertion');
@@ -74,7 +110,7 @@ function updateIndices(data) {
         targetBand.style.width = '30%';
     }
 
-    // 4. CARGA / ENERGY Metric Card
+    // 5. CARGA / ENERGY Metric Card
     const valEnergy = document.getElementById('valEnergy');
     const subEnergy = document.getElementById('subEnergy');
     const barEnergy = document.getElementById('barEnergy');
@@ -83,6 +119,18 @@ function updateIndices(data) {
     if (barEnergy) {
         barEnergy.style.width = `${Math.min(100, (tss || atl) / 1.5)}%`;
         barEnergy.style.background = 'var(--orange)';
+    }
+
+    // 6. HOOPER / FADIGA Metric Card
+    const valHooper = document.getElementById('valHooper');
+    const subHooper = document.getElementById('subHooper');
+    const barHooper = document.getElementById('barHooper');
+    const hooper = L.hooper || 0;
+    if (valHooper) valHooper.innerHTML = `${hooper}<span>/28</span>`;
+    if (subHooper) subHooper.textContent = hooper <= 12 ? 'Baixo Estresse Físico' : hooper <= 18 ? 'Fadiga Moderada' : 'Fadiga Elevada';
+    if (barHooper) {
+        barHooper.style.width = `${Math.min(100, Math.round((hooper / 28) * 100))}%`;
+        barHooper.style.background = hooper <= 12 ? 'var(--green)' : hooper <= 18 ? 'var(--orange)' : 'var(--red)';
     }
 }
 

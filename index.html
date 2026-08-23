@@ -77,7 +77,10 @@
 
         <!-- Top Header Navigation -->
         <div class="top-nav">
-            <div class="top-title">Hoje</div>
+            <div>
+                <div class="top-title">Hoje, <span id="userName" style="color:var(--cyan)">Atleta</span></div>
+                <div id="headerDate" style="font-size:12px;color:var(--text-muted);font-weight:500;margin-top:2px"></div>
+            </div>
             <div class="top-actions">
                 <div class="icon-btn" onclick="openModal('workoutModal')" title="Registrar Treino">📅</div>
                 <div class="icon-btn" onclick="openModal('curriculumModal')" title="Meu Perfil">👤</div>
@@ -93,10 +96,10 @@
             </div>
         </div>
 
-        <!-- 2. 2x2 Key Metric Cards Grid -->
+        <!-- 2. Key Metric Cards Grid -->
         <div class="metrics-grid">
             <!-- Metric 1: Recovery -->
-            <div class="metric-card" onclick="openModal('questionnaireModal')">
+            <div class="metric-card" onclick="openModal('questionnaireModal')" title="Recuperação Geral">
                 <div class="metric-header">
                     <span class="metric-title">RECOVERY</span>
                     <span class="metric-arrow">❯</span>
@@ -108,8 +111,21 @@
                 </div>
             </div>
 
-            <!-- Metric 2: Sleep -->
-            <div class="metric-card" onclick="openModal('questionnaireModal')">
+            <!-- Metric 2: HRV (Heart Rate Variability) -->
+            <div class="metric-card" onclick="openModal('questionnaireModal')" title="Variabilidade da Frequência Cardíaca (rMSSD)">
+                <div class="metric-header">
+                    <span class="metric-title">HRV (rMSSD)</span>
+                    <span class="metric-arrow">❯</span>
+                </div>
+                <div class="metric-val" id="valHrv" style="color:var(--cyan)">--<span> ms</span></div>
+                <div class="metric-sub" id="subHrv">Média 7d: -- ms</div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-fill" id="barHrv" style="width:0%;background:var(--cyan)"></div>
+                </div>
+            </div>
+
+            <!-- Metric 3: Sleep -->
+            <div class="metric-card" onclick="openModal('questionnaireModal')" title="Qualidade & Duração do Sono">
                 <div class="metric-header">
                     <span class="metric-title">SLEEP</span>
                     <span class="metric-arrow">❯</span>
@@ -121,8 +137,8 @@
                 </div>
             </div>
 
-            <!-- Metric 3: Exertion / Readiness -->
-            <div class="metric-card" onclick="openModal('workoutModal')">
+            <!-- Metric 4: Exertion / Readiness -->
+            <div class="metric-card" onclick="openModal('workoutModal')" title="Esforço & Prontidão">
                 <div class="metric-header">
                     <span class="metric-title">EXERTION</span>
                     <span class="metric-arrow">❯</span>
@@ -135,8 +151,8 @@
                 </div>
             </div>
 
-            <!-- Metric 4: Energy Burned / Carga -->
-            <div class="metric-card" onclick="openModal('workoutModal')">
+            <!-- Metric 5: Energy Burned / Carga -->
+            <div class="metric-card" onclick="openModal('workoutModal')" title="Carga Acumulada (TSS)">
                 <div class="metric-header">
                     <span class="metric-title">ENERGY / TSS</span>
                     <span class="metric-arrow">❯</span>
@@ -145,6 +161,19 @@
                 <div class="metric-sub" id="subEnergy">Carga Acumulada</div>
                 <div class="progress-bar-wrap">
                     <div class="progress-fill" id="barEnergy" style="width:0%;background:var(--orange)"></div>
+                </div>
+            </div>
+
+            <!-- Metric 6: Hooper Index / Fadiga & Estresse -->
+            <div class="metric-card" onclick="openModal('questionnaireModal')" title="Índice Hooper (Fadiga, Estresse, Dor e Humor)">
+                <div class="metric-header">
+                    <span class="metric-title">FADIGA / HOOPER</span>
+                    <span class="metric-arrow">❯</span>
+                </div>
+                <div class="metric-val" id="valHooper" style="color:#fb923c">--<span>/28</span></div>
+                <div class="metric-sub" id="subHooper">Status Subjetivo</div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-fill" id="barHooper" style="width:0%;background:#fb923c"></div>
                 </div>
             </div>
         </div>
@@ -311,6 +340,15 @@
             <div class="slider-header"><label>Motivação</label><span class="slider-val" id="vMotivacao">7</span></div>
             <input type="range" id="motivacao" min="0" max="10" value="7" oninput="sv(this,'vMotivacao')">
             <div class="slider-labels"><span>Sem vontade</span><span>Muito motivado</span></div>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px; padding: 14px; background: rgba(0, 229, 255, 0.06); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: var(--radius-md);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px">
+                <label style="margin-bottom:0; font-weight:700; color:var(--text)">❤️ HRV Matinal (rMSSD)</label>
+                <span style="font-size:11px; color:var(--cyan); font-weight:700">ms</span>
+            </div>
+            <input type="number" id="qHrv" class="form-control" placeholder="Ex: 58 (ms em repouso)" min="10" max="250">
+            <span style="font-size:11px; color:var(--text-muted); display:block; margin-top:4px">Variabilidade da frequência cardíaca em repouso ao acordar (opcional).</span>
         </div>
 
         <div class="modal-actions">
