@@ -1,345 +1,631 @@
 /* ===================================================================
-   Synthonia AI — Athlytic / WHOOP Ultra-Premium Dark Aesthetics
-   Deep onyx dark background, glowing indicators, target exertion bars
+   Synthonia AI — Athlytic iOS Native Theme
+   Clean Apple SF / Inter typography, #f2f2f7 grouped background,
+   pure white cards, circular gauges, segmented controls, 7-day bar charts
    =================================================================== */
 
-/* ── COLOR TOKENS (ATHLYTIC / WHOOP PALETTE) ── */
+/* ── COLOR TOKENS & SYSTEM VARIABLES (APPLE / ATHLYTIC PALETTE) ── */
 :root {
-    --bg-dark: #05090d;
-    --bg-card: #0e161e;
-    --bg-card-hover: #15202b;
-    --border: #1a2634;
-    --border-highlight: #26384c;
+    --bg-system: #f2f2f7;
+    --bg-card: #ffffff;
+    --bg-card-secondary: #f8f8fa;
+    --bg-segmented: #e3e3e8;
+    --bg-segmented-active: #ffffff;
 
-    --text: #f8fafc;
-    --text-muted: #8e9baf;
-    --text-dim: #5a687c;
+    --border: #e5e5ea;
+    --border-light: #f2f2f7;
+    --border-subtle: rgba(0, 0, 0, 0.05);
 
-    --green: #00e676;
-    --green-glow: rgba(0, 230, 118, 0.2);
-    --green-tint: rgba(0, 230, 118, 0.1);
+    --text-primary: #000000;
+    --text-secondary: #6c6c70;
+    --text-tertiary: #8e8e93;
+    --text-quaternary: #aeaeb2;
 
-    --blue: #3b82f6;
-    --indigo: #6366f1;
-    --indigo-glow: rgba(99, 102, 241, 0.2);
+    /* Semantic Status Colors (Athlytic Scale) */
+    --green: #34c759;
+    --green-light: #e8f9ed;
+    --green-lime: #a4cd39;
+    --yellow: #ffcc00;
+    --yellow-light: #fffbeb;
+    --orange: #ff9500;
+    --orange-light: #fff5e6;
+    --red: #ff3b30;
+    --red-light: #ffebe9;
 
-    --cyan: #00e5ff;
-    --cyan-glow: rgba(0, 229, 255, 0.2);
+    --blue: #007aff;
+    --blue-light: #e5f1ff;
+    --indigo: #5856d6;
+    --cyan: #32ade6;
+    --teal: #30b0c7;
+    --purple: #af52de;
 
-    --orange: #ff9800;
-    --orange-glow: rgba(255, 152, 0, 0.2);
-
-    --red: #ff5252;
-
-    --radius-lg: 20px;
-    --radius-md: 14px;
-    --radius-sm: 10px;
+    --radius-xl: 22px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
     --radius-pill: 9999px;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+    --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+    --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
 
     --tr: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ── RESET & BASE ── */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-
-body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: var(--bg-dark);
-    color: var(--text);
-    min-height: 100vh;
-    padding-bottom: 90px; /* space for fixed bottom nav */
-    overflow-x: hidden;
-    line-height: 1.5;
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* Background ambient glow */
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background:
-        radial-gradient(circle at 50% -10%, rgba(0, 230, 118, 0.07) 0%, transparent 60%),
-        radial-gradient(circle at 10% 40%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.05) 0%, transparent 50%);
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    background-color: var(--bg-system);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding-bottom: 96px; /* Space for bottom tab bar */
+    overflow-x: hidden;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
 }
 
 .container {
-    max-width: 640px;
+    max-width: 480px;
     margin: 0 auto;
-    padding: 16px;
-    position: relative;
-    z-index: 1;
+    padding: 12px 16px;
 }
 
-.screen { display: none; animation: fadeIn 0.35s ease; }
-.screen.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ── CARD COMPONENT ── */
-.card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    margin-bottom: 16px;
-    transition: var(--tr);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+.screen {
+    display: none;
+    animation: fadeIn 0.25s ease-out;
 }
-.card:hover { border-color: var(--border-highlight); }
+.screen.active {
+    display: block;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-/* ── TOP HEADER ── */
+/* ── TOP NAVIGATION BAR (iOS HEADER) ── */
 .top-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding: 8px 0;
-}
-.top-title { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
-.top-actions { display: flex; gap: 10px; align-items: center; }
-
-.icon-btn {
-    width: 42px; height: 42px;
-    border-radius: 50%;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; cursor: pointer; transition: var(--tr);
-}
-.icon-btn:hover { background: var(--bg-card-hover); border-color: var(--text-muted); }
-
-/* ── HERO STATUS CARD ── */
-.hero-card {
-    background: linear-gradient(145deg, #0e1c18, #0e161e);
-    border: 1px solid rgba(0, 230, 118, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-.hero-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--green), var(--cyan));
+    padding: 8px 0 12px;
 }
 
-.status-pill {
-    display: inline-flex;
+.top-left-action {
+    display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: var(--radius-pill);
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    background: rgba(0, 230, 118, 0.12);
-    color: var(--green);
-    border: 1px solid rgba(0, 230, 118, 0.25);
+}
+
+.top-title-wrap {
+    margin-top: 4px;
     margin-bottom: 12px;
 }
-.status-pill.amber {
-    background: rgba(255, 152, 0, 0.12);
-    color: var(--orange);
-    border-color: rgba(255, 152, 0, 0.25);
-}
-.status-pill.red {
-    background: rgba(255, 82, 82, 0.12);
-    color: var(--red);
-    border-color: rgba(255, 82, 82, 0.25);
-}
 
-.hero-headline {
-    font-size: 28px;
-    font-weight: 900;
+.top-large-title {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    color: var(--text-primary);
     line-height: 1.1;
-    margin-bottom: 10px;
-    letter-spacing: -0.5px;
-}
-.hero-desc {
-    font-size: 13.5px;
-    color: var(--text-muted);
-    line-height: 1.6;
 }
 
-/* ── 2x2 METRICS GRID ── */
-.metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+.top-actions {
+    display: flex;
     gap: 12px;
-    margin-bottom: 16px;
+    align-items: center;
 }
 
-.metric-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 16px;
-    position: relative;
+.ios-icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
     cursor: pointer;
     transition: var(--tr);
 }
-.metric-card:hover { border-color: var(--border-highlight); transform: translateY(-2px); }
+.ios-icon-btn:hover, .ios-icon-btn:active {
+    background: rgba(0, 122, 255, 0.08);
+}
 
-.metric-header {
+/* ── iOS SEGMENTED CONTROL ── */
+.segmented-control-wrap {
+    margin-bottom: 16px;
+}
+
+.segmented-control {
+    display: flex;
+    background: var(--bg-segmented);
+    padding: 3px;
+    border-radius: 9px;
+    position: relative;
+}
+
+.segment-btn {
+    flex: 1;
+    text-align: center;
+    padding: 7px 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border: none;
+    background: transparent;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+}
+
+.segment-btn.active {
+    background: var(--bg-segmented-active);
+    color: var(--text-primary);
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* ── ATHLYTIC WHITE CARD COMPONENT ── */
+.card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-subtle);
+    position: relative;
+}
+
+.card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
-}
-.metric-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--text-muted);
-}
-.metric-arrow { font-size: 14px; color: var(--text-dim); }
-
-.metric-val {
-    font-size: 32px;
-    font-weight: 900;
-    line-height: 1;
-    margin-bottom: 4px;
-    letter-spacing: -0.5px;
-}
-.metric-val span { font-size: 16px; font-weight: 700; opacity: 0.85; }
-
-.metric-sub {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-weight: 500;
-    margin-bottom: 10px;
-}
-
-/* Custom Horizontal Progress Bar with Target Zone support */
-.progress-bar-wrap {
-    height: 6px;
-    background: #17222f;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-}
-.progress-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Exertion / Target range progress bar */
-.exertion-bar-container {
-    position: relative;
-    height: 8px;
-    background: #17222f;
-    border-radius: 4px;
-    overflow: hidden;
-}
-.target-band {
-    position: absolute;
-    top: 0; bottom: 0;
-    background: rgba(0, 230, 118, 0.35);
-    border-left: 2px solid var(--green);
-    border-right: 2px solid var(--green);
-}
-.exertion-fill {
-    height: 100%;
-    background: var(--text-muted);
-    border-radius: 4px;
-}
-
-/* ── RECOMMENDATION / EXERTION TARGET CARD ── */
-.recom-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    margin-bottom: 16px;
-}
-
-.recom-badge {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    color: #3b82f6;
     margin-bottom: 12px;
 }
 
-.recom-main {
+.card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+}
+
+.card-help-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+}
+
+/* ── RECOVERY HERO CARD ── */
+.recovery-hero-card {
+    text-align: center;
+    padding: 20px 20px 24px;
+}
+
+.recovery-status-title {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    position: relative;
+}
+
+.recovery-status-title .card-help-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Recovery Top Horizontal Status Line */
+.recovery-color-bar {
+    width: 140px;
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--green-lime);
+    margin: 0 auto 16px;
+    transition: background 0.3s ease;
+}
+
+.recovery-big-score {
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -1.5px;
+    margin-bottom: 4px;
+    color: var(--green-lime);
+}
+
+.recovery-update-time {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-weight: 500;
     margin-bottom: 14px;
 }
 
-.recom-icon-box {
-    width: 48px; height: 48px;
-    border-radius: 14px;
-    background: rgba(0, 229, 255, 0.12);
-    color: var(--cyan);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-    flex-shrink: 0;
+.recovery-coaching-text {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 0 4px;
 }
 
-.recom-title { font-size: 18px; font-weight: 800; line-height: 1.2; }
-.recom-meta { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+/* Biometrics Pills Grid (HRV & Resting HR) */
+.bio-metrics-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+}
 
-/* Zone Breakdown Multi-color Bar */
-.zone-bar-wrap { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 12px 0 6px; }
-.zone-seg { height: 100%; }
-.zone-seg.z1 { background: var(--cyan); }
-.zone-seg.z2 { background: #00b0ff; }
-.zone-seg.z3 { background: var(--orange); }
-
-.zone-labels {
+.bio-pill {
     display: flex;
-    justify-content: space-around;
-    font-size: 11px;
-    color: var(--text-muted);
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-card-secondary);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    text-align: left;
+}
+
+.bio-icon {
+    font-size: 20px;
+}
+
+.bio-val-main {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+.bio-sub-label {
+    font-size: 11.5px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.bio-delta-down {
+    color: var(--red);
     font-weight: 600;
+}
+.bio-delta-up {
+    color: var(--green);
+    font-weight: 600;
+}
+
+/* ── 7-DAY VERTICAL BAR CHART COMPONENT ── */
+.daily-chart-card {
+    padding: 18px 20px;
+}
+
+.daily-chart-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 18px;
+}
+
+.daily-bars-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 150px;
+    padding: 0 6px 6px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.daily-bar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.daily-bar-val {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.daily-bar-track {
+    width: 28px;
+    height: 100px;
+    display: flex;
+    align-items: flex-end;
+    border-radius: 6px;
+}
+
+.daily-bar-fill {
+    width: 100%;
+    border-radius: 6px;
+    transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 8px;
+}
+
+.daily-bar-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    margin-top: 2px;
+}
+
+.daily-chart-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+.daily-chart-footer strong {
+    color: var(--text-primary);
+    margin-left: 4px;
+}
+
+/* ── EXERTION CIRCULAR GAUGE CARD ── */
+.exertion-hero-card {
+    text-align: center;
+    padding: 24px 20px;
+}
+
+.circular-gauge-wrap {
+    position: relative;
+    width: 170px;
+    height: 170px;
+    margin: 8px auto 16px;
+}
+
+.circular-gauge-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.gauge-bg-circle {
+    fill: none;
+    stroke: #e5e5ea;
+    stroke-width: 14;
+}
+
+.gauge-target-arc {
+    fill: none;
+    stroke: rgba(52, 199, 89, 0.25);
+    stroke-width: 18;
+    stroke-linecap: round;
+}
+
+.gauge-progress-circle {
+    fill: none;
+    stroke: var(--orange);
+    stroke-width: 14;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.4s ease;
+}
+
+.gauge-center-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.gauge-center-sub {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+}
+
+.gauge-center-val {
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1;
+    color: var(--text-primary);
+}
+
+.target-zone-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+}
+
+.target-zone-square {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background: var(--green);
+}
+
+/* ── DISCLAIMER TEXT (ATHLYTIC CLINICAL STYLE) ── */
+.medical-disclaimer {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+    margin: 16px 4px 24px;
+    text-align: justify;
+}
+
+/* ── TRENDS TAB STYLES ── */
+.trends-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.ios-switch-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ios-switch-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.ios-toggle {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 28px;
+}
+.ios-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.ios-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #e5e5ea;
+    transition: .3s;
+    border-radius: 28px;
+}
+.ios-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: .3s;
+    border-radius: 50%;
+}
+.ios-toggle input:checked + .ios-toggle-slider {
+    background-color: var(--blue);
+}
+.ios-toggle input:checked + .ios-toggle-slider:before {
+    transform: translateX(18px);
+}
+
+.trend-status-banner {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+.trend-status-tag {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 2px;
+}
+.trend-status-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* Trend Key Values Summary */
+.trend-metrics-summary {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 14px;
+}
+.trend-metric-item .trend-metric-title {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+.trend-metric-item .trend-metric-num {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+/* Variable Chips for Trends */
+.var-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
     margin-bottom: 12px;
 }
-.zone-labels span strong { color: var(--text); }
-
-/* Quick Action Pill Buttons */
-.pill-btn-group { display: flex; gap: 8px; margin-top: 14px; }
-.btn-pill-action {
-    flex: 1;
-    padding: 12px;
+.var-chip {
+    padding: 5px 12px;
     border-radius: var(--radius-pill);
-    border: none;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 700;
+    color: var(--text-secondary);
+    background: var(--bg-system);
+    border: 1px solid transparent;
     cursor: pointer;
-    text-align: center;
     transition: var(--tr);
 }
-.btn-pill-action.blue {
-    background: #0088ff;
-    color: #fff;
-    box-shadow: 0 4px 16px rgba(0, 136, 255, 0.35);
+.var-chip.active {
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
-.btn-pill-action.blue:hover { background: #0077e6; }
-.btn-pill-action.dark {
-    background: #152230;
-    color: #38edf6;
-    border: 1px solid rgba(0, 229, 255, 0.2);
-}
-.btn-pill-action.dark:hover { background: #1c2d3f; }
 
-/* ── AI BLOCKS ── */
-.ai-section { margin-bottom: 16px; }
+.chart-box {
+    position: relative;
+    height: 280px;
+    width: 100%;
+}
+
+/* ── AI NEUROPHYSIOLOGICAL BLOCKS ── */
 .ai-block {
     background: var(--bg-card);
-    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 18px;
-    margin-bottom: 10px;
-    position: relative;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-card);
 }
 .ai-block.b1 { border-left: 4px solid var(--indigo); }
 .ai-block.b2 { border-left: 4px solid var(--cyan); }
@@ -349,67 +635,66 @@ body::before {
     font-size: 14px;
     font-weight: 800;
     margin-bottom: 6px;
-    display: flex; align-items: center; gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 .ai-block-text {
     font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.6;
+    color: var(--text-secondary);
+    line-height: 1.55;
 }
 
-/* ── TRENDS / CHART SECTION ── */
-.trends-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.trends-header {
+/* ── QUICK ACTION PILL BUTTONS ── */
+.pill-btn-group {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
+    margin-top: 14px;
 }
-.trends-header h3 { font-size: 17px; font-weight: 800; }
-
-.period-pills { display: flex; gap: 6px; background: #070e14; padding: 3px; border-radius: var(--radius-pill); }
-.period-pill {
-    padding: 5px 12px;
+.btn-pill-action {
+    flex: 1;
+    padding: 12px 16px;
     border-radius: var(--radius-pill);
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
     border: none;
-    background: transparent;
+    font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
+    text-align: center;
     transition: var(--tr);
 }
-.period-pill.active { background: #1c2936; color: var(--text); }
-
-.chart-box {
-    position: relative;
-    height: 320px;
-    width: 100%;
+.btn-pill-action.blue {
+    background: var(--blue);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(0, 122, 255, 0.28);
+}
+.btn-pill-action.blue:hover {
+    background: #0066d6;
+}
+.btn-pill-action.secondary {
+    background: var(--bg-system);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+.btn-pill-action.secondary:hover {
+    background: #e5e5ea;
 }
 
-/* ── BOTTOM NAV BAR (ATHLYTIC / WHOOP STYLE) ── */
+/* ── iOS TRANSLUCENT BOTTOM TAB BAR ── */
 .bottom-nav {
     position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 72px;
-    background: rgba(8, 14, 20, 0.92);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid var(--border);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 0.5px solid rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
     justify-content: space-around;
-    z-index: 999;
-    padding: 0 10px;
+    z-index: 1000;
+    padding: 0 8px 14px;
 }
 
 .nav-item {
@@ -417,85 +702,226 @@ body::before {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    color: var(--text-dim);
+    gap: 3px;
+    color: var(--text-tertiary);
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
     transition: var(--tr);
-    padding: 6px 14px;
+    padding: 6px 12px;
     border-radius: var(--radius-pill);
     text-decoration: none;
+    flex: 1;
 }
-.nav-item.active, .nav-item:hover { color: var(--text); }
-.nav-item .nav-icon { font-size: 20px; }
-.nav-item.active .nav-icon { color: var(--green); }
 
-/* ── MODALS (SLEEK DARK) ── */
+.nav-item .nav-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.nav-item.active {
+    color: var(--blue);
+}
+.nav-item.active .nav-icon {
+    transform: scale(1.08);
+}
+
+/* ── iOS MODALS (BOTTOM SHEET STYLE) ── */
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     z-index: 2000;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
 }
-.modal.active { display: flex; }
+.modal.active {
+    display: flex;
+}
 
 .modal-content {
-    background: #0e161e;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    max-width: 480px;
-    width: 92%;
+    background: var(--bg-card);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 36px;
+    max-width: 500px;
+    width: 100%;
     max-height: 88vh;
     overflow-y: auto;
-    animation: modalIn 0.3s ease;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: var(--shadow-lg);
 }
-@keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(15px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
 
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-.modal-header h2 { font-size: 19px; font-weight: 800; }
+.modal-handle {
+    width: 36px;
+    height: 5px;
+    background: #d1d1d6;
+    border-radius: var(--radius-pill);
+    margin: -8px auto 16px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+.modal-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
 .modal-close {
-    width: 32px; height: 32px;
-    border-radius: 50%; border: none;
-    background: #17222f; color: var(--text-muted);
-    font-size: 16px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-system);
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: var(--tr);
 }
-.modal-close:hover { background: var(--red); color: #fff; }
+.modal-close:hover {
+    background: #e5e5ea;
+    color: var(--text-primary);
+}
 
-.form-group { margin-bottom: 16px; }
-.form-group label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
+/* Form inputs (iOS Cupertino Style) */
+.form-group {
+    margin-bottom: 16px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
 .form-control {
     width: 100%;
     padding: 12px 14px;
-    background: #15202b;
-    border: 1px solid var(--border);
+    background: var(--bg-system);
+    border: 1px solid transparent;
     border-radius: var(--radius-md);
-    color: var(--text);
+    color: var(--text-primary);
     font-family: inherit;
-    font-size: 14px;
+    font-size: 15px;
     transition: var(--tr);
 }
-.form-control:focus { outline: none; border-color: var(--blue); background: #192736; }
+.form-control:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+/* Sliders */
+.slider-group {
+    background: var(--bg-system);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    margin-bottom: 12px;
+}
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.slider-header label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.slider-val {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--blue);
+}
+input[type="range"] {
+    width: 100%;
+    accent-color: var(--blue);
+    cursor: pointer;
+}
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-top: 4px;
+}
 
 /* Modal Actions */
-.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-.modal-actions .btn { flex: 1; padding: 12px; border-radius: var(--radius-pill); font-weight: 700; cursor: pointer; border: none; font-size: 14px; }
-.modal-actions .btn-primary { background: #0088ff; color: #fff; box-shadow: 0 4px 16px rgba(0,136,255,0.35); }
-.modal-actions .btn-secondary { background: #17222f; color: var(--text-muted); border: 1px solid var(--border); }
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+}
+.modal-actions .btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-size: 15px;
+    transition: var(--tr);
+}
+.modal-actions .btn-primary {
+    background: var(--blue);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(0, 122, 255, 0.3);
+}
+.modal-actions .btn-primary:hover {
+    background: #0066d6;
+}
+.modal-actions .btn-secondary {
+    background: var(--bg-system);
+    color: var(--text-secondary);
+}
+.modal-actions .btn-secondary:hover {
+    background: #e5e5ea;
+}
 
-/* AUTH SCREEN */
-.auth-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.auth-card { max-width: 400px; width: 100%; }
+/* ── AUTH SCREEN (iOS CLEAN CARD) ── */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: var(--bg-system);
+}
+.auth-card {
+    max-width: 400px;
+    width: 100%;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 36px 28px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-subtle);
+}
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #1f2d3d; border-radius: 3px; }
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+    width: 5px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #d1d1d6;
+    border-radius: 3px;
+}

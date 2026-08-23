@@ -2,294 +2,470 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synthonia AI — Recuperação & Performance</title>
-    <meta name="description" content="Plataforma inteligente de monitoramento de recuperação muscular, prontidão e performance para atletas.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Athlytic — Recuperação, Esforço & Performance</title>
+    <meta name="description" content="Monitoramento inteligente de recuperação, variabilidade de frequência cardíaca (HRV), sono e esforço atlético no padrão Athlytic.">
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts (Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Athlytic / WHOOP Style CSS -->
+    <!-- Athlytic iOS Native CSS -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<!-- ==================== AUTH SCREEN ==================== -->
+<!-- ==================== AUTH SCREEN (iOS CLEAN CARD) ==================== -->
 <div id="authScreen" class="screen active">
     <div class="auth-wrapper">
-        <div class="auth-card card" style="padding:32px;text-align:center">
-            <div style="width:64px;height:64px;margin:0 auto 16px;border-radius:18px;background:linear-gradient(135deg,#00e676,#00e5ff);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 24px rgba(0,230,118,0.3)">⚡</div>
-            <h1 style="font-size:26px;font-weight:900;margin-bottom:4px">Synthonia <span style="color:var(--green)">AI</span></h1>
-            <p style="color:var(--text-muted);font-size:13px;margin-bottom:24px">Recuperação & Performance Athlytic</p>
+        <div class="auth-card">
+            <div style="width:60px;height:60px;margin:0 auto 16px;border-radius:16px;background:linear-gradient(135deg,#34c759,#30b0c7);display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;box-shadow:0 8px 20px rgba(52,199,89,0.25)">⚡</div>
+            <h1 style="font-size:24px;font-weight:800;text-align:center;margin-bottom:4px;letter-spacing:-0.5px">Athlytic <span style="color:var(--green)">AI</span></h1>
+            <p style="color:var(--text-tertiary);font-size:13px;text-align:center;margin-bottom:28px">Recuperação, HRV & Zonas de Esforço</p>
 
             <div id="loginForm">
-                <div class="form-group" style="text-align:left">
+                <div class="form-group">
                     <label>E-mail</label>
                     <input type="email" id="loginEmail" class="form-control" placeholder="seu@email.com">
                 </div>
-                <div class="form-group" style="text-align:left">
+                <div class="form-group">
                     <label>Senha</label>
-                    <input type="password" id="loginPassword" class="form-control" placeholder="••••••">
+                    <input type="password" id="loginPassword" class="form-control" placeholder="••••••••">
                 </div>
                 <button type="button" class="btn-pill-action blue" style="width:100%;margin-top:8px" onclick="login()">Entrar</button>
-                <div style="margin-top:16px;font-size:13px;color:var(--text-muted)">
-                    Não tem conta? <a onclick="toggleAuth('register')" style="color:var(--cyan);cursor:pointer;font-weight:700">Cadastre-se</a>
+                <div style="margin-top:20px;font-size:13px;text-align:center;color:var(--text-secondary)">
+                    Não tem conta? <a onclick="toggleAuth('register')" style="color:var(--blue);cursor:pointer;font-weight:700">Criar cadastro</a>
                 </div>
             </div>
 
             <div id="registerForm" style="display:none">
-                <div class="form-group" style="text-align:left">
+                <div class="form-group">
                     <label>Nome Completo</label>
                     <input type="text" id="regName" class="form-control" placeholder="Seu nome">
                 </div>
-                <div class="form-group" style="text-align:left">
+                <div class="form-group">
                     <label>E-mail</label>
                     <input type="email" id="regEmail" class="form-control" placeholder="seu@email.com">
                 </div>
-                <div class="form-group" style="text-align:left">
+                <div class="form-group">
                     <label>Confirmar E-mail</label>
                     <input type="email" id="regEmailConfirm" class="form-control" placeholder="Confirme seu e-mail">
                 </div>
-                <div class="form-group" style="text-align:left">
+                <div class="form-group">
                     <label>Senha</label>
                     <input type="password" id="regPassword" class="form-control" placeholder="Mínimo 6 caracteres">
                 </div>
-                <div class="form-group" style="text-align:left">
+                <div class="form-group">
                     <label>Confirmar Senha</label>
-                    <input type="password" id="regPasswordConfirm" class="form-control" placeholder="Confirme a senha">
+                    <input type="password" id="regPasswordConfirm" class="form-control" placeholder="Confirme sua senha">
                 </div>
                 <button type="button" class="btn-pill-action blue" style="width:100%;margin-top:8px" onclick="register()">Cadastrar</button>
-                <div style="margin-top:16px;font-size:13px;color:var(--text-muted)">
-                    Já tem conta? <a onclick="toggleAuth('login')" style="color:var(--cyan);cursor:pointer;font-weight:700">Faça login</a>
+                <div style="margin-top:20px;font-size:13px;text-align:center;color:var(--text-secondary)">
+                    Já possui conta? <a onclick="toggleAuth('login')" style="color:var(--blue);cursor:pointer;font-weight:700">Fazer login</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ==================== MAIN DASHBOARD ==================== -->
+<!-- ==================== MAIN APPLICATION ==================== -->
 <div id="mainScreen" class="screen">
     <div class="container">
 
-        <!-- Top Header Navigation -->
-        <div class="top-nav">
-            <div>
-                <div class="top-title">Hoje, <span id="userName" style="color:var(--cyan)">Atleta</span></div>
-                <div id="headerDate" style="font-size:12px;color:var(--text-muted);font-weight:500;margin-top:2px"></div>
+        <!-- ==================== VIEW: TODAY (HOJE) ==================== -->
+        <div id="viewToday">
+
+            <!-- Top Header (iOS Style with Action Buttons) -->
+            <div class="top-nav">
+                <div class="top-left-action">
+                    <button type="button" class="ios-icon-btn" onclick="openShareSummary()" title="Compartilhar">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                    </button>
+                </div>
+                <div class="top-actions">
+                    <button type="button" class="ios-icon-btn" onclick="openModal('questionnaireModal')" title="Questionário Matinal">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    </button>
+                    <button type="button" class="ios-icon-btn" onclick="openModal('workoutModal')" title="Registrar Treino">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    </button>
+                </div>
             </div>
-            <div class="top-actions">
-                <div class="icon-btn" onclick="openModal('workoutModal')" title="Registrar Treino">📅</div>
-                <div class="icon-btn" onclick="openModal('curriculumModal')" title="Meu Perfil">👤</div>
+
+            <!-- Large iOS Title -->
+            <div class="top-title-wrap">
+                <h1 class="top-large-title">Today</h1>
+                <div id="headerDate" style="font-size:13px;color:var(--text-tertiary);font-weight:500;margin-top:2px">Hoje, Atleta</div>
             </div>
+
+            <!-- iOS Segmented Control (Recovery | Exertion | Energy) -->
+            <div class="segmented-control-wrap">
+                <div class="segmented-control">
+                    <button type="button" class="segment-btn active" id="segRecovery" onclick="switchSegment('recovery')">Recovery</button>
+                    <button type="button" class="segment-btn" id="segExertion" onclick="switchSegment('exertion')">Exertion</button>
+                    <button type="button" class="segment-btn" id="segEnergy" onclick="switchSegment('energy')">Energy</button>
+                </div>
+            </div>
+
+            <!-- ==================== SUB-VIEW: RECOVERY ==================== -->
+            <div id="subViewRecovery">
+
+                <!-- 1. Recovery Hero Card (Exact Athlytic Style) -->
+                <div class="card recovery-hero-card">
+                    <div class="recovery-status-title">
+                        <span id="recStatusTitle">Recovering</span>
+                        <button type="button" class="card-help-btn" onclick="openHelpModal('recovery')">?</button>
+                    </div>
+
+                    <!-- Horizontal Recovery Color Indicator -->
+                    <div class="recovery-color-bar" id="recColorBar"></div>
+
+                    <!-- Big Central Recovery Percentage -->
+                    <div class="recovery-big-score" id="valRecoveryScore">49%</div>
+                    <div class="recovery-update-time" id="recUpdateTime">Last update: 08:10</div>
+
+                    <!-- Clinical Coaching Description -->
+                    <div class="recovery-coaching-text" id="recCoachingText">
+                        Your Recovery today indicates that your body is in a state of recovery and you should consider training at a moderate or reduced load.
+                    </div>
+
+                    <!-- Biometrics: HRV (Variabilidade da FC) & Resting Heart Rate -->
+                    <div class="bio-metrics-row">
+                        <!-- HRV Pill -->
+                        <div class="bio-pill" onclick="openModal('questionnaireModal')" style="cursor:pointer" title="Variabilidade da Frequência Cardíaca (rMSSD)">
+                            <div class="bio-icon">⚡</div>
+                            <div>
+                                <div class="bio-val-main" id="bioHrvVal">85 <span style="font-size:12px;font-weight:600;color:var(--text-tertiary)">ms</span></div>
+                                <div class="bio-sub-label">
+                                    <span>HRV</span>
+                                    <span id="bioHrvDelta" class="bio-delta-down">-14% (99) ↓</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resting HR Pill -->
+                        <div class="bio-pill" onclick="openModal('workoutModal')" style="cursor:pointer" title="Frequência Cardíaca de Repouso">
+                            <div class="bio-icon">❤️</div>
+                            <div>
+                                <div class="bio-val-main" id="bioRhrVal">40 <span style="font-size:12px;font-weight:600;color:var(--text-tertiary)">bpm</span></div>
+                                <div class="bio-sub-label">
+                                    <span>RHR</span>
+                                    <span id="bioRhrDelta" class="bio-delta-down">-7% (43) ↓</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Recovery Per Day (7-Day Vertical Bar Chart Card) -->
+                <div class="card daily-chart-card">
+                    <div class="daily-chart-title">Recovery Per Day</div>
+                    <div class="daily-bars-container" id="recDailyBars">
+                        <!-- Injected dynamically by dashboard.js (7 daily columns) -->
+                    </div>
+                    <div class="daily-chart-footer">
+                        <span>Weekly Average:</span>
+                        <strong id="recWeeklyAvg">52% ↓</strong>
+                    </div>
+                </div>
+
+                <!-- 3. Sleep & Subjective Recovery Details Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Qualidade do Sono & Fadiga</div>
+                        <span id="sleepQualityBadge" style="font-size:12px;font-weight:700;color:var(--blue);background:var(--blue-light);padding:3px 8px;border-radius:6px">8h 48m</span>
+                    </div>
+                    <div style="font-size:13.5px;color:var(--text-secondary);line-height:1.5;margin-bottom:14px">
+                        Sua duração de sono e índice Hooper (<strong id="hooperBadge">12/28</strong>) refletem níveis controlados de estresse e suporte favorável à modulação autonômica vagal.
+                    </div>
+                    <div class="pill-btn-group">
+                        <button type="button" class="btn-pill-action blue" onclick="openModal('questionnaireModal')">Responder Questionário</button>
+                        <button type="button" class="btn-pill-action secondary" onclick="openModal('workoutModal')">Registrar Treino</button>
+                    </div>
+                </div>
+
+                <!-- 4. Medical / Clinical Disclaimer (Athlytic Native Style) -->
+                <div class="medical-disclaimer">
+                    Athlytic provides only information, is not medical or treatment advice and may not be treated as such by the user. As such, this App may not be relied upon for the purposes of medical diagnosis or as a recommendation for medical care or treatment. The information on this App is not a substitute for professional medical advice, diagnosis or treatment. All content, including text, graphics, images and information, contained on or available through this App is for general information purposes only.
+                </div>
+
+            </div>
+
+            <!-- ==================== SUB-VIEW: EXERTION ==================== -->
+            <div id="subViewExertion" style="display:none">
+
+                <!-- 1. Exertion Hero Card with Circular Gauge -->
+                <div class="card exertion-hero-card">
+                    <div class="recovery-status-title">
+                        <span>Exertion & Target Zone</span>
+                        <button type="button" class="card-help-btn" onclick="openHelpModal('exertion')">?</button>
+                    </div>
+
+                    <!-- Circular Progress Gauge SVG -->
+                    <div class="circular-gauge-wrap">
+                        <svg class="circular-gauge-svg" viewBox="0 0 180 180">
+                            <!-- Background Track -->
+                            <circle class="gauge-bg-circle" cx="90" cy="90" r="72"></circle>
+                            <!-- Target Zone Arc -->
+                            <circle class="gauge-target-arc" id="gaugeTargetArc" cx="90" cy="90" r="72" stroke-dasharray="452.39" stroke-dashoffset="250"></circle>
+                            <!-- Actual Exertion Progress Fill -->
+                            <circle class="gauge-progress-circle" id="gaugeProgressCircle" cx="90" cy="90" r="72" stroke-dasharray="452.39" stroke-dashoffset="240"></circle>
+                        </svg>
+
+                        <!-- Center Content -->
+                        <div class="gauge-center-content">
+                            <div class="gauge-center-sub" id="gaugeCenterSub">Moderate</div>
+                            <div class="gauge-center-val" id="valExertionScore">4,6</div>
+                        </div>
+                    </div>
+
+                    <!-- Target Zone Legend -->
+                    <div class="target-zone-legend">
+                        <span class="target-zone-square"></span>
+                        <span id="targetExertionLabel">Target Exertion Zone: 3.9 - 5.9</span>
+                    </div>
+
+                    <!-- Exertion Coaching Description -->
+                    <div class="recovery-coaching-text" id="exertionCoachingText">
+                        Your Recovery was Moderate today and you are within your Target Exertion Zone, try to keep your Exertion below 5.9 to fully Recover tomorrow.
+                    </div>
+                </div>
+
+                <!-- 2. Total Per Day (7-Day Exertion Bars) -->
+                <div class="card daily-chart-card">
+                    <div class="daily-chart-title">Total Per Day</div>
+                    <div class="daily-bars-container" id="exertionDailyBars">
+                        <!-- Injected dynamically by dashboard.js (7 exertion columns) -->
+                    </div>
+                    <div class="daily-chart-footer">
+                        <span>Weekly Average:</span>
+                        <strong id="exertionWeeklyAvg">5,6 ↓</strong>
+                    </div>
+                </div>
+
+                <!-- 3. Heart Rate & Intensity Zones Analysis Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Today's Heart Rate Analysis</div>
+                        <span style="font-size:12px;font-weight:700;color:var(--text-tertiary)">Zonas de FC</span>
+                    </div>
+                    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">
+                        Distribuição do tempo nas zonas metabólicas e cardiovasculares calculadas:
+                    </div>
+                    <div style="display:flex;height:10px;border-radius:5px;overflow:hidden;margin-bottom:8px">
+                        <div style="width:30%;background:#32ade6" title="Z1 / Recuperação"></div>
+                        <div style="width:45%;background:#007aff" title="Z2 / Aeróbio"></div>
+                        <div style="width:25%;background:#ff9500" title="Z3 / Limiar"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-tertiary);font-weight:600">
+                        <span>Z1 (Regen): <strong>18m</strong></span>
+                        <span>Z2 (Base): <strong>32m</strong></span>
+                        <span>Z3 (Carga): <strong>14m</strong></span>
+                    </div>
+                    <div class="pill-btn-group" style="margin-top:16px">
+                        <button type="button" class="btn-pill-action blue" onclick="openModal('workoutModal')">Novo Treino</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ==================== SUB-VIEW: ENERGY ==================== -->
+            <div id="subViewEnergy" style="display:none">
+
+                <!-- 1. Energy & Carga Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Carga de Treino & TSS</div>
+                        <span id="energyTssBadge" style="font-size:13px;font-weight:800;color:var(--orange);background:var(--orange-light);padding:3px 10px;border-radius:6px">65 TSS</span>
+                    </div>
+                    <div style="font-size:13.5px;color:var(--text-secondary);line-height:1.5;margin-bottom:16px">
+                        A carga acumulada de hoje combina volume, intensidade e esforço percebido (TRIMP & PSE).
+                    </div>
+                    <div class="bio-metrics-row">
+                        <div class="bio-pill">
+                            <div class="bio-icon">📊</div>
+                            <div>
+                                <div class="bio-val-main" id="valAtl">48</div>
+                                <div class="bio-sub-label">ATL (Carga Aguda)</div>
+                            </div>
+                        </div>
+                        <div class="bio-pill">
+                            <div class="bio-icon">📈</div>
+                            <div>
+                                <div class="bio-val-main" id="valCtl">52</div>
+                                <div class="bio-sub-label">CTL (Fitness Crônico)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bio-metrics-row" style="margin-top:12px;border:none;padding-top:0">
+                        <div class="bio-pill">
+                            <div class="bio-icon">⚖️</div>
+                            <div>
+                                <div class="bio-val-main" id="valTsb" style="color:var(--green)">+4</div>
+                                <div class="bio-sub-label">TSB (Balanço de Carga)</div>
+                            </div>
+                        </div>
+                        <div class="bio-pill">
+                            <div class="bio-icon">🔁</div>
+                            <div>
+                                <div class="bio-val-main" id="valMono">1.12</div>
+                                <div class="bio-sub-label">Índice Monotonia</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Neurophysiological AI Insights -->
+                <div class="ai-section" id="aiBlocks">
+                    <!-- Dynamic 3 AI blocks injected by dashboard.js -->
+                </div>
+
+            </div>
+
         </div>
 
-        <!-- 1. Hero Status Card (Athlytic Style Banner) -->
-        <div class="card hero-card">
-            <div class="status-pill" id="heroPill">● GREEN LIGHT, LET'S GO!</div>
-            <div class="hero-headline" id="heroHeadline">Pronto para Superar.</div>
-            <div class="hero-desc" id="heroDesc">
-                Carregando análise do dia...
-            </div>
-        </div>
+        <!-- ==================== VIEW: TRENDS (TENDÊNCIAS) ==================== -->
+        <div id="viewTrends" style="display:none">
 
-        <!-- 2. Key Metric Cards Grid -->
-        <div class="metrics-grid">
-            <!-- Metric 1: Recovery -->
-            <div class="metric-card" onclick="openModal('questionnaireModal')" title="Recuperação Geral">
-                <div class="metric-header">
-                    <span class="metric-title">RECOVERY</span>
-                    <span class="metric-arrow">❯</span>
-                </div>
-                <div class="metric-val" id="valRec" style="color:var(--green)">--<span>%</span></div>
-                <div class="metric-sub" id="subRec">Ready to Train</div>
-                <div class="progress-bar-wrap">
-                    <div class="progress-fill" id="barRec" style="width:0%;background:var(--green)"></div>
+            <!-- Top Trends Header (iOS Style with Switch) -->
+            <div class="trends-top-header">
+                <h1 class="top-large-title">Trends</h1>
+                <div class="ios-switch-wrap">
+                    <span class="ios-switch-label" id="periodToggleLabel">30 Day</span>
+                    <label class="ios-toggle">
+                        <input type="checkbox" id="periodSwitch" onchange="togglePeriodSwitch(this)">
+                        <span class="ios-toggle-slider"></span>
+                    </label>
                 </div>
             </div>
 
-            <!-- Metric 2: HRV (Heart Rate Variability) -->
-            <div class="metric-card" onclick="openModal('questionnaireModal')" title="Variabilidade da Frequência Cardíaca (rMSSD)">
-                <div class="metric-header">
-                    <span class="metric-title">HRV (rMSSD)</span>
-                    <span class="metric-arrow">❯</span>
+            <!-- 1. Recovery vs. Exertion Dual Chart Card (Exact Athlytic Style) -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Recovery vs. Exertion</div>
                 </div>
-                <div class="metric-val" id="valHrv" style="color:var(--cyan)">--<span> ms</span></div>
-                <div class="metric-sub" id="subHrv">Média 7d: -- ms</div>
-                <div class="progress-bar-wrap">
-                    <div class="progress-fill" id="barHrv" style="width:0%;background:var(--cyan)"></div>
+
+                <!-- Interactive Chart Canvas -->
+                <div class="chart-box">
+                    <canvas id="mainChart"></canvas>
+                </div>
+
+                <!-- Balanced Status & Clinical Advice -->
+                <div class="trend-status-banner">
+                    <div class="trend-status-tag" id="trendStatusTag">Balanced</div>
+                    <div class="trend-status-desc" id="trendStatusDesc">
+                        Good job listening to your body and planning your training accordingly.
+                    </div>
                 </div>
             </div>
 
-            <!-- Metric 3: Sleep -->
-            <div class="metric-card" onclick="openModal('questionnaireModal')" title="Qualidade & Duração do Sono">
-                <div class="metric-header">
-                    <span class="metric-title">SLEEP</span>
-                    <span class="metric-arrow">❯</span>
+            <!-- 2. Recovery Trend Summary Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span style="font-size:16px">📅</span>
+                        <div class="card-title">Recovery</div>
+                    </div>
                 </div>
-                <div class="metric-val" id="valSleep" style="color:#818cf8">--<span>%</span></div>
-                <div class="metric-sub" id="subSleep">8h 48m</div>
-                <div class="progress-bar-wrap">
-                    <div class="progress-fill" id="barSleep" style="width:0%;background:var(--indigo)"></div>
-                </div>
-            </div>
-
-            <!-- Metric 4: Exertion / Readiness -->
-            <div class="metric-card" onclick="openModal('workoutModal')" title="Esforço & Prontidão">
-                <div class="metric-header">
-                    <span class="metric-title">EXERTION</span>
-                    <span class="metric-arrow">❯</span>
-                </div>
-                <div class="metric-val" id="valExertion" style="color:var(--text)">--<span>/10</span></div>
-                <div class="metric-sub" id="subExertion">Target Exertion Zone</div>
-                <div class="exertion-bar-container">
-                    <div class="target-band" id="targetBand" style="left:40%;width:35%"></div>
-                    <div class="progress-fill" id="barExertion" style="width:0%;background:var(--cyan)"></div>
+                <div class="trend-metrics-summary">
+                    <div class="trend-metric-item">
+                        <div class="trend-metric-title">Most Recent</div>
+                        <div class="trend-metric-num" id="trendMostRecentRec">49%</div>
+                    </div>
+                    <div class="trend-metric-item">
+                        <div class="trend-metric-title">Average</div>
+                        <div class="trend-metric-num" id="trendAvgRec">56%</div>
+                    </div>
+                    <div class="trend-metric-item">
+                        <div class="trend-metric-title">HRV Médio</div>
+                        <div class="trend-metric-num" id="trendAvgHrv" style="color:var(--cyan)">64 ms</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Metric 5: Energy Burned / Carga -->
-            <div class="metric-card" onclick="openModal('workoutModal')" title="Carga Acumulada (TSS)">
-                <div class="metric-header">
-                    <span class="metric-title">ENERGY / TSS</span>
-                    <span class="metric-arrow">❯</span>
-                </div>
-                <div class="metric-val" id="valEnergy" style="color:var(--orange)">--<span> TSS</span></div>
-                <div class="metric-sub" id="subEnergy">Carga Acumulada</div>
-                <div class="progress-bar-wrap">
-                    <div class="progress-fill" id="barEnergy" style="width:0%;background:var(--orange)"></div>
-                </div>
+            <!-- 3. All Variables Filter Chips -->
+            <div class="card">
+                <div class="card-title" style="margin-bottom:12px;font-size:14px">Filtrar Variáveis Fisiológicas</div>
+                <div class="var-chips" id="varChips"></div>
             </div>
 
-            <!-- Metric 6: Hooper Index / Fadiga & Estresse -->
-            <div class="metric-card" onclick="openModal('questionnaireModal')" title="Índice Hooper (Fadiga, Estresse, Dor e Humor)">
-                <div class="metric-header">
-                    <span class="metric-title">FADIGA / HOOPER</span>
-                    <span class="metric-arrow">❯</span>
-                </div>
-                <div class="metric-val" id="valHooper" style="color:#fb923c">--<span>/28</span></div>
-                <div class="metric-sub" id="subHooper">Status Subjetivo</div>
-                <div class="progress-bar-wrap">
-                    <div class="progress-fill" id="barHooper" style="width:0%;background:#fb923c"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. Target Exertion & Recommended Workout Card -->
-        <div class="recom-card">
-            <div class="recom-badge">RECOMENDADO PARA VOCÊ</div>
-            <div class="recom-main">
-                <div class="recom-icon-box">🏃</div>
-                <div>
-                    <div class="recom-title" id="recomTitle">Treino Funcional & Força</div>
-                    <div class="recom-meta" id="recomMeta">46 min · Esforço Moderado</div>
-                </div>
-            </div>
-            <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">
-                Zona alvo estimada em <strong>~6.0</strong>, encaixando-se perfeitamente na sua capacidade de recuperação de hoje.
-            </div>
-            <!-- Zone Breakdown Bar -->
-            <div class="zone-bar-wrap">
-                <div class="zone-seg z1" style="width:28%"></div>
-                <div class="zone-seg z2" style="width:50%"></div>
-                <div class="zone-seg z3" style="width:22%"></div>
-            </div>
-            <div class="zone-labels">
-                <span>Z1: <strong>13m</strong></span>
-                <span>Z2: <strong>23m</strong></span>
-                <span>Z3: <strong>9m</strong></span>
-            </div>
-            <div class="pill-btn-group">
-                <button type="button" class="btn-pill-action blue" onclick="openModal('workoutModal')">Registrar Treino</button>
-                <button type="button" class="btn-pill-action dark" onclick="openModal('questionnaireModal')">Questionário</button>
-            </div>
-        </div>
-
-        <!-- 4. Deep AI Evolution Section (3 Neurophysiological Blocks) -->
-        <div class="ai-section" id="aiBlocks">
-            <!-- Dynamic 3 AI blocks injected by dashboard.js -->
-        </div>
-
-        <!-- 5. Trends / Chart Section -->
-        <div class="trends-card" id="trendsSection">
-            <div class="trends-header">
-                <h3>📊 Tendências</h3>
-                <div class="period-pills" id="periodBtns">
-                    <button type="button" class="period-pill active" onclick="setPeriod(7,this)">7d</button>
-                    <button type="button" class="period-pill" onclick="setPeriod(14,this)">14d</button>
-                    <button type="button" class="period-pill" onclick="setPeriod(21,this)">21d</button>
-                    <button type="button" class="period-pill" onclick="setPeriod(28,this)">28d</button>
-                </div>
-            </div>
-            <div class="var-chips" id="varChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div>
-            <div class="chart-box"><canvas id="mainChart"></canvas></div>
         </div>
 
     </div>
 </div>
 
-<!-- ==================== FIXED BOTTOM NAVIGATION BAR ==================== -->
+<!-- ==================== FIXED iOS TRANSLUCENT BOTTOM TAB BAR ==================== -->
 <div class="bottom-nav">
-    <div class="nav-item active" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <div class="nav-item active" id="tabNavToday" onclick="switchMainTab('today')">
         <span class="nav-icon">☀️</span>
-        <span>Hoje</span>
+        <span>Today</span>
+    </div>
+    <div class="nav-item" id="tabNavTrends" onclick="switchMainTab('trends')">
+        <span class="nav-icon">📊</span>
+        <span>Trends</span>
     </div>
     <div class="nav-item" onclick="openModal('questionnaireModal')">
         <span class="nav-icon">📋</span>
-        <span>Questionário</span>
+        <span>Health</span>
     </div>
     <div class="nav-item" onclick="openModal('workoutModal')">
-        <span class="nav-icon">💪</span>
-        <span>Treinos</span>
-    </div>
-    <div class="nav-item" onclick="document.getElementById('trendsSection').scrollIntoView({behavior:'smooth'})">
-        <span class="nav-icon">📈</span>
-        <span>Tendências</span>
+        <span class="nav-icon">⚡</span>
+        <span>Workouts</span>
     </div>
     <div class="nav-item" onclick="openModal('curriculumModal')">
         <span class="nav-icon">👤</span>
-        <span>Perfil</span>
+        <span>Profile</span>
     </div>
 </div>
 
-<!-- ==================== MODALS ==================== -->
+<!-- ==================== MODALS (iOS BOTTOM SHEETS) ==================== -->
 
-<!-- Curriculum Modal -->
-<div id="curriculumModal" class="modal">
+<!-- 1. Help & Methodology Modal -->
+<div id="helpModal" class="modal">
     <div class="modal-content">
+        <div class="modal-handle"></div>
         <div class="modal-header">
-            <h2>📄 Meu Perfil / Currículo</h2>
-            <button type="button" class="modal-close" onclick="closeModal('curriculumModal')">✕</button>
+            <h2 id="helpModalTitle">Sobre a Recuperação & HRV</h2>
+            <button type="button" class="modal-close" onclick="closeModal('helpModal')">✕</button>
         </div>
-        <div style="text-align:center;margin-bottom:20px">
-            <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:32px">👤</div>
-            <h3 id="currName">—</h3>
-            <p style="color:var(--text-muted);font-size:13px" id="currEmail">—</p>
-        </div>
-        <div style="border-top:1px solid var(--border);padding-top:16px;font-size:14px;color:var(--text-muted);line-height:1.8">
-            <p><strong style="color:var(--text)">Data de Cadastro:</strong> <span id="currDate">—</span></p>
-            <p><strong style="color:var(--text)">Total de Registros:</strong> <span id="currRecords">0</span></p>
-            <hr style="border-color:var(--border);margin:12px 0">
-            <p>Atleta monitorado via Synthonia AI Athlytic Engine, integrando variáveis autonômicas, fisiológicas e perceptivas para otimização contínua.</p>
+        <div style="font-size:14px;color:var(--text-secondary);line-height:1.6" id="helpModalBody">
+            <p style="margin-bottom:12px">A pontuação de <strong>Recuperação</strong> do Athlytic sintetiza a Variabilidade da Frequência Cardíaca (HRV rMSSD), a FC de repouso (RHR), as horas e qualidade do sono, e os índices subjetivos de fadiga e dor muscular (DOMS).</p>
+            <p style="margin-bottom:12px"><strong>Zonas de Recuperação:</strong></p>
+            <ul style="padding-left:20px;margin-bottom:14px">
+                <li><strong style="color:var(--green)">67% a 100%:</strong> Ótima prontidão autonômica. Janela favorável para alta carga.</li>
+                <li><strong style="color:var(--yellow)">34% a 66%:</strong> Recuperação moderada. Mantenha estímulos controlados.</li>
+                <li><strong style="color:var(--red)">0% a 33%:</strong> Sobrecarga ou fadiga acumulada. Priorize sono e regeneração.</li>
+            </ul>
         </div>
         <div class="modal-actions">
-            <button type="button" class="btn btn-primary" onclick="openModal('editProfileModal');closeModal('curriculumModal')">Editar Nome</button>
-            <button type="button" class="btn btn-secondary" onclick="closeModal('curriculumModal')">Fechar</button>
+            <button type="button" class="btn btn-primary" onclick="closeModal('helpModal')">Entendi</button>
         </div>
     </div>
 </div>
 
-<!-- Recovery Questionnaire Modal -->
+<!-- 2. Recovery Questionnaire Modal -->
 <div id="questionnaireModal" class="modal">
     <div class="modal-content">
+        <div class="modal-handle"></div>
         <div class="modal-header">
-            <h2>📋 Questionário do Dia</h2>
+            <h2>📋 Questionário Matinal</h2>
             <button type="button" class="modal-close" onclick="closeModal('questionnaireModal')">✕</button>
         </div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Responda com base no seu estado fisiológico <strong>atual</strong>.</p>
+        <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:16px">Avaliação subjetiva e biometria matinal.</p>
+
+        <!-- Morning HRV input (rMSSD) -->
+        <div class="form-group" style="background:var(--blue-light);padding:14px;border-radius:var(--radius-md);margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                <label style="margin-bottom:0;font-weight:700;color:var(--text-primary)">⚡ HRV Matinal (rMSSD)</label>
+                <span style="font-size:12px;color:var(--blue);font-weight:700">ms</span>
+            </div>
+            <input type="number" id="qHrv" class="form-control" placeholder="Ex: 85 (ms em repouso)" min="10" max="250" style="background:#fff">
+            <span style="font-size:11.5px;color:var(--text-secondary);display:block;margin-top:4px">Variabilidade da FC medida em repouso ao acordar.</span>
+        </div>
 
         <div class="slider-group">
             <div class="slider-header"><label>Qualidade do Sono</label><span class="slider-val" id="vSonoQ">3</span></div>
@@ -342,15 +518,6 @@
             <div class="slider-labels"><span>Sem vontade</span><span>Muito motivado</span></div>
         </div>
 
-        <div class="form-group" style="margin-top: 16px; padding: 14px; background: rgba(0, 229, 255, 0.06); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: var(--radius-md);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px">
-                <label style="margin-bottom:0; font-weight:700; color:var(--text)">❤️ HRV Matinal (rMSSD)</label>
-                <span style="font-size:11px; color:var(--cyan); font-weight:700">ms</span>
-            </div>
-            <input type="number" id="qHrv" class="form-control" placeholder="Ex: 58 (ms em repouso)" min="10" max="250">
-            <span style="font-size:11px; color:var(--text-muted); display:block; margin-top:4px">Variabilidade da frequência cardíaca em repouso ao acordar (opcional).</span>
-        </div>
-
         <div class="modal-actions">
             <button type="button" class="btn btn-primary" onclick="saveQuestionnaire()">Salvar Questionário</button>
             <button type="button" class="btn btn-secondary" onclick="closeModal('questionnaireModal')">Cancelar</button>
@@ -358,11 +525,12 @@
     </div>
 </div>
 
-<!-- Workout Modal -->
+<!-- 3. Workout Modal -->
 <div id="workoutModal" class="modal">
     <div class="modal-content">
+        <div class="modal-handle"></div>
         <div class="modal-header">
-            <h2>💪 Registro de Treino</h2>
+            <h2>⚡ Registro de Treino</h2>
             <button type="button" class="modal-close" onclick="closeModal('workoutModal')">✕</button>
         </div>
 
@@ -371,7 +539,7 @@
             <input type="date" id="wkDate" class="form-control">
         </div>
         <div class="form-group">
-            <label>Tipo de Treino</label>
+            <label>Tipo de Atividade</label>
             <select id="wkType" class="form-control">
                 <option>Musculação / Força</option>
                 <option>Corrida</option>
@@ -379,13 +547,13 @@
                 <option>Natação</option>
                 <option>CrossFit / Funcional</option>
                 <option>Esporte Coletivo</option>
-                <option>Mobilidade / Regen</option>
+                <option>Mobilidade / Regenerativo</option>
             </select>
         </div>
         <div class="slider-group">
-            <div class="slider-header"><label>Duração (min)</label><span class="slider-val" id="vWkDur">60</span></div>
+            <div class="slider-header"><label>Duração (minutos)</label><span class="slider-val" id="vWkDur">60</span></div>
             <input type="range" id="wkDur" min="10" max="180" value="60" step="5" oninput="sv(this,'vWkDur')">
-            <div class="slider-labels"><span>10</span><span>180</span></div>
+            <div class="slider-labels"><span>10 min</span><span>180 min</span></div>
         </div>
         <div class="slider-group">
             <div class="slider-header"><label>PSE — Esforço Percebido (Borg CR-10)</label><span class="slider-val" id="vWkPse">6</span></div>
@@ -393,16 +561,16 @@
             <div class="slider-labels"><span>0 (Repouso)</span><span>10 (Máximo)</span></div>
         </div>
         <div class="form-group">
-            <label>❤️ HRV — Variabilidade da FC (rMSSD, ms)</label>
-            <input type="number" id="wkHrv" class="form-control" placeholder="Ex: 55" min="0" max="200">
+            <label>⚡ HRV do Dia (rMSSD, ms)</label>
+            <input type="number" id="wkHrv" class="form-control" placeholder="Ex: 85" min="0" max="250">
         </div>
         <div class="form-group">
-            <label>💓 FC Média (bpm)</label>
-            <input type="number" id="wkFc" class="form-control" placeholder="Ex: 140" min="40" max="220">
+            <label>❤️ FC Média durante o treino (bpm)</label>
+            <input type="number" id="wkFc" class="form-control" placeholder="Ex: 142" min="40" max="220">
         </div>
         <div class="form-group">
-            <label>Observações</label>
-            <input type="text" id="wkNotes" class="form-control" placeholder="Ex: Carga progressiva em membros inferiores">
+            <label>Observações do Treinamento</label>
+            <input type="text" id="wkNotes" class="form-control" placeholder="Ex: Trabalho de potência em membros inferiores">
         </div>
         <div class="modal-actions">
             <button type="button" class="btn btn-primary" onclick="saveWorkout()">Salvar Treino</button>
@@ -411,9 +579,36 @@
     </div>
 </div>
 
-<!-- Edit Profile Modal -->
+<!-- 4. Profile / Curriculum Modal -->
+<div id="curriculumModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h2>👤 Perfil do Atleta</h2>
+            <button type="button" class="modal-close" onclick="closeModal('curriculumModal')">✕</button>
+        </div>
+        <div style="text-align:center;margin-bottom:20px">
+            <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700">👤</div>
+            <h3 id="currName" style="font-size:18px;font-weight:800;color:var(--text-primary)">—</h3>
+            <p style="color:var(--text-tertiary);font-size:13px" id="currEmail">—</p>
+        </div>
+        <div style="background:var(--bg-system);border-radius:var(--radius-md);padding:14px;font-size:13.5px;color:var(--text-secondary);line-height:1.8;margin-bottom:16px">
+            <p><strong style="color:var(--text-primary)">Cadastro:</strong> <span id="currDate">—</span></p>
+            <p><strong style="color:var(--text-primary)">Registros de Carga:</strong> <span id="currRecords">0</span> dias</p>
+            <hr style="border:none;border-top:1px solid var(--border);margin:10px 0">
+            <p>Atleta monitorado via Athlytic Engine, integrando prontidão, tônus vagal e controle de esforço diário.</p>
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-primary" onclick="openModal('editProfileModal');closeModal('curriculumModal')">Editar Perfil</button>
+            <button type="button" class="btn btn-secondary" onclick="logout();closeModal('curriculumModal')">Sair da Conta</button>
+        </div>
+    </div>
+</div>
+
+<!-- 5. Edit Profile Modal -->
 <div id="editProfileModal" class="modal">
     <div class="modal-content">
+        <div class="modal-handle"></div>
         <div class="modal-header">
             <h2>✏️ Editar Perfil</h2>
             <button type="button" class="modal-close" onclick="closeModal('editProfileModal')">✕</button>
@@ -424,7 +619,7 @@
         </div>
         <div class="form-group">
             <label>E-mail (somente leitura)</label>
-            <input type="email" id="editEmail" class="form-control" readonly style="opacity:.6">
+            <input type="email" id="editEmail" class="form-control" readonly style="opacity:.7">
         </div>
         <div class="modal-actions">
             <button type="button" class="btn btn-primary" onclick="saveProfile()">Salvar Alterações</button>
