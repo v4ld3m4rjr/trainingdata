@@ -1,5 +1,5 @@
 /* ===================================================================
-   app.js — Athlytic iOS Application Init & Tab Router
+   app.js — Application Init & Tab Router
    =================================================================== */
 
 function switchMainTab(tab) {

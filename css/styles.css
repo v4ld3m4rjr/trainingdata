@@ -1,10 +1,10 @@
 /* ===================================================================
-   Synthonia AI — Athlytic iOS Native Theme
+   Synthonia AI — iOS Native Theme
    Clean Apple SF / Inter typography, #f2f2f7 grouped background,
    pure white cards, circular gauges, segmented controls, 7-day bar charts
    =================================================================== */
 
-/* ── COLOR TOKENS & SYSTEM VARIABLES (APPLE / ATHLYTIC PALETTE) ── */
+/* ── COLOR TOKENS & SYSTEM VARIABLES (APPLE PALETTE) ── */
 :root {
     --bg-system: #f2f2f7;
     --bg-card: #ffffff;
@@ -21,7 +21,7 @@
     --text-tertiary: #8e8e93;
     --text-quaternary: #aeaeb2;
 
-    /* Semantic Status Colors (Athlytic Scale) */
+    /* Semantic Status Colors */
     --green: #34c759;
     --green-light: #e8f9ed;
     --green-lime: #a4cd39;
@@ -181,7 +181,7 @@ body {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-/* ── ATHLYTIC WHITE CARD COMPONENT ── */
+/* ── WHITE CARD COMPONENT ── */
 .card {
     background: var(--bg-card);
     border-radius: var(--radius-lg);
@@ -485,15 +485,6 @@ body {
     height: 10px;
     border-radius: 2px;
     background: var(--green);
-}
-
-/* ── DISCLAIMER TEXT (ATHLYTIC CLINICAL STYLE) ── */
-.medical-disclaimer {
-    font-size: 11px;
-    color: var(--text-tertiary);
-    line-height: 1.5;
-    margin: 16px 4px 24px;
-    text-align: justify;
 }
 
 /* ── TRENDS TAB STYLES ── */

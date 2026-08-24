@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Athlytic — Recuperação, Esforço & Performance</title>
-    <meta name="description" content="Monitoramento inteligente de recuperação, variabilidade de frequência cardíaca (HRV), sono e esforço atlético no padrão Athlytic.">
+    <title>Synthonia AI — Recuperação, Esforço & Performance</title>
+    <meta name="description" content="Monitoramento inteligente de recuperação, variabilidade de frequência cardíaca (HRV), sono e esforço atlético.">
 
     <!-- Google Fonts (Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,7 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Athlytic iOS Native CSS -->
+    <!-- iOS Native CSS -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -24,7 +24,7 @@
     <div class="auth-wrapper">
         <div class="auth-card">
             <div style="width:60px;height:60px;margin:0 auto 16px;border-radius:16px;background:linear-gradient(135deg,#34c759,#30b0c7);display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;box-shadow:0 8px 20px rgba(52,199,89,0.25)">⚡</div>
-            <h1 style="font-size:24px;font-weight:800;text-align:center;margin-bottom:4px;letter-spacing:-0.5px">Athlytic <span style="color:var(--green)">AI</span></h1>
+            <h1 style="font-size:24px;font-weight:800;text-align:center;margin-bottom:4px;letter-spacing:-0.5px">Synthonia <span style="color:var(--green)">AI</span></h1>
             <p style="color:var(--text-tertiary);font-size:13px;text-align:center;margin-bottom:28px">Recuperação, HRV & Zonas de Esforço</p>
 
             <div id="loginForm">
@@ -114,7 +114,7 @@
             <!-- ==================== SUB-VIEW: RECOVERY ==================== -->
             <div id="subViewRecovery">
 
-                <!-- 1. Recovery Hero Card (Exact Athlytic Style) -->
+                <!-- 1. Recovery Hero Card -->
                 <div class="card recovery-hero-card">
                     <div class="recovery-status-title">
                         <span id="recStatusTitle">Recovering</span>
@@ -186,11 +186,6 @@
                         <button type="button" class="btn-pill-action blue" onclick="openModal('questionnaireModal')">Responder Questionário</button>
                         <button type="button" class="btn-pill-action secondary" onclick="openModal('workoutModal')">Registrar Treino</button>
                     </div>
-                </div>
-
-                <!-- 4. Medical / Clinical Disclaimer (Athlytic Native Style) -->
-                <div class="medical-disclaimer">
-                    Athlytic provides only information, is not medical or treatment advice and may not be treated as such by the user. As such, this App may not be relied upon for the purposes of medical diagnosis or as a recommendation for medical care or treatment. The information on this App is not a substitute for professional medical advice, diagnosis or treatment. All content, including text, graphics, images and information, contained on or available through this App is for general information purposes only.
                 </div>
 
             </div>
@@ -343,7 +338,7 @@
                 </div>
             </div>
 
-            <!-- 1. Recovery vs. Exertion Dual Chart Card (Exact Athlytic Style) -->
+            <!-- 1. Recovery vs. Exertion Dual Chart Card -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Recovery vs. Exertion</div>
@@ -433,7 +428,7 @@
             <button type="button" class="modal-close" onclick="closeModal('helpModal')">✕</button>
         </div>
         <div style="font-size:14px;color:var(--text-secondary);line-height:1.6" id="helpModalBody">
-            <p style="margin-bottom:12px">A pontuação de <strong>Recuperação</strong> do Athlytic sintetiza a Variabilidade da Frequência Cardíaca (HRV rMSSD), a FC de repouso (RHR), as horas e qualidade do sono, e os índices subjetivos de fadiga e dor muscular (DOMS).</p>
+            <p style="margin-bottom:12px">A pontuação de <strong>Recuperação</strong> sintetiza a Variabilidade da Frequência Cardíaca (HRV rMSSD), a FC de repouso (RHR), as horas e qualidade do sono, e os índices subjetivos de fadiga e dor muscular (DOMS).</p>
             <p style="margin-bottom:12px"><strong>Zonas de Recuperação:</strong></p>
             <ul style="padding-left:20px;margin-bottom:14px">
                 <li><strong style="color:var(--green)">67% a 100%:</strong> Ótima prontidão autonômica. Janela favorável para alta carga.</li>
@@ -596,7 +591,7 @@
             <p><strong style="color:var(--text-primary)">Cadastro:</strong> <span id="currDate">—</span></p>
             <p><strong style="color:var(--text-primary)">Registros de Carga:</strong> <span id="currRecords">0</span> dias</p>
             <hr style="border:none;border-top:1px solid var(--border);margin:10px 0">
-            <p>Atleta monitorado via Athlytic Engine, integrando prontidão, tônus vagal e controle de esforço diário.</p>
+            <p>Atleta monitorado via Synthonia Engine, integrando prontidão, tônus vagal e controle de esforço diário.</p>
         </div>
         <div class="modal-actions">
             <button type="button" class="btn btn-primary" onclick="openModal('editProfileModal');closeModal('curriculumModal')">Editar Perfil</button>

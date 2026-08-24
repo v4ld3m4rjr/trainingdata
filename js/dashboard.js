@@ -1,5 +1,5 @@
 /* ===================================================================
-   dashboard.js — Athlytic iOS UI Engine
+   dashboard.js — Synthonia AI UI Engine
    Segmented controls, 7-day bar charts, circular gauges, HRV deltas & AI
    =================================================================== */
 
@@ -28,7 +28,7 @@ function switchSegment(seg) {
 }
 
 /**
- * Update all Athlytic dashboard indices and cards
+ * Update all dashboard indices and cards
  */
 function updateIndices(data) {
     if (!data || !data.length) return;
@@ -47,7 +47,7 @@ function updateIndices(data) {
     const rhr = L.rhr || (L.fcmedia ? Math.round(L.fcmedia * 0.38) : 42); // Resting Heart Rate
     const exertion = +(pront / 10).toFixed(1); // 0-10 scale
 
-    // ── 1. RECOVERY HERO CARD (Athlytic Style) ──
+    // ── 1. RECOVERY HERO CARD ──
     const valRecScore = document.getElementById('valRecoveryScore');
     const recColorBar = document.getElementById('recColorBar');
     const recStatusTitle = document.getElementById('recStatusTitle');
@@ -211,7 +211,7 @@ function updateIndices(data) {
 }
 
 /**
- * Render 7-day Recovery Bars in Athlytic Style
+ * Render 7-day Recovery Bars
  */
 function renderDailyRecoveryBars(data) {
     const container = document.getElementById('recDailyBars');
@@ -257,7 +257,7 @@ function renderDailyRecoveryBars(data) {
 }
 
 /**
- * Render 7-day Exertion Bars in Athlytic Style
+ * Render 7-day Exertion Bars
  */
 function renderDailyExertionBars(data) {
     const container = document.getElementById('exertionDailyBars');
@@ -394,9 +394,9 @@ function openHelpModal(type) {
 function openShareSummary() {
     const data = getData();
     const L = data[data.length - 1];
-    const text = `📊 Athlytic Report de Hoje:\n• Recuperação: ${L.recuperacao}%\n• HRV: ${L.hrv} ms\n• Esforço: ${(L.prontidao/10).toFixed(1)}/10\n• Sono: ${L.sonoH}h`;
+    const text = `📊 Relatório de Hoje:\n• Recuperação: ${L.recuperacao}%\n• HRV: ${L.hrv} ms\n• Esforço: ${(L.prontidao/10).toFixed(1)}/10\n• Sono: ${L.sonoH}h`;
     if (navigator.share) {
-        navigator.share({ title: 'Athlytic Report', text: text }).catch(() => {});
+        navigator.share({ title: 'Relatório Diário', text: text }).catch(() => {});
     } else {
         alert(text);
     }

@@ -1,5 +1,5 @@
 /* ===================================================================
-   chart.js — Athlytic iOS Trends Engine
+   chart.js — Trends Engine
    Dual line chart (Recovery vs Exertion), shaded Target Exertion Band,
    iOS 30-day toggle switch & variable chips
    =================================================================== */
@@ -218,6 +218,6 @@ function renderChart() {
             }
         });
     } catch (err) {
-        console.error('Athlytic Chart render error:', err);
+        console.error('Chart render error:', err);
     }
 }
