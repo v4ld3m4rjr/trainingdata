@@ -468,54 +468,129 @@
         </div>
 
         <div class="slider-group">
-            <div class="slider-header"><label>Qualidade do Sono</label><span class="slider-val" id="vSonoQ">3</span></div>
-            <input type="range" id="sonoQ" min="1" max="5" value="3" oninput="sv(this,'vSonoQ')">
-            <div class="slider-labels"><span>Péssimo</span><span>Excelente</span></div>
+            <div class="slider-header">
+                <label>Qualidade do Sono</label>
+                <div class="slider-header-actions">
+                    <button type="button" class="btn-scale-info" onclick="showScaleLegend('sonoQ')">ℹ️ Legenda</button>
+                    <span class="slider-val" id="vSonoQ">7</span>
+                </div>
+            </div>
+            <input type="range" id="sonoQ" min="0" max="10" value="7" oninput="sv(this,'vSonoQ','sonoQ')">
+            <div class="slider-labels"><span>0 (Péssimo)</span><span>10 (Excelente)</span></div>
+            <div class="slider-desc-hint" id="desc_sonoQ"><strong>7:</strong> Bom — Repousante e revigorante</div>
         </div>
+
         <div class="slider-group">
-            <div class="slider-header"><label>Horas de Sono</label><span class="slider-val" id="vSonoH">7</span></div>
-            <input type="range" id="sonoH" min="3" max="12" value="7" step="0.5" oninput="sv(this,'vSonoH')">
-            <div class="slider-labels"><span>3h</span><span>12h</span></div>
+            <div class="slider-header">
+                <label>Horas de Sono</label>
+                <span class="slider-val" id="vSonoH">7.5h</span>
+            </div>
+            <input type="range" id="sonoH" min="3" max="14" value="7.5" step="0.5" oninput="sv(this,'vSonoH')">
+            <div class="slider-labels"><span>3h</span><span>14h</span></div>
         </div>
+
         <div class="slider-group">
-            <div class="slider-header"><label>Fadiga (Hooper)</label><span class="slider-val" id="vFadiga">3</span></div>
-            <input type="range" id="fadiga" min="1" max="7" value="3" oninput="sv(this,'vFadiga')">
-            <div class="slider-labels"><span>Nenhuma</span><span>Extrema</span></div>
+            <div class="slider-header">
+                <label>Fadiga Geral</label>
+                <div class="slider-header-actions">
+                    <button type="button" class="btn-scale-info" onclick="showScaleLegend('fadiga')">ℹ️ Legenda</button>
+                    <span class="slider-val" id="vFadiga">3</span>
+                </div>
+            </div>
+            <input type="range" id="fadiga" min="0" max="10" value="3" oninput="sv(this,'vFadiga','fadiga')">
+            <div class="slider-labels"><span>0 (Nenhuma)</span><span>10 (Extrema)</span></div>
+            <div class="slider-desc-hint" id="desc_fadiga"><strong>3:</strong> Leve — Sensação sutil de cansaço</div>
         </div>
+
         <div class="slider-group">
-            <div class="slider-header"><label>Estresse (Hooper)</label><span class="slider-val" id="vEstresse">3</span></div>
-            <input type="range" id="estresse" min="1" max="7" value="3" oninput="sv(this,'vEstresse')">
-            <div class="slider-labels"><span>Nenhum</span><span>Extremo</span></div>
+            <div class="slider-header">
+                <label>Nível de Estresse</label>
+                <div class="slider-header-actions">
+                    <button type="button" class="btn-scale-info" onclick="showScaleLegend('estresse')">ℹ️ Legenda</button>
+                    <span class="slider-val" id="vEstresse">3</span>
+                </div>
+            </div>
+            <input type="range" id="estresse" min="0" max="10" value="3" oninput="sv(this,'vEstresse','estresse')">
+            <div class="slider-labels"><span>0 (Nenhum)</span><span>10 (Extremo)</span></div>
+            <div class="slider-desc-hint" id="desc_estresse"><strong>3:</strong> Baixo — Estresse cotidiano leve e controlado</div>
         </div>
+
         <div class="slider-group">
-            <div class="slider-header"><label>Dor Muscular / DOMS (Hooper)</label><span class="slider-val" id="vDoms">3</span></div>
-            <input type="range" id="doms" min="1" max="7" value="3" oninput="sv(this,'vDoms')">
-            <div class="slider-labels"><span>Sem dor</span><span>Insuportável</span></div>
+            <div class="slider-header">
+                <label>Dor Muscular / DOMS</label>
+                <div class="slider-header-actions">
+                    <button type="button" class="btn-scale-info" onclick="showScaleLegend('doms')">ℹ️ Legenda</button>
+                    <span class="slider-val" id="vDoms">3</span>
+                </div>
+            </div>
+            <input type="range" id="doms" min="0" max="10" value="3" oninput="sv(this,'vDoms','doms')">
+            <div class="slider-labels"><span>0 (Sem dor)</span><span>10 (Insuportável)</span></div>
+            <div class="slider-desc-hint" id="desc_doms"><strong>3:</strong> Leve — Dor leve apenas em contrações fortes</div>
         </div>
+
         <div class="slider-group">
-            <div class="slider-header"><label>Humor (Hooper)</label><span class="slider-val" id="vHumor">5</span></div>
-            <input type="range" id="humor" min="1" max="7" value="5" oninput="sv(this,'vHumor')">
-            <div class="slider-labels"><span>Muito ruim</span><span>Excelente</span></div>
+            <div class="slider-header">
+                <label>Estado de Humor</label>
+                <div class="slider-header-actions">
+                    <button type="button" class="btn-scale-info" onclick="showScaleLegend('humor')">ℹ️ Legenda</button>
+                    <span class="slider-val" id="vHumor">7</span>
+                </div>
+            </div>
+            <input type="range" id="humor" min="0" max="10" value="7" oninput="sv(this,'vHumor','humor')">
+            <div class="slider-labels"><span>0 (Péssimo)</span><span>10 (Excelente)</span></div>
+            <div class="slider-desc-hint" id="desc_humor"><strong>7:</strong> Bom — Positivo, focado e animado</div>
         </div>
+
         <div class="slider-group">
-            <div class="slider-header"><label>TQR — Recuperação Total</label><span class="slider-val" id="vTqr">13</span></div>
-            <input type="range" id="tqr" min="6" max="20" value="13" oninput="sv(this,'vTqr')">
-            <div class="slider-labels"><span>6 (Nada)</span><span>20 (Total)</span></div>
+            <div class="slider-header">
+                <label>TQR — Recuperação Total (0 a 13)</label>
+                <div class="slider-header-actions">
+                    <button type="button" class="btn-scale-info" onclick="showScaleLegend('tqr')">ℹ️ Legenda</button>
+                    <span class="slider-val" id="vTqr">9</span>
+                </div>
+            </div>
+            <input type="range" id="tqr" min="0" max="13" value="9" oninput="sv(this,'vTqr','tqr')">
+            <div class="slider-labels"><span>0 (Nenhuma)</span><span>13 (Total)</span></div>
+            <div class="slider-desc-hint" id="desc_tqr"><strong>9:</strong> Muito boa recuperação</div>
         </div>
+
         <div class="slider-group">
-            <div class="slider-header"><label>PRS — Recuperação Percebida</label><span class="slider-val" id="vPrs">5</span></div>
-            <input type="range" id="prs" min="0" max="10" value="5" oninput="sv(this,'vPrs')">
+            <div class="slider-header">
+                <label>PRS — Recuperação Percebida</label>
+                <div class="slider-header-actions">
+                    <button type="button" class="btn-scale-info" onclick="showScaleLegend('prs')">ℹ️ Legenda</button>
+                    <span class="slider-val" id="vPrs">6</span>
+                </div>
+            </div>
+            <input type="range" id="prs" min="0" max="10" value="6" oninput="sv(this,'vPrs','prs')">
             <div class="slider-labels"><span>0 (Ruim)</span><span>10 (Ótimo)</span></div>
+            <div class="slider-desc-hint" id="desc_prs"><strong>6:</strong> Razoável — Prontidão para carga moderada</div>
         </div>
+
         <div class="slider-group">
-            <div class="slider-header"><label>Dor Geral</label><span class="slider-val" id="vDor">2</span></div>
-            <input type="range" id="dor" min="0" max="10" value="2" oninput="sv(this,'vDor')">
-            <div class="slider-labels"><span>Sem dor</span><span>Insuportável</span></div>
+            <div class="slider-header">
+                <label>Dor Geral / Articular</label>
+                <div class="slider-header-actions">
+                    <button type="button" class="btn-scale-info" onclick="showScaleLegend('dor')">ℹ️ Legenda</button>
+                    <span class="slider-val" id="vDor">2</span>
+                </div>
+            </div>
+            <input type="range" id="dor" min="0" max="10" value="2" oninput="sv(this,'vDor','dor')">
+            <div class="slider-labels"><span>0 (Sem dor)</span><span>10 (Insuportável)</span></div>
+            <div class="slider-desc-hint" id="desc_dor"><strong>2:</strong> Muito leve — Incômodo pontual discreto</div>
         </div>
+
         <div class="slider-group">
-            <div class="slider-header"><label>Motivação</label><span class="slider-val" id="vMotivacao">7</span></div>
-            <input type="range" id="motivacao" min="0" max="10" value="7" oninput="sv(this,'vMotivacao')">
-            <div class="slider-labels"><span>Sem vontade</span><span>Muito motivado</span></div>
+            <div class="slider-header">
+                <label>Motivação para Treinar</label>
+                <div class="slider-header-actions">
+                    <button type="button" class="btn-scale-info" onclick="showScaleLegend('motivacao')">ℹ️ Legenda</button>
+                    <span class="slider-val" id="vMotivacao">8</span>
+                </div>
+            </div>
+            <input type="range" id="motivacao" min="0" max="10" value="8" oninput="sv(this,'vMotivacao','motivacao')">
+            <div class="slider-labels"><span>0 (Nenhuma)</span><span>10 (Máxima)</span></div>
+            <div class="slider-desc-hint" id="desc_motivacao"><strong>8:</strong> Muito boa — Grande empolgação e foco</div>
         </div>
 
         <div class="modal-actions">
@@ -556,9 +631,16 @@
             <div class="slider-labels"><span>10 min</span><span>180 min</span></div>
         </div>
         <div class="slider-group">
-            <div class="slider-header"><label>PSE — Esforço Percebido (Borg CR-10)</label><span class="slider-val" id="vWkPse">6</span></div>
-            <input type="range" id="wkPse" min="0" max="10" value="6" oninput="sv(this,'vWkPse')">
+            <div class="slider-header">
+                <label>PSE — Esforço Percebido (Borg CR-10)</label>
+                <div class="slider-header-actions">
+                    <button type="button" class="btn-scale-info" onclick="showScaleLegend('wkPse')">ℹ️ Legenda</button>
+                    <span class="slider-val" id="vWkPse">6</span>
+                </div>
+            </div>
+            <input type="range" id="wkPse" min="0" max="10" value="6" oninput="sv(this,'vWkPse','wkPse')">
             <div class="slider-labels"><span>0 (Repouso)</span><span>10 (Máximo)</span></div>
+            <div class="slider-desc-hint" id="desc_wkPse"><strong>6:</strong> Pesado — Ritmo forte, esforço claro</div>
         </div>
         <div class="form-group">
             <label>⚡ HRV do Dia (rMSSD, ms)</label>
@@ -575,6 +657,22 @@
         <div class="modal-actions">
             <button type="button" class="btn btn-primary" onclick="saveWorkout()">Salvar Treino</button>
             <button type="button" class="btn btn-secondary" onclick="closeModal('workoutModal')">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- 4. Detailed Scale Legend Modal -->
+<div id="scaleLegendModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <h2 id="scaleLegendTitle" style="font-size:18px">📋 Legenda da Escala</h2>
+            <button type="button" class="modal-close" onclick="closeModal('scaleLegendModal')">✕</button>
+        </div>
+        <p style="font-size:12.5px;color:var(--text-tertiary);margin-bottom:8px">Toque em qualquer nível para selecionar automaticamente o valor.</p>
+        <div id="scaleLegendContent"></div>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-primary" onclick="closeModal('scaleLegendModal')">Fechar</button>
         </div>
     </div>
 </div>

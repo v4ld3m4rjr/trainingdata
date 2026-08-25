@@ -1,5 +1,6 @@
 /* ===================================================================
-   modals.js — Modal Management, Questionnaire & Workout Save
+   modals.js — Modal Management, Questionnaire (0-10 & TQR 0-13),
+   Dynamic Scale Descriptors & Detailed Legend Modal
    =================================================================== */
 
 function openModal(id) {
@@ -21,19 +22,121 @@ function openModal(id) {
         if (qHrvEl) {
             qHrvEl.value = (te && te.hrv) ? te.hrv : '';
         }
+
+        // Initialize / sync all slider descriptors
+        const sliders = [
+            { id: 'sonoQ', valId: 'vSonoQ', key: 'sonoQ' },
+            { id: 'sonoH', valId: 'vSonoH', key: null },
+            { id: 'fadiga', valId: 'vFadiga', key: 'fadiga' },
+            { id: 'estresse', valId: 'vEstresse', key: 'estresse' },
+            { id: 'doms', valId: 'vDoms', key: 'doms' },
+            { id: 'humor', valId: 'vHumor', key: 'humor' },
+            { id: 'tqr', valId: 'vTqr', key: 'tqr' },
+            { id: 'prs', valId: 'vPrs', key: 'prs' },
+            { id: 'dor', valId: 'vDor', key: 'dor' },
+            { id: 'motivacao', valId: 'vMotivacao', key: 'motivacao' }
+        ];
+
+        sliders.forEach(s => {
+            const el = document.getElementById(s.id);
+            if (el) {
+                if (te && te[s.id] != null) el.value = te[s.id];
+                sv(el, s.valId, s.key);
+            }
+        });
     }
     if (id === 'workoutModal') {
-        // Default date to today
         document.getElementById('wkDate').value = new Date().toISOString().slice(0, 10);
+        const wkPseEl = document.getElementById('wkPse');
+        if (wkPseEl) sv(wkPseEl, 'vWkPse', 'wkPse');
     }
     document.getElementById(id).classList.add('active');
 }
 
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-function sv(s, id) { document.getElementById(id).textContent = s.value; }
-function num(id) { return parseInt(document.getElementById(id).value) || 0; }
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
 
-/* ── Save Recovery Questionnaire ── */
+/**
+ * Update Slider Value & Live Scale Descriptor
+ */
+function sv(slider, valId, scaleKey) {
+    const valEl = document.getElementById(valId);
+    if (!valEl) return;
+
+    const val = parseFloat(slider.value);
+
+    if (scaleKey && typeof SCALE_LEGENDS !== 'undefined' && SCALE_LEGENDS[scaleKey]) {
+        const info = SCALE_LEGENDS[scaleKey];
+        const desc = info.descriptions[val] || '';
+
+        // Display value
+        valEl.textContent = val;
+
+        // Update live descriptor hint below slider
+        const descEl = document.getElementById('desc_' + scaleKey);
+        if (descEl) {
+            descEl.innerHTML = `<strong>${val}:</strong> ${desc}`;
+        }
+    } else {
+        valEl.textContent = slider.value + (valId === 'vSonoH' ? 'h' : valId === 'vWkDur' ? 'm' : '');
+    }
+}
+
+/**
+ * Show Detailed Scale Legend in Modal
+ */
+function showScaleLegend(scaleKey) {
+    if (typeof SCALE_LEGENDS === 'undefined' || !SCALE_LEGENDS[scaleKey]) return;
+    const info = SCALE_LEGENDS[scaleKey];
+
+    const titleEl = document.getElementById('scaleLegendTitle');
+    const contentEl = document.getElementById('scaleLegendContent');
+    const sliderEl = document.getElementById(scaleKey);
+    const currentVal = sliderEl ? parseFloat(sliderEl.value) : -1;
+
+    if (titleEl) titleEl.textContent = `📋 Legenda: ${info.title}`;
+
+    if (contentEl) {
+        let html = '<div class="scale-legend-list">';
+        for (let i = info.min; i <= info.max; i++) {
+            const isSelected = (i === currentVal);
+            const desc = info.descriptions[i] || '';
+            html += `
+                <div class="scale-legend-row ${isSelected ? 'selected' : ''}" onclick="selectScaleValue('${scaleKey}', ${i})">
+                    <div class="scale-num-badge">${i}</div>
+                    <div class="scale-desc-text">${desc}</div>
+                    ${isSelected ? '<span class="scale-selected-check">✓ Selecionado</span>' : ''}
+                </div>
+            `;
+        }
+        html += '</div>';
+        contentEl.innerHTML = html;
+    }
+
+    openModal('scaleLegendModal');
+}
+
+/**
+ * Quick select value from legend modal
+ */
+function selectScaleValue(scaleKey, val) {
+    const sliderEl = document.getElementById(scaleKey);
+    if (sliderEl) {
+        sliderEl.value = val;
+        const valMap = {
+            sonoQ: 'vSonoQ', fadiga: 'vFadiga', estresse: 'vEstresse',
+            doms: 'vDoms', humor: 'vHumor', tqr: 'vTqr',
+            prs: 'vPrs', dor: 'vDor', motivacao: 'vMotivacao', wkPse: 'vWkPse'
+        };
+        sv(sliderEl, valMap[scaleKey], scaleKey);
+    }
+    closeModal('scaleLegendModal');
+}
+
+function num(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+/* ── Save Recovery Questionnaire (0-10 Scales, TQR 0-13) ── */
 function saveQuestionnaire() {
     var sonoQ = num('sonoQ'), sonoH = parseFloat(document.getElementById('sonoH').value) || 7;
     var fadiga = num('fadiga'), estresse = num('estresse'), doms = num('doms'), humor = num('humor');
@@ -62,7 +165,7 @@ function saveQuestionnaire() {
         var ctl = prev ? Math.round(prev.ctl + (0 - prev.ctl) / 42) : 0;
         data.push({
             date: new Date().toISOString(), pse: 0, dur: 0, tss: 0, trimp: 0,
-            hrv: qHrv > 0 ? qHrv : (prev ? prev.hrv : 0), fcmedia: 0,
+            hrv: qHrv > 0 ? qHrv : (prev ? prev.hrv : 0), fcmedia: 0, rhr: prev ? prev.rhr : 42,
             sonoQ: sonoQ, sonoH: sonoH, fadiga: fadiga, estresse: estresse, doms: doms, humor: humor,
             tqr: tqr, prs: prs, dor: dor, motivacao: motivacao,
             hooper: hooper, atl: atl, ctl: ctl, tsb: ctl - atl,
@@ -75,7 +178,7 @@ function saveQuestionnaire() {
 
 /* ── Save Workout ── */
 function saveWorkout() {
-    var selectedDate = document.getElementById('wkDate').value; // YYYY-MM-DD from calendar
+    var selectedDate = document.getElementById('wkDate').value;
     var type = document.getElementById('wkType').value;
     var dur = num('wkDur');
     var pse = num('wkPse');
@@ -95,27 +198,25 @@ function saveWorkout() {
     var last7 = data.slice(-6).map(function (e) { return e.tss || 0; }).concat([tss]);
     var mono = cMono(last7);
 
-    var defs = { sonoQ: 3, sonoH: 7, fadiga: 3, estresse: 3, doms: 3, humor: 5, tqr: 13, prs: 5, dor: 2, motivacao: 7, prontidao: 60, recuperacao: 60 };
+    var defs = { sonoQ: 7, sonoH: 7.5, fadiga: 3, estresse: 3, doms: 3, humor: 7, tqr: 9, prs: 6, dor: 2, motivacao: 8, prontidao: 65, recuperacao: 65 };
     var c = {};
     for (var k in defs) { c[k] = prev ? (prev[k] != null ? prev[k] : defs[k]) : defs[k]; }
     var hooper = cHooper(c.fadiga, c.estresse, c.doms, c.humor);
 
-    // Use the selected date from calendar
     var entryDate = selectedDate || new Date().toISOString().slice(0, 10);
     var te = data.find(function (e) { return e.date && e.date.slice(0, 10) === entryDate; });
 
     if (te) {
-        Object.assign(te, { pse: pse, dur: dur, tss: tss, trimp: trimp, hrv: hrv, fcmedia: fcmedia, atl: atl, ctl: ctl, tsb: tsb, monotonia: mono, workoutType: type, notes: notes });
+        Object.assign(te, { pse: pse, dur: dur, tss: tss, trimp: trimp, hrv: hrv || te.hrv, fcmedia: fcmedia, atl: atl, ctl: ctl, tsb: tsb, monotonia: mono, workoutType: type, notes: notes });
     } else {
         var fullDate = new Date(entryDate + 'T12:00:00').toISOString();
         data.push({
-            date: fullDate, pse: pse, dur: dur, tss: tss, trimp: trimp, hrv: hrv, fcmedia: fcmedia,
+            date: fullDate, pse: pse, dur: dur, tss: tss, trimp: trimp, hrv: hrv, fcmedia: fcmedia, rhr: prev ? prev.rhr : 42,
             sonoQ: c.sonoQ, sonoH: c.sonoH, fadiga: c.fadiga, estresse: c.estresse,
             doms: c.doms, humor: c.humor, tqr: c.tqr, prs: c.prs, dor: c.dor, motivacao: c.motivacao,
             hooper: hooper, atl: atl, ctl: ctl, tsb: tsb, monotonia: mono,
             prontidao: c.prontidao, recuperacao: c.recuperacao, workoutType: type, notes: notes
         });
-        // Sort by date after adding past entries
         data.sort(function (a, b) { return new Date(a.date) - new Date(b.date); });
     }
     saveData(data); closeModal('workoutModal'); refreshAll();
