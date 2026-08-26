@@ -1,7 +1,6 @@
 /* ===================================================================
    chart.js — Trends Engine
-   Dual line chart (Recovery vs Exertion), shaded Target Exertion Band,
-   iOS 30-day toggle switch & variable chips
+   Dynamic multi-variable trends chart with active variable chips & period toggle
    =================================================================== */
 
 let chartInst = null;
@@ -34,8 +33,11 @@ function buildVarChips() {
             chip.style.color = '';
         }
         chip.addEventListener('click', function () {
-            if (activeVars.has(k)) activeVars.delete(k);
-            else activeVars.add(k);
+            if (activeVars.has(k)) {
+                activeVars.delete(k);
+            } else {
+                activeVars.add(k);
+            }
             buildVarChips();
             renderChart();
         });
@@ -59,12 +61,6 @@ function renderChart() {
 
     // Date labels
     const labels = [];
-    const recValues = [];
-    const exertionValues = [];
-    const targetMinValues = [];
-    const targetMaxValues = [];
-    const recPointColors = [];
-
     for (let i = 0; i < sliced.length; i++) {
         const d = new Date(sliced[i].date);
         if (isNaN(d.getTime())) {
@@ -72,75 +68,62 @@ function renderChart() {
         } else {
             labels.push(d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
         }
-
-        const r = CL(sliced[i].recuperacao || 0, 0, 100);
-        // Normalize recovery to 0-10 scale for visual harmony with exertion (0-10) or display on dual axis
-        const rNorm = +(r / 10).toFixed(1);
-        recValues.push(rNorm);
-
-        const ex = +((sliced[i].prontidao || 50) / 10).toFixed(1);
-        exertionValues.push(ex);
-
-        const tMin = Math.max(1.5, +((r / 25) + 1.2).toFixed(1));
-        const tMax = Math.min(9.8, +(tMin + 2.0).toFixed(1));
-        targetMinValues.push(tMin);
-        targetMaxValues.push(tMax);
-
-        // Point color based on recovery status
-        if (r >= 67) recPointColors.push('#34c759');
-        else if (r >= 40) recPointColors.push('#ffcc00');
-        else recPointColors.push('#ff3b30');
     }
 
-    // Datasets
-    const datasets = [
-        // Target Exertion Upper Bound (Shaded Range)
-        {
-            label: 'Target Range Max',
-            data: targetMaxValues,
-            borderColor: 'transparent',
-            backgroundColor: 'rgba(142, 142, 147, 0.12)',
-            fill: '+1', // Fill to Target Range Min
-            pointRadius: 0,
-            tension: 0.35
-        },
-        // Target Exertion Lower Bound
-        {
-            label: 'Target Exertion Range',
-            data: targetMinValues,
-            borderColor: 'transparent',
-            backgroundColor: 'transparent',
-            fill: false,
-            pointRadius: 0,
-            tension: 0.35
-        },
-        // Exertion Line (Bright Cyan/Blue)
-        {
-            label: 'Exertion',
-            data: exertionValues,
-            borderColor: '#32ade6',
-            backgroundColor: 'transparent',
-            borderWidth: 2.5,
-            pointRadius: curPeriod === 30 ? 2 : 4,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#32ade6',
-            tension: 0.35
-        },
-        // Recovery Line (Slate Gray with status dots)
-        {
-            label: 'Recovery (÷10)',
-            data: recValues,
-            borderColor: '#8e8e93',
-            backgroundColor: 'transparent',
-            borderWidth: 2.5,
-            pointRadius: curPeriod === 30 ? 3.5 : 5,
-            pointHoverRadius: 7,
-            pointBackgroundColor: recPointColors,
-            pointBorderColor: '#ffffff',
-            pointBorderWidth: 1.5,
-            tension: 0.35
+    // Build Dynamic Datasets based on activeVars
+    const datasets = [];
+
+    if (activeVars.size === 0) {
+        // Fallback if no variable is checked: show Recovery & Prontidão
+        activeVars.add('Recuperacao');
+        activeVars.add('Prontidao');
+    }
+
+    activeVars.forEach(function (vKey) {
+        const vInfo = VARS[vKey];
+        if (!vInfo) return;
+
+        const dataPoints = sliced.map(function (e) {
+            return exVar(e, vKey);
+        });
+
+        // Special styling for Recuperação (dots colored by status)
+        if (vKey === 'Recuperacao') {
+            const pointColors = dataPoints.map(function (r) {
+                if (r >= 67) return '#34c759';
+                if (r >= 40) return '#ffcc00';
+                return '#ff3b30';
+            });
+
+            datasets.push({
+                label: vInfo.label,
+                data: dataPoints,
+                borderColor: vInfo.color || '#34d399',
+                backgroundColor: 'transparent',
+                borderWidth: 2.5,
+                pointRadius: curPeriod === 30 ? 3 : 5,
+                pointHoverRadius: 7,
+                pointBackgroundColor: pointColors,
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 1.5,
+                tension: 0.35
+            });
+        } else {
+            datasets.push({
+                label: vInfo.label,
+                data: dataPoints,
+                borderColor: vInfo.color,
+                backgroundColor: 'transparent',
+                borderWidth: 2.2,
+                pointRadius: curPeriod === 30 ? 2.5 : 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: vInfo.color,
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 1,
+                tension: 0.35
+            });
         }
-    ];
+    });
 
     try {
         chartInst = new Chart(canvas.getContext('2d'), {
@@ -156,35 +139,29 @@ function renderChart() {
                         position: 'bottom',
                         labels: {
                             color: '#1c1c1e',
-                            font: { family: '-apple-system, Inter', size: 12, weight: '600' },
-                            boxWidth: 12,
-                            padding: 14,
-                            filter: function (item) {
-                                return item.text !== 'Target Range Max';
-                            }
+                            font: { family: '-apple-system, Inter', size: 11.5, weight: '600' },
+                            boxWidth: 10,
+                            padding: 10,
+                            usePointStyle: true
                         }
                     },
                     tooltip: {
-                        backgroundColor: '#ffffff',
+                        backgroundColor: 'rgba(255, 255, 255, 0.96)',
                         titleColor: '#000000',
-                        bodyColor: '#6c6c70',
+                        bodyColor: '#3c3c43',
                         borderColor: '#e5e5ea',
                         borderWidth: 1,
                         cornerRadius: 12,
                         padding: 12,
-                        boxShadow: '0 4px 14px rgba(0,0,0,0.1)',
+                        boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
                         callbacks: {
                             label: function (ctx) {
-                                if (ctx.dataset.label === 'Recovery (÷10)') {
-                                    return `Recovery: ${Math.round(ctx.parsed.y * 10)}%`;
-                                }
-                                if (ctx.dataset.label === 'Exertion') {
-                                    return `Exertion: ${ctx.parsed.y.toFixed(1)}`;
-                                }
-                                if (ctx.dataset.label === 'Target Exertion Range') {
-                                    return `Target Min: ${ctx.parsed.y.toFixed(1)}`;
-                                }
-                                return `${ctx.dataset.label}: ${ctx.parsed.y}`;
+                                const val = ctx.parsed.y;
+                                const lbl = ctx.dataset.label || '';
+                                if (lbl.includes('HRV')) return `${lbl}: ${val} ms`;
+                                if (lbl.includes('FC Média')) return `${lbl}: ${val} bpm`;
+                                if (lbl.includes('Recuperação') || lbl.includes('Prontidão')) return `${lbl}: ${val}%`;
+                                return `${lbl}: ${val}`;
                             }
                         }
                     }
@@ -202,12 +179,10 @@ function renderChart() {
                         }
                     },
                     y: {
-                        min: 0,
-                        max: 10,
+                        grace: '5%',
                         ticks: {
                             color: '#8e8e93',
-                            font: { size: 10.5, family: '-apple-system, Inter' },
-                            stepSize: 2
+                            font: { size: 10.5, family: '-apple-system, Inter' }
                         },
                         grid: {
                             color: 'rgba(0, 0, 0, 0.05)',

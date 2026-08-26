@@ -160,17 +160,20 @@ function saveQuestionnaire() {
         };
         if (qHrv > 0) updatedFields.hrv = qHrv;
         Object.assign(te, updatedFields);
+        if (typeof pushEntryToSupabase === 'function') pushEntryToSupabase(te);
     } else {
         var atl = prev ? Math.round(prev.atl * 0.87) : 0;
         var ctl = prev ? Math.round(prev.ctl + (0 - prev.ctl) / 42) : 0;
-        data.push({
+        var newEntry = {
             date: new Date().toISOString(), pse: 0, dur: 0, tss: 0, trimp: 0,
             hrv: qHrv > 0 ? qHrv : (prev ? prev.hrv : 0), fcmedia: 0, rhr: prev ? prev.rhr : 42,
             sonoQ: sonoQ, sonoH: sonoH, fadiga: fadiga, estresse: estresse, doms: doms, humor: humor,
             tqr: tqr, prs: prs, dor: dor, motivacao: motivacao,
             hooper: hooper, atl: atl, ctl: ctl, tsb: ctl - atl,
             monotonia: prev ? prev.monotonia : 0, prontidao: prontidao, recuperacao: recuperacao
-        });
+        };
+        data.push(newEntry);
+        if (typeof pushEntryToSupabase === 'function') pushEntryToSupabase(newEntry);
     }
     saveData(data); closeModal('questionnaireModal'); refreshAll();
     alert('Questionário de recuperação salvo com sucesso!');
@@ -208,16 +211,19 @@ function saveWorkout() {
 
     if (te) {
         Object.assign(te, { pse: pse, dur: dur, tss: tss, trimp: trimp, hrv: hrv || te.hrv, fcmedia: fcmedia, atl: atl, ctl: ctl, tsb: tsb, monotonia: mono, workoutType: type, notes: notes });
+        if (typeof pushEntryToSupabase === 'function') pushEntryToSupabase(te);
     } else {
         var fullDate = new Date(entryDate + 'T12:00:00').toISOString();
-        data.push({
+        var newWkEntry = {
             date: fullDate, pse: pse, dur: dur, tss: tss, trimp: trimp, hrv: hrv, fcmedia: fcmedia, rhr: prev ? prev.rhr : 42,
             sonoQ: c.sonoQ, sonoH: c.sonoH, fadiga: c.fadiga, estresse: c.estresse,
             doms: c.doms, humor: c.humor, tqr: c.tqr, prs: c.prs, dor: c.dor, motivacao: c.motivacao,
             hooper: hooper, atl: atl, ctl: ctl, tsb: tsb, monotonia: mono,
             prontidao: c.prontidao, recuperacao: c.recuperacao, workoutType: type, notes: notes
-        });
+        };
+        data.push(newWkEntry);
         data.sort(function (a, b) { return new Date(a.date) - new Date(b.date); });
+        if (typeof pushEntryToSupabase === 'function') pushEntryToSupabase(newWkEntry);
     }
     saveData(data); closeModal('workoutModal'); refreshAll();
     alert('Treino de ' + type + ' registrado em ' + entryDate + '!');

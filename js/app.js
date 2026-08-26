@@ -19,6 +19,7 @@ function switchMainTab(tab) {
         if (viewTrends) viewTrends.style.display = 'block';
         if (tabNavToday) tabNavToday.classList.remove('active');
         if (tabNavTrends) tabNavTrends.classList.add('active');
+        buildVarChips();
         renderChart();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -41,6 +42,7 @@ function showDashboard() {
 
     buildVarChips();
     refreshAll();
+    if (typeof syncFromSupabase === 'function') syncFromSupabase();
 }
 
 function refreshAll() {
@@ -50,7 +52,23 @@ function refreshAll() {
     renderChart();
 }
 
+function handleSaveSupabaseConfig() {
+    const url = document.getElementById('sbUrlInput').value;
+    const key = document.getElementById('sbKeyInput').value;
+    const table = document.getElementById('sbTableInput').value;
+
+    if (!url || !key) return alert('Por favor, informe a URL e a Anon Key do Supabase!');
+
+    saveSupabaseConfig(url, key, table);
+    closeModal('supabaseConfigModal');
+    alert('Configurações do Supabase salvas com sucesso! Sincronizando dados...');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    if (typeof initSupabase === 'function') {
+        initSupabase();
+    }
+
     const s = localStorage.getItem(SK.USER);
     if (s) {
         try {
