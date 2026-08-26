@@ -13,14 +13,17 @@ const SUPABASE_CONFIG = {
 };
 
 let sbClient = null;
+let sbSyncStatus = 'idle'; // 'idle' | 'connected' | 'error' | 'syncing'
 
 function initSupabase() {
     if (SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey && typeof supabase !== 'undefined') {
         try {
             sbClient = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
             console.log('Supabase initialized successfully with project:', SUPABASE_CONFIG.url);
+            sbSyncStatus = 'connected';
             syncFromSupabase();
         } catch (e) {
+            sbSyncStatus = 'error';
             console.error('Supabase initialization error:', e);
         }
     }
@@ -31,12 +34,12 @@ function isSupabaseConnected() {
 }
 
 /**
- * Fetch records from Supabase for current user or all logged entries
+ * Fetch records from Supabase and populate Dashboard with 100% real cloud data
  */
 async function syncFromSupabase() {
     if (!sbClient) return;
     try {
-        const u = currentUser || JSON.parse(localStorage.getItem(SK.USER) || 'null');
+        sbSyncStatus = 'syncing';
         
         // Attempt query on the configured table
         let { data, error } = await sbClient
@@ -45,15 +48,21 @@ async function syncFromSupabase() {
             .order('date', { ascending: true });
 
         if (error) {
-            console.warn(`Supabase table [${SUPABASE_CONFIG.table}] query notice:`, error.message);
+            sbSyncStatus = 'error';
+            console.warn(`Supabase notice on table [${SUPABASE_CONFIG.table}]:`, error.message);
+            // If table doesn't exist or RLS issue
             return;
         }
 
-        if (data && data.length) {
-            console.log(`Loaded ${data.length} real records from Supabase table [${SUPABASE_CONFIG.table}]`);
+        sbSyncStatus = 'connected';
+        if (data && data.length > 0) {
+            console.log(`[Supabase] Carregados ${data.length} registros reais da nuvem (tabela: ${SUPABASE_CONFIG.table})`);
             processSupabaseData(data);
+        } else {
+            console.log(`[Supabase] Conectado com sucesso. Tabela [${SUPABASE_CONFIG.table}] está aguardando os primeiros registros.`);
         }
     } catch (err) {
+        sbSyncStatus = 'error';
         console.error('Supabase sync exception:', err);
     }
 }
@@ -107,7 +116,10 @@ function processSupabaseData(remoteRows) {
  * Save / Upsert entry to Supabase
  */
 async function pushEntryToSupabase(entry) {
-    if (!sbClient) return;
+    if (!sbClient) {
+        console.warn('Supabase client not initialized. Saved locally in browser.');
+        return;
+    }
     try {
         const u = currentUser || JSON.parse(localStorage.getItem(SK.USER) || 'null');
         const payload = {
@@ -145,9 +157,13 @@ async function pushEntryToSupabase(entry) {
 
         const { error } = await sbClient.from(SUPABASE_CONFIG.table).upsert(payload, { onConflict: 'date' });
         if (error) {
-            console.error('Error saving entry to Supabase:', error.message);
+            console.error('Erro ao salvar no Supabase:', error.message);
+            // If table doesn't exist yet, we inform the console and user
+            if (error.code === '42P01' || error.message.includes('relation') || error.message.includes('does not exist')) {
+                alert('Atenção: A tabela "' + SUPABASE_CONFIG.table + '" ainda não foi criada no Supabase.\n\nOs dados foram salvos no dispositivo. Para salvar na nuvem, execute o script SQL no painel do Supabase.');
+            }
         } else {
-            console.log('Entry successfully saved to Supabase table:', SUPABASE_CONFIG.table);
+            console.log('✅ Registro salvo e sincronizado com sucesso no Supabase na tabela:', SUPABASE_CONFIG.table);
         }
     } catch (err) {
         console.error('Supabase push error:', err);
@@ -155,7 +171,7 @@ async function pushEntryToSupabase(entry) {
 }
 
 /**
- * Save Supabase Credentials
+ * Save Supabase Credentials & Re-test
  */
 function saveSupabaseConfig(url, key, table) {
     SUPABASE_CONFIG.url = url.trim();
