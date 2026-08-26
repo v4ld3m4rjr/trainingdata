@@ -40,9 +40,35 @@
                     <label>Senha</label>
                     <input type="password" id="loginPassword" class="form-control" placeholder="••••••••">
                 </div>
-                <button type="button" class="btn-pill-action blue" style="width:100%;margin-top:8px" onclick="login()">Entrar</button>
+                <div style="display:flex;justify-content:flex-end;margin-top:-6px;margin-bottom:14px">
+                    <a onclick="toggleAuth('reset')" style="font-size:12.5px;color:var(--blue);cursor:pointer;font-weight:600">Esqueci minha senha</a>
+                </div>
+                <button type="button" class="btn-pill-action blue" style="width:100%;margin-top:4px" onclick="login()">Entrar</button>
                 <div style="margin-top:20px;font-size:13px;text-align:center;color:var(--text-secondary)">
                     Não tem conta? <a onclick="toggleAuth('register')" style="color:var(--blue);cursor:pointer;font-weight:700">Criar cadastro</a>
+                </div>
+            </div>
+
+            <div id="resetForm" style="display:none">
+                <div style="text-align:center;margin-bottom:16px">
+                    <h3 style="font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:4px">Redefinir Senha</h3>
+                    <p style="font-size:12.5px;color:var(--text-secondary)">Digite o e-mail cadastrado e sua nova senha.</p>
+                </div>
+                <div class="form-group">
+                    <label>E-mail Cadastrado</label>
+                    <input type="email" id="resetEmail" class="form-control" placeholder="seu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Nova Senha</label>
+                    <input type="password" id="resetPassword" class="form-control" placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="form-group">
+                    <label>Confirmar Nova Senha</label>
+                    <input type="password" id="resetPasswordConfirm" class="form-control" placeholder="Confirme a nova senha">
+                </div>
+                <button type="button" class="btn-pill-action blue" style="width:100%;margin-top:8px" onclick="resetPassword()">Redefinir Senha</button>
+                <div style="margin-top:20px;font-size:13px;text-align:center;color:var(--text-secondary)">
+                    Lembrou a senha? <a onclick="toggleAuth('login')" style="color:var(--blue);cursor:pointer;font-weight:700">Voltar ao Login</a>
                 </div>
             </div>
 
