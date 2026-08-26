@@ -2,10 +2,14 @@
    supabase.js — Supabase Client & Real-time Cloud Sync
    =================================================================== */
 
+const DEFAULT_SB_URL = 'https://bkhgofrluwyqhnazabyp.supabase.co';
+const DEFAULT_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJraGdvZnJsdXd5cWhuYXphYnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0Mjg0NzAsImV4cCI6MjA5OTAwNDQ3MH0.Y01ieiNS7-9HbSXOMOQ2R1KKZ4roeBewee-WQZC21rk';
+const DEFAULT_SB_TABLE = 'training_logs';
+
 const SUPABASE_CONFIG = {
-    url: localStorage.getItem('syn_sb_url') || '',
-    anonKey: localStorage.getItem('syn_sb_key') || '',
-    table: localStorage.getItem('syn_sb_table') || 'training_logs'
+    url: localStorage.getItem('syn_sb_url') || DEFAULT_SB_URL,
+    anonKey: localStorage.getItem('syn_sb_key') || DEFAULT_SB_KEY,
+    table: localStorage.getItem('syn_sb_table') || DEFAULT_SB_TABLE
 };
 
 let sbClient = null;
@@ -14,7 +18,7 @@ function initSupabase() {
     if (SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey && typeof supabase !== 'undefined') {
         try {
             sbClient = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-            console.log('Supabase initialized successfully');
+            console.log('Supabase initialized successfully with project:', SUPABASE_CONFIG.url);
             syncFromSupabase();
         } catch (e) {
             console.error('Supabase initialization error:', e);
@@ -27,74 +31,76 @@ function isSupabaseConnected() {
 }
 
 /**
- * Fetch records from Supabase for current user
+ * Fetch records from Supabase for current user or all logged entries
  */
 async function syncFromSupabase() {
     if (!sbClient) return;
     try {
         const u = currentUser || JSON.parse(localStorage.getItem(SK.USER) || 'null');
-        let query = sbClient.from(SUPABASE_CONFIG.table).select('*').order('date', { ascending: true });
+        
+        // Attempt query on the configured table
+        let { data, error } = await sbClient
+            .from(SUPABASE_CONFIG.table)
+            .select('*')
+            .order('date', { ascending: true });
 
-        if (u && u.id) {
-            // If table has user_id or email column, filter by user
-            // We fetch all records or user-specific records
-            query = query.or(`user_id.eq.${u.id},user_email.eq.${u.email}`);
-        }
-
-        const { data, error } = await query;
         if (error) {
-            console.warn('Supabase fetch query error, attempting fallback fetch all:', error.message);
-            const fallback = await sbClient.from(SUPABASE_CONFIG.table).select('*').order('date', { ascending: true });
-            if (!fallback.error && fallback.data) {
-                processSupabaseData(fallback.data);
-            }
+            console.warn(`Supabase table [${SUPABASE_CONFIG.table}] query notice:`, error.message);
             return;
         }
 
         if (data && data.length) {
+            console.log(`Loaded ${data.length} real records from Supabase table [${SUPABASE_CONFIG.table}]`);
             processSupabaseData(data);
         }
     } catch (err) {
-        console.error('Supabase sync error:', err);
+        console.error('Supabase sync exception:', err);
     }
 }
 
 function processSupabaseData(remoteRows) {
-    const formatted = remoteRows.map(r => ({
-        id: r.id,
-        date: r.date || new Date().toISOString(),
-        pse: Number(r.pse) || 0,
-        dur: Number(r.dur || r.duration) || 0,
-        tss: Number(r.tss) || 0,
-        trimp: Number(r.trimp) || 0,
-        hrv: Number(r.hrv) || 0,
-        fcmedia: Number(r.fcmedia || r.avg_hr) || 0,
-        rhr: Number(r.rhr || r.resting_hr) || 42,
-        sonoQ: Number(r.sonoQ || r.sleep_quality) || 7,
-        sonoH: Number(r.sonoH || r.sleep_hours) || 7.5,
-        fadiga: Number(r.fadiga || r.fatigue) || 3,
-        estresse: Number(r.estresse || r.stress) || 3,
-        doms: Number(r.doms) || 3,
-        humor: Number(r.humor || r.mood) || 7,
-        tqr: Number(r.tqr) || 9,
-        prs: Number(r.prs) || 6,
-        dor: Number(r.dor || r.pain) || 2,
-        motivacao: Number(r.motivacao || r.motivation) || 8,
-        hooper: Number(r.hooper) || cHooper(Number(r.fadiga) || 3, Number(r.estresse) || 3, Number(r.doms) || 3, Number(r.humor) || 7),
-        atl: Number(r.atl) || Number(r.tss) || 0,
-        ctl: Number(r.ctl) || 45,
-        tsb: Number(r.tsb) || 0,
-        monotonia: Number(r.monotonia) || 1,
-        prontidao: Number(r.prontidao) || 65,
-        recuperacao: Number(r.recuperacao) || 65,
-        workoutType: r.workoutType || r.activity_type || '',
-        notes: r.notes || ''
-    }));
+    if (!remoteRows || !remoteRows.length) return;
 
-    if (formatted.length) {
-        localStorage.setItem(SK.DATA, JSON.stringify(formatted));
-        if (typeof refreshAll === 'function') refreshAll();
-    }
+    const formatted = remoteRows.map(function (r) {
+        return {
+            id: r.id,
+            date: r.date || new Date().toISOString(),
+            pse: Number(r.pse) || 0,
+            dur: Number(r.dur || r.duration) || 0,
+            tss: Number(r.tss) || 0,
+            trimp: Number(r.trimp) || 0,
+            hrv: Number(r.hrv) || 0,
+            fcmedia: Number(r.fcmedia || r.avg_hr || r.fc_media) || 0,
+            rhr: Number(r.rhr || r.resting_hr || r.fc_repouso) || 42,
+            sonoQ: Number(r.sonoQ || r.sleep_quality || r.sono_q) || 7,
+            sonoH: Number(r.sonoH || r.sleep_hours || r.sono_h) || 7.5,
+            fadiga: Number(r.fadiga || r.fatigue) || 3,
+            estresse: Number(r.estresse || r.stress) || 3,
+            doms: Number(r.doms) || 3,
+            humor: Number(r.humor || r.mood) || 7,
+            tqr: Number(r.tqr) || 9,
+            prs: Number(r.prs) || 6,
+            dor: Number(r.dor || r.pain) || 2,
+            motivacao: Number(r.motivacao || r.motivation) || 8,
+            hooper: Number(r.hooper) || cHooper(Number(r.fadiga) || 3, Number(r.estresse) || 3, Number(r.doms) || 3, Number(r.humor) || 7),
+            atl: Number(r.atl) || Number(r.tss) || 0,
+            ctl: Number(r.ctl) || 45,
+            tsb: Number(r.tsb) || 0,
+            monotonia: Number(r.monotonia) || 1,
+            prontidao: Number(r.prontidao) || 65,
+            recuperacao: Number(r.recuperacao) || 65,
+            workoutType: r.workoutType || r.workout_type || r.activity_type || '',
+            notes: r.notes || ''
+        };
+    });
+
+    // Sort chronologically
+    formatted.sort(function (a, b) {
+        return new Date(a.date) - new Date(b.date);
+    });
+
+    localStorage.setItem(SK.DATA, JSON.stringify(formatted));
+    if (typeof refreshAll === 'function') refreshAll();
 }
 
 /**
@@ -105,7 +111,33 @@ async function pushEntryToSupabase(entry) {
     try {
         const u = currentUser || JSON.parse(localStorage.getItem(SK.USER) || 'null');
         const payload = {
-            ...entry,
+            date: entry.date,
+            pse: entry.pse,
+            dur: entry.dur,
+            tss: entry.tss,
+            trimp: entry.trimp,
+            hrv: entry.hrv,
+            fcmedia: entry.fcmedia,
+            rhr: entry.rhr,
+            "sonoQ": entry.sonoQ,
+            "sonoH": entry.sonoH,
+            fadiga: entry.fadiga,
+            estresse: entry.estresse,
+            doms: entry.doms,
+            humor: entry.humor,
+            tqr: entry.tqr,
+            prs: entry.prs,
+            dor: entry.dor,
+            motivacao: entry.motivacao,
+            hooper: entry.hooper,
+            atl: entry.atl,
+            ctl: entry.ctl,
+            tsb: entry.tsb,
+            monotonia: entry.monotonia,
+            prontidao: entry.prontidao,
+            recuperacao: entry.recuperacao,
+            workout_type: entry.workoutType || '',
+            notes: entry.notes || '',
             user_id: u ? u.id : null,
             user_email: u ? u.email : null,
             updated_at: new Date().toISOString()
@@ -113,9 +145,9 @@ async function pushEntryToSupabase(entry) {
 
         const { error } = await sbClient.from(SUPABASE_CONFIG.table).upsert(payload, { onConflict: 'date' });
         if (error) {
-            console.error('Error pushing entry to Supabase:', error.message);
+            console.error('Error saving entry to Supabase:', error.message);
         } else {
-            console.log('Entry successfully saved to Supabase');
+            console.log('Entry successfully saved to Supabase table:', SUPABASE_CONFIG.table);
         }
     } catch (err) {
         console.error('Supabase push error:', err);
@@ -128,7 +160,7 @@ async function pushEntryToSupabase(entry) {
 function saveSupabaseConfig(url, key, table) {
     SUPABASE_CONFIG.url = url.trim();
     SUPABASE_CONFIG.anonKey = key.trim();
-    SUPABASE_CONFIG.table = (table && table.trim()) ? table.trim() : 'training_logs';
+    SUPABASE_CONFIG.table = (table && table.trim()) ? table.trim() : DEFAULT_SB_TABLE;
 
     localStorage.setItem('syn_sb_url', SUPABASE_CONFIG.url);
     localStorage.setItem('syn_sb_key', SUPABASE_CONFIG.anonKey);

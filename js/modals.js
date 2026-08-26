@@ -14,6 +14,14 @@ function openModal(id) {
         document.getElementById('editName').value = currentUser.name;
         document.getElementById('editEmail').value = currentUser.email;
     }
+    if (id === 'supabaseConfigModal') {
+        const uEl = document.getElementById('sbUrlInput');
+        const kEl = document.getElementById('sbKeyInput');
+        const tEl = document.getElementById('sbTableInput');
+        if (uEl) uEl.value = (typeof SUPABASE_CONFIG !== 'undefined') ? SUPABASE_CONFIG.url : '';
+        if (kEl) kEl.value = (typeof SUPABASE_CONFIG !== 'undefined') ? SUPABASE_CONFIG.anonKey : '';
+        if (tEl) tEl.value = (typeof SUPABASE_CONFIG !== 'undefined') ? SUPABASE_CONFIG.table : 'training_logs';
+    }
     if (id === 'questionnaireModal') {
         const data = getData();
         const today = new Date().toISOString().slice(0, 10);
